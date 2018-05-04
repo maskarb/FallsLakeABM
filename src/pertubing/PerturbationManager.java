@@ -3,7 +3,7 @@ package pertubing;
 public class PerturbationManager {
 
 	public static double[] executeRecon(final int[] time, final double[] values, final double interval,
-			final double shiftFactor) {
+			final double[] shiftFactor) {
 
 		DataList dataList = new DataList();
 
@@ -20,9 +20,9 @@ public class PerturbationManager {
 
 			double n = interval * i;
 
-			Perturbation perturbaion = new Perturbation(shiftFactor, n, dataList);
+			Perturbation perturbation = new Perturbation(shiftFactor[i], n, dataList);
 
-			a[i] = perturbaion.workflow();
+			a[i] = perturbation.workflow();
 
 		}
 

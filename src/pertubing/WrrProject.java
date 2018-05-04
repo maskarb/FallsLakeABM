@@ -1,6 +1,7 @@
 package pertubing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
@@ -199,7 +200,7 @@ public class WrrProject {
 		}
 		return aa;
 	}
-
+/*
 	public static double[] reconstruct(final int monthNumber1To12,
 			final double interval, final double shiftFactor,
 			final boolean isFlow, final boolean isPrecipitation,
@@ -220,12 +221,73 @@ public class WrrProject {
 
 		return a;
 
+	}*/
+
+	public static double[] linspace(double min, double max, int points) {  
+		double[] d = new double[points];  
+		for (int i = 0; i < points; i++){  
+			d[i] = min + i * (max - min) / (points - 1);  
+		}
+		return d;  
 	}
+
 
 	public static Timeseries reconstructAllTimeseriesWithRespectToShiftInFlow(
 			final int monthNumber1To12, final double interval,
 			final double shiftFactor) {
 		Timeseries t = new Timeseries();
+
+		double[] newFactor = linspace(1, shiftFactor, 21); // this is new
+
+		PearsonsCorrelation p = new PearsonsCorrelation();
+
+		double[] flowsVal = getValueArray(monthNumber1To12, true, false, false);
+		double[] flows = PerturbationManager.executeRecon(time, flowsVal,
+				interval, newFactor);
+
+		double[] preVal = getValueArray(monthNumber1To12, false, true, false);
+
+		double corF_P = p.correlation(flowsVal, preVal);
+		double[] shift4Pre = new double[21];
+
+		for (int i = 0; i < newFactor.length; i++) {
+			if (newFactor[i] > 1) {
+				shift4Pre[i] = (newFactor[i] - 1) * corF_P + 1;
+			} else {
+				shift4Pre[i] = 1 - (1 - newFactor[i]) * corF_P;
+			}
+		}
+		//System.out.println(Arrays.toString(shift4Pre));
+
+
+		double[] precipitation = PerturbationManager.executeRecon(time, preVal,
+				interval, shift4Pre);
+
+		double[] evaVal = getValueArray(monthNumber1To12, false, false, true);
+
+		double corF_E = p.correlation(flowsVal, evaVal);
+		double[] shift4Eva = new double[21];
+
+		for (int i = 0; i < newFactor.length; i++) {
+			if (newFactor[i] > 1) {
+				shift4Eva[i] = (newFactor[i] - 1) * corF_E + 1;
+			} else {
+				shift4Eva[i] = 1 - (1 - newFactor[i]) * corF_E;
+			}
+		}
+
+		double[] evatr = PerturbationManager.executeRecon(time, evaVal,
+				interval, shift4Eva);
+
+		for (int i = 0; i < evatr.length; i++) {
+			t.getFlow().addData(i, flows[i]);
+			t.getPrecipitation().addData(i, precipitation[i]);
+			t.getEvapotranspiration().addData(i, evatr[i]);
+		}
+		return t;
+	}
+
+		/*
 
 		PearsonsCorrelation p = new PearsonsCorrelation();
 
@@ -267,7 +329,7 @@ public class WrrProject {
 			t.getEvapotranspiration().addData(i, evatr[i]);
 		}
 		return t;
-	}
+	} */
 
 	private static double[] getValueArray(final int monthNumber1To12,
 			final boolean isFlow, final boolean isPrecipitation,
@@ -367,10 +429,10 @@ public class WrrProject {
 	}
 
 	public static void main(String[] args) {
-		double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
+		/*double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
 		for (int i = 0; i < p.length; i++) {
 			System.out.println(p[i]);
-		}
+		}*/
 
 		WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(1, 0.05,
 				0.75);

@@ -702,7 +702,7 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 9;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfShifts = 7;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
 		numOfRun = 1;
 		numOfManagementScenarios = 1;
 		SimState state = null;
@@ -723,7 +723,7 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 8; m < numOfShifts; m++) {
+			for (int m = 6; m < numOfShifts; m++) {
 				// for (int n = 0; n < 1; n++) {
 				finalResult = new ArrayList<HashMap>();
 				for (int i = 0; i < numOfRun; i++) {
