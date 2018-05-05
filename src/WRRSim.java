@@ -12,6 +12,7 @@ import java.util.Scanner;
 import pertubing.DataList;
 import pertubing.GenerateTimeseries;
 import pertubing.Timeseries;
+import pertubing.WrrProject;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
@@ -51,7 +52,7 @@ public class WRRSim extends SimState {
 	private int runNum;
 	public static ArrayList<HashMap> finalResult = new ArrayList<HashMap>();
 
-	private double shift;
+	private double[] shift;
 
 	public WRRSim(long seed, int runNum, String climate, boolean r, boolean d, double[] per) {
 		super(seed);
@@ -605,9 +606,16 @@ public class WRRSim extends SimState {
 		schedule.scheduleRepeating(policyMaker, 4, 1);
 
 	}
+	public static double[] linspace(double min, double max, int points) {
+		double[] d = new double[points];
+		for (int i = 0; i < points; i++) {
+			d[i] = min + i * (max - min) / (points - 1);
+		}
+		return d;
+	}
 
 	public WRRSim setShift(double number) {
-		this.shift = number;
+		this.shift = linspace(1, number, ((50 - WrrProject.time.length) * 12 + 1) );
 		return this;
 	}
 

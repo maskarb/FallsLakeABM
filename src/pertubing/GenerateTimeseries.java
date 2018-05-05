@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Arrays;
 
 public class GenerateTimeseries {
 
@@ -233,8 +234,11 @@ public class GenerateTimeseries {
 		return result;
 	}
 
-	public static Timeseries execute(double shiftFactor, int numberYears) {
+	public static Timeseries execute(double[] shiftFactor, int numberYears) {
 
+		System.out.println("Timeseries execute");
+		System.out.println(Arrays.toString(shiftFactor)); // show the array of shiftfactors
+		System.out.println(shiftFactor.length);
 		Timeseries result = new Timeseries();
 
 		// add historic data
@@ -307,8 +311,8 @@ public class GenerateTimeseries {
 		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
 
 			if (tMonth1 == null) {
-
-				tMonth1 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month++, 0.05, shiftFactor);
+				System.out.println("tMonth1 == null");
+				tMonth1 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month++, 0.05, shiftFactor[i]);
 
 				flow = tMonth1.getFlow();
 
@@ -349,8 +353,8 @@ public class GenerateTimeseries {
 
 				month = 1;
 			}
-
-			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor);
+			System.out.println("tMonth2 " + (i+1));
+			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i+1]);
 
 			DataList flow2 = tMonth2.getFlow();
 
@@ -518,8 +522,8 @@ public class GenerateTimeseries {
 		Timeseries t = null;
 		for (int i = 0; i < 1; i++) {
 			// System.out.println("Run " + i);
-
-			t = GenerateTimeseries.execute(0.75, 50);
+			double[] shift = {1,0.9,0.8,0.7};
+			t = GenerateTimeseries.execute( shift, 50);
 
 		}
 
