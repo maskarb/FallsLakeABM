@@ -1,17 +1,17 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+// import java.io.BufferedReader;
+// import java.io.FileReader;
+// import java.io.IOException;
+// import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.nio.channels.NonReadableChannelException;
+// import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+// import java.util.List;
+// import java.util.Scanner;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
-import sim.util.media.chart.TimeSeriesAttributes;
+// import sim.util.media.chart.TimeSeriesAttributes;
 import pertubing.*;
 
 /**
@@ -424,7 +424,7 @@ public class FallsLake extends Reservoir implements Steppable {
 		int days = (int) popGrowth.getNumOfDays(month);
 
 		waterSupply = 0;
-
+	//	System.out.println(data.get(time));
 		double elevationStart = (double) ((ArrayList<Double>) data.get(time)).get(2);
 		double elevationEnd = (double) ((ArrayList<Double>) data.get(time)).get(3);
 		double elevationMax = (double) ((ArrayList<Double>) data.get(time)).get(4);
@@ -535,8 +535,10 @@ public class FallsLake extends Reservoir implements Steppable {
 		finalResultArray.add(deficit);//10
 
 		finalResultMap.put(time, finalResultArray);
+
+		int endTime = 960; // length of simulation in months
 		
-		if (time < 599) {
+		if (time < endTime-1) {
 			resilience = 0.0;
 			reliability = 0.0;
 			sumDeficit = 0.0;
@@ -545,7 +547,7 @@ public class FallsLake extends Reservoir implements Steppable {
 			averageDemand = 0.0;
 			sustainabilityindex = 0.0;
 		}
-		if (time == 599) {
+		if (time == endTime-1) {
 
 			////////////////
 			// calculate sustainability metrics based on deficit
@@ -556,7 +558,8 @@ public class FallsLake extends Reservoir implements Steppable {
 			sumDeficit = 0;
 			averageDemand = 0;
 
-			for (int m = 372; m < 600; m++) {// m = 372 for future data
+
+			for (int m = 372; m < endTime; m++) {// m = 372 for future data
 				sumDeficit += finalResultMap.get(m).get(10);
 				if (finalResultMap.get(m).get(10) == 0) {// deficit is equal to
 															// zero
@@ -572,27 +575,32 @@ public class FallsLake extends Reservoir implements Steppable {
 				averageDemand += finalResultMap.get(m).get(2);
 			}
 
-			nonzerodeficit = (600 - 372) - zeroDeficit;// 228 points in future data
+			nonzerodeficit = (endTime - 372) - zeroDeficit;// 228 points in future data
 
 			if (nonzerodeficit == 0) {// if there are no deficits
 				resilience = 1.0;
 				reliability = 1.0;
 				vulnerability = 0.0;
 				maxDeficit = 0.0;
-				averageDemand = averageDemand / (600-372);
+				averageDemand = averageDemand / (endTime-372);
 				sustainabilityindex = Math.pow(reliability * resilience * (1 - vulnerability / averageDemand)
 						* (1 - maxDeficit / averageDemand), .25);
 			} else {// if there are non-zero deficits
 				resilience = 1.0 * resilienceCount / (1.0 * nonzerodeficit);
-				reliability = 1.0 * zeroDeficit / (600-372) ;
-				averageDemand = averageDemand / (600-372);
+				reliability = 1.0 * zeroDeficit / (endTime-372);
+				averageDemand = averageDemand / (endTime-372);
 				vulnerability = (sumDeficit / nonzerodeficit);
 				sustainabilityindex = Math.pow(reliability * resilience * (1 - vulnerability / averageDemand)
 						* (1 - maxDeficit / averageDemand), .25);
-			}
-			System.out.println(reliability + " " + resilience + " " + sumDeficit + " " + nonzerodeficit + " "
-					+ maxDeficit + " " + averageDemand + " " + sustainabilityindex + " " + vulnerability/averageDemand 
-					+ " " + maxDeficit/averageDemand);
+			} 
+			System.out.println("resilience:................. " + resilience);
+			System.out.println("sumDeficit:................. "  + sumDeficit); 
+			System.out.println("nonzerodeficit:............. " + nonzerodeficit);
+			System.out.println("maxDeficit:................. " + maxDeficit);
+			System.out.println("averageDemand:.............. " + averageDemand);
+			System.out.println("sustainabilityindex:........ " + sustainabilityindex);
+			System.out.println("vulnerability/averageDemand: " + vulnerability/averageDemand);
+			System.out.println("maxDeficit/averageDemand:... " + maxDeficit/averageDemand);
 		}
 		////////////////
 
@@ -614,7 +622,7 @@ public class FallsLake extends Reservoir implements Steppable {
 		
 		finalResultMap.put(time, finalResultArray);
 
-		if (time == 599) {
+		if (time == endTime - 1) {
 
 			outputStream.close();
 

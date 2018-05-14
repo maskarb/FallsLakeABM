@@ -7,15 +7,13 @@ str.num <- function(string, nums) {
   return(strings)
 }
 
-file.list <- function(string, folder.num, file.num) {
+file.list <- function(string, file.num) {
   files <- character()
   a <- 0
-  for (i in folders) {
-    for (j in filenames) {
-      a <- a + 1
-      files[[a]] <- sprintf(string, i, j)
+  for (i in filenames) {
+    a <- a + 1
+    files[[a]] <- sprintf(string, i)
     }
-  }
   return(files)
 }
 

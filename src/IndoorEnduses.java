@@ -4,7 +4,7 @@ import sim.engine.SimState;
  * 
  */
 
-import sim.portrayal.simple.FacetedPortrayal2D;
+// import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.util.distribution.*;
 
 /**

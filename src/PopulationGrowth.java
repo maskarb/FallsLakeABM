@@ -3,13 +3,13 @@ import java.util.HashMap;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
-import sim.field.continuous.Continuous2D;
+// import sim.field.continuous.Continuous2D;
 import sim.field.grid.Grid2D;
-//import sim.field.continuous.Continuous2D;
+// import sim.field.continuous.Continuous2D;
 import sim.field.grid.SparseGrid2D;
 import sim.field.network.Network;
 import sim.util.Bag;
-import sim.util.Double2D;
+// import sim.util.Double2D;
 import sim.util.IntBag;
 
 /**
@@ -122,11 +122,11 @@ public class PopulationGrowth implements Steppable {
 		Reservoir reservoir = (Reservoir) bag.get(1);
 
 		// int[] year = { 1990, 2000, 2010, 2020, 2030, 2040 };
-		int[] year = { 1993, 2003, 2013, 2023, 2033 };
+		int[] year = { 1993, 2003, 2013, 2023, 2033, 2043, 2053, 2063 };
 	
-		int[] population = { 151951, 213498, 316605, 483253, 638544, 799142 };
+		int[] population = { 151951, 213498, 316605, 483253, 638544, 799142, 974150, 1187483, 1447535 };
 
-		double[] area = { 692123097.6, 1121157734, 1422941414, 1688544507, 2870094335.0, 3416725186.0 };
+		double[] area = { 692123097.6, 1121157734, 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
 		// double householdArea = 0;
 
 		HashMap<Integer, Double> averageSize = new HashMap<Integer, Double>();
@@ -141,12 +141,19 @@ public class PopulationGrowth implements Steppable {
 		averageSize.put(2013, 2.55);
 		averageSize.put(2023, 2.55);
 		averageSize.put(2033, 2.55);
+		averageSize.put(2043, 2.55);
+		averageSize.put(2053, 2.55);
+		averageSize.put(2063, 2.55);
 		// averageSize.put(2040, 2.63);
 		// int increasedPop = 0;
 		// int totalNumOfHouseholds = 0;
 		// double aveSize = 0;
 
 		int time = (int) wrrSim.schedule.getTime();
+		int endTime = 960; // end of 80 years in months
+		if ((time % 50) == 0) {
+			System.out.println(time);
+		}
 		monthNum = (int) (time % 12);
 		calculateNumOfDays(monthNum);
 
@@ -387,7 +394,7 @@ public class PopulationGrowth implements Steppable {
 		outputStreamPopGrowth.println(
 				wrrSim.schedule.getTime() + " " + bag.size() + " " + (increasedPop * (time % 120) + population[g]));
 
-		if (wrrSim.schedule.getTime() == 599) {
+		if (wrrSim.schedule.getTime() == endTime-1) {
 			outputStreamHousehold.close();
 			outputStreamPopGrowth.close();
 		}

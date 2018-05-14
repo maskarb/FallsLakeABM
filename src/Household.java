@@ -195,7 +195,7 @@ public class Household implements Steppable {
 		ArrayList<Double> tempArray = new ArrayList<Double>();
 		double tempVar = 0;
 		if (totalWithdrawal == null) {
-			totalWithdrawal = new HashMap();
+			totalWithdrawal = new HashMap<Integer, ArrayList<Double>>();
 		}
 		if (totalWithdrawal.containsKey(index)) {
 			tempArray = totalWithdrawal.get(index);

@@ -6,7 +6,7 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.GammaDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.random.RandomDataGenerator;
-import org.apache.commons.math3.random.EmpiricalDistribution;
+// import org.apache.commons.math3.random.EmpiricalDistribution;
 
 public class IndependentJointDistribution {
 

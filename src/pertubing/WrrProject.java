@@ -182,7 +182,7 @@ public class WrrProject {
 
 	public static double[] historicData(final boolean isFlow,
 			final boolean isPrecipitation, final boolean isEvapotranspiration) {
-		List<Double> a = new ArrayList();
+		List<Double> a = new ArrayList<Double>();
 
 		for (int i = 0; i < time.length; i++) {
 			for (int j = 0; j < 12; j++) {
@@ -225,7 +225,7 @@ public class WrrProject {
 	public static Timeseries reconstructAllTimeseriesWithRespectToShiftInFlow(
 			final int monthNumber1To12, final double interval,
 			final double shiftFactor) {
-		System.out.println("reconstructAllTimeseriesWRTShiftInflow");
+//		System.out.println("reconstructAllTimeseriesWRTShiftInflow");
 		
 		Timeseries t = new Timeseries();
 
@@ -233,14 +233,14 @@ public class WrrProject {
 
 		double[] flowsVal = getValueArray(monthNumber1To12, true, false, false);
 
-		System.out.println("flows");
+//		System.out.println("flows");
 		double[] flows = PerturbationManager.executeRecon(time, flowsVal,
 				interval, shiftFactor);
 
 		double[] preVal = getValueArray(monthNumber1To12, false, true, false);
 
 		double corF_P = p.correlation(flowsVal, preVal);
-		System.out.println("corF_P : " + corF_P);
+//		System.out.println("corF_P : " + corF_P);
 		double shift4Pre = 0;
 
 		if (shiftFactor > 1) {
@@ -248,14 +248,14 @@ public class WrrProject {
 		} else {
 			shift4Pre = 1 - (1 - shiftFactor) * corF_P;
 		}
-		System.out.println("shift4Pre :");
+//		System.out.println("shift4Pre :");
 		double[] precipitation = PerturbationManager.executeRecon(time, preVal,
 				interval, shift4Pre);
 
 		double[] evaVal = getValueArray(monthNumber1To12, false, false, true);
 
 		double corF_E = p.correlation(flowsVal, evaVal);
-		System.out.println("corF_E : " + corF_E);
+//		System.out.println("corF_E : " + corF_E);
 		double shift4Eva = 0;
 
 		if (shiftFactor > 1) {
@@ -263,7 +263,7 @@ public class WrrProject {
 		} else {
 			shift4Eva = 1 - (1 - shiftFactor) * corF_E;
 		}
-		System.out.println("shift4Eva :");
+//		System.out.println("shift4Eva :");
 		double[] evatr = PerturbationManager.executeRecon(time, evaVal,
 				interval, shift4Eva);
 

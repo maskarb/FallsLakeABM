@@ -10,11 +10,11 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
-import sim.util.media.chart.TimeSeriesChartGenerator;
+// import sim.util.media.chart.TimeSeriesChartGenerator;
 
 import sim.portrayal.DrawInfo2D;
 import sim.portrayal.Inspector;
-import sim.portrayal.continuous.ContinuousPortrayal2D;
+// import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.grid.SparseGridPortrayal2D;
 import sim.portrayal.network.*;
 import sim.portrayal.simple.OvalPortrayal2D;

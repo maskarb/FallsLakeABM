@@ -1,8 +1,8 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+// import java.io.BufferedReader;
+// import java.io.FileReader;
+// import java.io.IOException;
+// import java.util.ArrayList;
+// import java.util.Scanner;
 
 import pertubing.DataList;
 
@@ -23,7 +23,7 @@ public class Climate {
 	private DataList precipitation;
 	private DataList evapotrans;
 
-	private ArrayList<Double> temprature;
+	// private ArrayList<Double> temperature;
 
 	// public Climate(ArrayList<ArrayList<Double>> list) {
 	//
