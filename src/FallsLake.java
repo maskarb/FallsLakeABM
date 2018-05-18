@@ -536,7 +536,10 @@ public class FallsLake extends Reservoir implements Steppable {
 
 		finalResultMap.put(time, finalResultArray);
 
-		int endTime = 960; // length of simulation in months
+		// System.out.println(finalResultMap);
+
+		int endTime = 600; // length of simulation in months
+		int futureData = 0; // What time point starts future data? - 372 if historic data goes in model.
 		
 		if (time < endTime-1) {
 			resilience = 0.0;
@@ -559,7 +562,7 @@ public class FallsLake extends Reservoir implements Steppable {
 			averageDemand = 0;
 
 
-			for (int m = 372; m < endTime; m++) {// m = 372 for future data
+			for (int m = futureData; m < endTime; m++) {// m = 372 for future data
 				sumDeficit += finalResultMap.get(m).get(10);
 				if (finalResultMap.get(m).get(10) == 0) {// deficit is equal to
 															// zero
@@ -575,20 +578,20 @@ public class FallsLake extends Reservoir implements Steppable {
 				averageDemand += finalResultMap.get(m).get(2);
 			}
 
-			nonzerodeficit = (endTime - 372) - zeroDeficit;// 228 points in future data
+			nonzerodeficit = (endTime - futureData) - zeroDeficit;// 228 points in future data
 
 			if (nonzerodeficit == 0) {// if there are no deficits
 				resilience = 1.0;
 				reliability = 1.0;
 				vulnerability = 0.0;
 				maxDeficit = 0.0;
-				averageDemand = averageDemand / (endTime-372);
+				averageDemand = averageDemand / (endTime-futureData);
 				sustainabilityindex = Math.pow(reliability * resilience * (1 - vulnerability / averageDemand)
 						* (1 - maxDeficit / averageDemand), .25);
 			} else {// if there are non-zero deficits
 				resilience = 1.0 * resilienceCount / (1.0 * nonzerodeficit);
-				reliability = 1.0 * zeroDeficit / (endTime-372);
-				averageDemand = averageDemand / (endTime-372);
+				reliability = 1.0 * zeroDeficit / (endTime-futureData);
+				averageDemand = averageDemand / (endTime-futureData);
 				vulnerability = (sumDeficit / nonzerodeficit);
 				sustainabilityindex = Math.pow(reliability * resilience * (1 - vulnerability / averageDemand)
 						* (1 - maxDeficit / averageDemand), .25);

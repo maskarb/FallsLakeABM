@@ -238,28 +238,31 @@ public class GenerateTimeseries {
 
 		System.out.println("Timeseries execute");
 //		System.out.println(Arrays.toString(shiftFactor)); // show the array of shiftfactors
-		System.out.println(shiftFactor.length);
-		System.out.println("Number of years : " + numberYears);
+		System.out.println("Length of shift factor array: " + shiftFactor.length);
+		System.out.println("Number of years : " + (numberYears - WrrProject.time.length));
+		System.out.println("WrrProject length : " + (WrrProject.time.length));
 		Timeseries result = new Timeseries();
+		Timeseries hresult = new Timeseries(); // historical data is imported. not used.
 
 		// add historic data
 		double[] hFlow = WrrProject.historicData(true, false, false);
+		System.out.println("historic length: " + hFlow.length);
 
 		for (int i = 0; i < hFlow.length; i++) {
 
-			result.getFlow().addData(i, hFlow[i]);
+			hresult.getFlow().addData(i, hFlow[i]);
 		}
 
 		double[] hPre = WrrProject.historicData(false, true, false);
 
 		for (int i = 0; i < hPre.length; i++) {
-			result.getPrecipitation().addData(i, hPre[i]);
+			hresult.getPrecipitation().addData(i, hPre[i]);
 		}
 
 		double[] hEva = WrrProject.historicData(false, false, true);
 
 		for (int i = 0; i < hEva.length; i++) {
-			result.getEvapotranspiration().addData(i, hEva[i]);
+			hresult.getEvapotranspiration().addData(i, hEva[i]);
 		}
 
 		int ref = hEva.length;

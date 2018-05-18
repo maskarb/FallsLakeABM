@@ -34,6 +34,7 @@ public class WRRSim extends SimState {
 	private static int numOfManagementScenarios;
 	private static int numOfShifts;
 	private static int endTime;
+	private static int endTime1;
 
 	private String scenario = "enduse"; // "probabilistic" or "enduse"
 	private String climate = "DRY_new";
@@ -321,7 +322,7 @@ public class WRRSim extends SimState {
 		// int neighborDist = 1;
 		// double threshold = 0.3;
 
-		Timeseries timeSeries = GenerateTimeseries.execute(shift, 80);
+		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81);
 		DataList flow = timeSeries.getFlow();
 		DataList precipitation = timeSeries.getPrecipitation();
 		DataList evaporation = timeSeries.getEvapotranspiration();
@@ -616,7 +617,7 @@ public class WRRSim extends SimState {
 	}
 
 	public WRRSim setShift(double number) {
-		this.shift = spacedArray(1, number, ((80 - WrrProject.time.length) * 12 + 1) );
+		this.shift = spacedArray(1, number, ((81 - WrrProject.time.length) * 12 + 1) );
 		return this;
 	}
 
@@ -714,7 +715,8 @@ public class WRRSim extends SimState {
 		numOfShifts = 7;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
 		numOfRun = 1;
 		numOfManagementScenarios = 1;
-		endTime = 960;
+		endTime = 600;
+		endTime1 = 960;
 
 		SimState state = null;
 

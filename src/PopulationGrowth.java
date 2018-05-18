@@ -122,11 +122,19 @@ public class PopulationGrowth implements Steppable {
 		Reservoir reservoir = (Reservoir) bag.get(1);
 
 		// int[] year = { 1990, 2000, 2010, 2020, 2030, 2040 };
-		int[] year = { 1993, 2003, 2013, 2023, 2033, 2043, 2053, 2063 };
+		// int[] year = { 1993, 2003, 2013, 2023, 2033, 2043, 2053, 2063 };
 	
-		int[] population = { 151951, 213498, 316605, 483253, 638544, 799142, 974150, 1187483, 1447535 };
+		// int[] population = { 151951, 213498, 316605, 483253, 638544, 799142, 974150, 1187483, 1447535 };
 
-		double[] area = { 692123097.6, 1121157734, 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
+		// double[] area = { 692123097.6, 1121157734, 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
+
+		int[] year = { 2013, 2023, 2033, 2043, 2053, 2063 };
+	
+		int[] population = { 316605, 483253, 638544, 799142, 974150, 1187483, 1447535 };
+
+		double[] area = { 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
+
+
 		// double householdArea = 0;
 
 		HashMap<Integer, Double> averageSize = new HashMap<Integer, Double>();
@@ -136,8 +144,8 @@ public class PopulationGrowth implements Steppable {
 		// averageSize.put(1960, 3.33);
 		// averageSize.put(1970, 3.14);
 		// averageSize.put(1980, 2.76);
-		averageSize.put(1993, 2.56);
-		averageSize.put(2003, 2.54);
+		// averageSize.put(1993, 2.56);
+		// averageSize.put(2003, 2.54);
 		averageSize.put(2013, 2.55);
 		averageSize.put(2023, 2.55);
 		averageSize.put(2033, 2.55);
@@ -150,10 +158,11 @@ public class PopulationGrowth implements Steppable {
 		// double aveSize = 0;
 
 		int time = (int) wrrSim.schedule.getTime();
-		int endTime = 960; // end of 80 years in months
-		if ((time % 50) == 0) {
-			System.out.println(time);
-		}
+		int endTime = 600; // end of 80 years in months
+//		if ((time % 50) == 0) {
+//			System.out.println(time);
+//		}
+		System.out.println(time);
 		monthNum = (int) (time % 12);
 		calculateNumOfDays(monthNum);
 
