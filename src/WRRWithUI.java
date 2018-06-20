@@ -43,8 +43,8 @@ public class WRRWithUI extends GUIState{
 		super(state);
 	}
 	
-	public WRRWithUI(int runNum,String climate, boolean r, boolean d, double[] per) {
-		super(new WRRSim(System.currentTimeMillis(), runNum,climate, r,d,per));
+	public WRRWithUI(int runNum, double shiftFac, String climate, boolean r, boolean d, double[] per) {
+		super(new WRRSim(System.currentTimeMillis(), runNum, shiftFac, climate, r,d,per));
 	}
 	
 	public static String getName() {
@@ -56,7 +56,7 @@ public class WRRWithUI extends GUIState{
 		boolean isRetrofitting = false;
 		boolean isDroughtRestriction = false;
 		double[] reductionPercentages = {0.8,0.6,0.4,0.2};
-		WRRWithUI vid = new WRRWithUI(0,climate, isRetrofitting,isDroughtRestriction, reductionPercentages);
+		WRRWithUI vid = new WRRWithUI(0,0.1, climate, isRetrofitting,isDroughtRestriction, reductionPercentages);
 		Console c = new Console(vid);
 		c.setVisible(true);
 		

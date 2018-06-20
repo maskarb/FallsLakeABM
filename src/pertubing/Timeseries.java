@@ -4,6 +4,11 @@ public class Timeseries {
 	private final DataList flow = new DataList();
 	private final DataList precipitation = new DataList();
 	private final DataList evapotranspiration = new DataList();
+	private final DataList shiftFac = new DataList();
+
+	public DataList getShiftFactor() {
+		return shiftFac;
+	}
 	
 	public DataList getFlow() {
 		return flow;

@@ -124,7 +124,7 @@ public class Household implements Steppable {
 		// boolean isRetrofitting = true;
 
 		if (isRetrofitting) {
-			int currentYear = (int) (1983 + (time / 12));
+			int currentYear = (int) (2013 + (time / 12));
 			if ((this.builtYear + retrofitPeriod) <= currentYear) {
 
 				// this.builtYear = currentYear;

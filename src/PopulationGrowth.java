@@ -128,11 +128,11 @@ public class PopulationGrowth implements Steppable {
 
 		// double[] area = { 692123097.6, 1121157734, 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
 
-		int[] year = { 2013, 2023, 2033, 2043, 2053, 2063 };
+		int[] year = { 2023, 2033, 2043, 2053, 2063 };
 	
-		int[] population = { 316605, 483253, 638544, 799142, 974150, 1187483, 1447535 };
+		int[] population = { 483253, 638544, 799142, 974150, 1187483, 1447535 };
 
-		double[] area = { 1422941414, 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
+		double[] area = { 1688544507, 2870094335.0, 3416725186.0, 3758397705.0, 3946317590.0, 4143633469.0 };
 
 
 		// double householdArea = 0;
@@ -162,7 +162,7 @@ public class PopulationGrowth implements Steppable {
 //		if ((time % 50) == 0) {
 //			System.out.println(time);
 //		}
-		System.out.println(time);
+//		System.out.println(time);
 		monthNum = (int) (time % 12);
 		calculateNumOfDays(monthNum);
 

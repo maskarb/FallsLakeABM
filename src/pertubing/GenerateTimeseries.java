@@ -236,17 +236,11 @@ public class GenerateTimeseries {
 
 	public static Timeseries execute(double[] shiftFactor, int numberYears) {
 
-		System.out.println("Timeseries execute");
-//		System.out.println(Arrays.toString(shiftFactor)); // show the array of shiftfactors
-		System.out.println("Length of shift factor array: " + shiftFactor.length);
-		System.out.println("Number of years : " + (numberYears - WrrProject.time.length));
-		System.out.println("WrrProject length : " + (WrrProject.time.length));
 		Timeseries result = new Timeseries();
 		Timeseries hresult = new Timeseries(); // historical data is imported. not used.
 
 		// add historic data
 		double[] hFlow = WrrProject.historicData(true, false, false);
-		System.out.println("historic length: " + hFlow.length);
 
 		for (int i = 0; i < hFlow.length; i++) {
 
@@ -418,22 +412,22 @@ public class GenerateTimeseries {
 			if (i == 0 && i == 1) {
 				// System.out.println("adding data to " + (i + 1 + ref) + " " +
 				// sampleFlow2);
-				result.getFlow().addData(i + ref, sampleFlow);
+				result.getFlow().addData(i, sampleFlow);
 
-				result.getFlow().addData(i + 1 + ref, sampleFlow2);
+				result.getFlow().addData(i + 1, sampleFlow2);
 
 				// result.getFlow().addData(i + ref, result.getFlow().value(i));
 
 				// result.getFlow().addData(i + 1 + ref,
 				// result.getFlow().value(i + 1));
 
-				result.getEvapotranspiration().addData(i + ref, sampleEva);
+				result.getEvapotranspiration().addData(i, sampleEva);
 
-				result.getEvapotranspiration().addData(i + 1 + ref, sampleEva2);
+				result.getEvapotranspiration().addData(i + 1, sampleEva2);
 
-				result.getPrecipitation().addData(i + ref, samplePre);
+				result.getPrecipitation().addData(i, samplePre);
 
-				result.getPrecipitation().addData(i + 1 + ref, samplePre2);
+				result.getPrecipitation().addData(i + 1, samplePre2);
 
 				// result.getEvapotranspiration().addData(i + 1 + ref,
 				// result.getEvapotranspiration().value(i + 1));
@@ -448,17 +442,18 @@ public class GenerateTimeseries {
 				// result.getPrecipitation().value(i));
 			} else {
 
-				result.getFlow().addData(i + 1 + ref, sampleFlow2);
+				result.getFlow().addData(i + 1, sampleFlow2);
 				// result.getFlow().addData(i + 1 + ref,
 				// result.getFlow().value(i));
-				result.getEvapotranspiration().addData(i + 1 + ref, sampleEva2);
+				result.getEvapotranspiration().addData(i + 1, sampleEva2);
 
 				// result.getEvapotranspiration().addData(i + 1 + ref,
 				// result.getEvapotranspiration().value(i));
 
 				// result.getPrecipitation().addData(i + 1 + ref,
 				// result.getPrecipitation().value(i));
-				result.getPrecipitation().addData(i + 1 + ref, samplePre2);
+				result.getPrecipitation().addData(i + 1, samplePre2);
+				result.getShiftFactor().addData(i + 1, shiftFactor[i]);
 
 			}
 
@@ -489,11 +484,11 @@ public class GenerateTimeseries {
 		}
 
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("Flow \t Preci \t Evatr\n");
+		stringBuffer.append("Flow \t Preci \t Evatr \t ShiftFac\n");
 
 		for (int i = 0; i < result.getFlow().size(); i++) {
 			stringBuffer.append(result.getFlow().value(i) + "\t" + result.getPrecipitation().value(i) + "\t"
-					+ result.getEvapotranspiration().value(i) + "\n");
+					+ result.getEvapotranspiration().value(i) + "\t" + result.getShiftFactor().value(i) + "\n");
 		}
 		try {
 

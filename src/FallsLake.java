@@ -31,6 +31,7 @@ public class FallsLake extends Reservoir implements Steppable {
 	private HashMap<Integer, ArrayList<Double>> data;
 	public double observedStorage;
 	private double observedInflow;
+	private double newShiftFac;
 	private double observedOutflow;
 	private double observedWaterSupply;
 	private double rainfall;
@@ -56,14 +57,16 @@ public class FallsLake extends Reservoir implements Steppable {
 	private double lowestStorage;// 25073
 
 	DataList flow;
+	DataList shiftFac;
 
 	public static HashMap<Integer, ArrayList<Double>> finalResultMap = new HashMap<Integer, ArrayList<Double>>();
 
 	public FallsLake(boolean isReleaseModel, double initialStorage, double elevation, double lowestStorage,
 			HashMap<Integer, ArrayList<Double>> hashMap, ArrayList<ArrayList<Double>> list,
-			PrintWriter outputStreamReservoir, DataList flow) {
+			PrintWriter outputStreamReservoir, DataList flow, DataList shiftFac) {
 
 		this.flow = flow;
+		this.shiftFac = shiftFac;
 
 		this.storage = initialStorage;
 		this.observedStorage = initialStorage;
@@ -79,9 +82,10 @@ public class FallsLake extends Reservoir implements Steppable {
 		this.outputStream = outputStreamReservoir;
 		// This is for labeling the output file.
 		outputStream.println("observedStorage" + " " + "observedOutflow" + " " + "observedWaterSupply" + " "
-				+ "elevationEnd" + " " + "observedInflow" + " " + "storage" + " " + "outflow" + "  "
-				+ "totalWaterSupply" + "  " + "waterSupply" + " " + "elevation" + "  " + "totalIndoor" + "  "
-				+ "totalOutdoor" + "  " + "numOfHouseholds" + "  " + "population" + " " + "inflow" + " " + "deficit");
+				+ "elevationEnd" + " " + "observedInflow" + " " + "storage" + " " + "outflow" + " "
+				+ "totalWaterSupply" + " " + "waterSupply" + " " + "elevation" + " " + "totalIndoor" + " "
+				+ "totalOutdoor" + " " + "numOfHouseholds" + " " + "population" + " "  + "shiftFactor" + " " 
+				+ "inflow" + " " + "deficit");
 
 		elevationArray = (ArrayList<Double>) list.get(0);
 		areaArray = (ArrayList<Double>) list.get(1);
@@ -436,6 +440,7 @@ public class FallsLake extends Reservoir implements Steppable {
 		// * 1.98347
 		// * days;
 		observedInflow = (double) flow.value(time) * 1.98347 * days;
+		newShiftFac = (double) shiftFac.value(time);
 
 		observedOutflow = (double) ((ArrayList<Double>) data.get(time)).get(9) * 1.98347 * days;
 
@@ -454,6 +459,9 @@ public class FallsLake extends Reservoir implements Steppable {
 		double totalOutdoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(1);
 		double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
 		double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
+
+//		System.out.println(totalDemand.get(time));
+
 		// double numOfRW = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(5);
 
@@ -531,8 +539,9 @@ public class FallsLake extends Reservoir implements Steppable {
 		finalResultArray.add(totalOutdoor);
 		finalResultArray.add(numOfHouseholds);
 		finalResultArray.add(population);
+		finalResultArray.add(newShiftFac);//9
 		finalResultArray.add(observedInflow);
-		finalResultArray.add(deficit);//10
+		finalResultArray.add(deficit);//11
 
 		finalResultMap.put(time, finalResultArray);
 
@@ -568,7 +577,7 @@ public class FallsLake extends Reservoir implements Steppable {
 															// zero
 					zeroDeficit++;
 					//if (m > 0) {
-						if (finalResultMap.get(m - 1).get(10) > 0)
+						if (finalResultMap.get(m).get(10) > 0)
 							resilienceCount++;
 					//}
 				} else {// deficit is greater than zero
@@ -608,13 +617,18 @@ public class FallsLake extends Reservoir implements Steppable {
 		////////////////
 
 		outputStream.println(observedStorage + " " + observedOutflow + " " + observedWaterSupply + " " + elevationEnd
-				+ " " + observedInflow + " " + storage + " " + outflow + "  " + totalWaterSupply + "  " + waterSupply
-				+ " " + elevation + "  " + totalIndoor + "  " + totalOutdoor + "  " + numOfHouseholds + "  "
-				+ population + " " + deficit + " " + reliability + " " + resilience + " " + sumDeficit + " "
-				+ nonzerodeficit + " " + maxDeficit + " " + averageDemand + " " + sustainabilityindex);
-		// + " " + elevationMax + " " + elevationMin + " " + rainfall);
+				+ " " + observedInflow + " " + storage + " " + outflow + " " + totalWaterSupply + " " + waterSupply
+				+ " " + elevation + " " + totalIndoor + " " + totalOutdoor + " " + numOfHouseholds + " "
+				+ population + " " + newShiftFac + " " + deficit + " " + reliability + " " + resilience + " " 
+				+ sumDeficit + " "	+ nonzerodeficit + " " + maxDeficit + " " + averageDemand + " " + sustainabilityindex);
 
-		
+		// + " " + elevationMax + " " + elevationMin + " " + rainfall);
+//		outputStream.println(observedStorage + " " + observedOutflow + " " + observedWaterSupply + " " + elevationEnd
+//				+ " " + observedInflow + " " + storage + " " + outflow + "  " + totalWaterSupply + "  " + waterSupply
+//				+ " " + elevation + "  " + totalIndoor + "  " + totalOutdoor + "  " + numOfHouseholds + "  "
+//				+ population + " " + deficit + " " + reliability + " " + resilience + " " 
+//				+ sumDeficit + " "	+ nonzerodeficit + " " + maxDeficit + " " + averageDemand + " " + sustainabilityindex);
+
 		finalResultArray.add(reliability);
 		finalResultArray.add(resilience);//12
 		finalResultArray.add(sumDeficit);

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1523242756806.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3523622823",
+    "id" : "16F94262",
+    "lastKnownWriteTime" : 1527202074,
+    "last_content_update" : 1527202074,
+    "path" : "~/MASON/21-may-2018/rcode/start.R",
+    "project_path" : "start.R",
+    "properties" : {
+        "cursorPosition" : "60,40",
+        "scrollLine" : "47"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -271,6 +271,7 @@ public class WrrProject {
 			t.getFlow().addData(i, flows[i]);
 			t.getPrecipitation().addData(i, precipitation[i]);
 			t.getEvapotranspiration().addData(i, evatr[i]);
+			t.getShiftFactor().addData(i, shiftFactor);
 		}
 		return t;
 	}

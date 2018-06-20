@@ -1,0 +1,99 @@
+library(strucchange)
+library(tidyverse)
+
+rm(list=ls())
+source('~/MASON/21-may-2018/rcode/funcs.R')
+
+# Where and what data? ----------------------------------------------------
+num.folder <- c(0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00)
+num.filename <- c(0, 1, 2, 3, 4)
+
+filenames <- str.num("reservoir-timeSeries-%d.txt", num.filename)
+folders <- str.num("Shift%1.2f_Sc1_Runs5", num.folder)
+files <- file.list("G:/My Drive/BerglundResearch/model_data/%s/%s", folders, filenames)
+
+# Parse zee data --------------------------------------------------------
+num.filename <- 2
+file_path <- "~/MASON/21-may-2018/0.7_shift.csv"
+filenames <- str.num("reservoir-timeSeries-%d.txt", num.filename)
+
+folder <- '0.7 shift'
+j <- filenames
+
+# folder <- str.num("Shift%1.2f_Sc1_Runs5", i)
+# folder <- str.num("%1.2f_runs", i)
+file <- sprintf("~/MASON/21-may-2018/%s", j)
+stress <- read_delim(file, ' ')
+stor <- stress['storage']
+new.df <- find.bp(stress, window=120, i, j)
+
+for (i in folders) {
+  for (j in filenames) {
+    file <- sprintf("G:/My Drive/BerglundResearch/model_data/%s/%s", i, j)
+    stress <- read_tsv(file)
+    new.df <- find.bp(stress, window = 120, i, j)
+    if(file.exists(file_path)){
+      write_csv(new.df, file_path, append=TRUE, col_names=FALSE)
+    } else {
+      write_csv(new.df, file_path, append=TRUE, col_names=TRUE)
+    }
+  }
+}
+
+#---------------------------------------------------------------------------
+library(strucchange)
+library(tidyverse)
+source('~/MASON/21-may-2018/rcode/funcs.R')
+
+num.folder <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
+num.filename <- c(0:9)
+num.filename <- 9
+num.folder <- 0.7
+#filenames <- str.num2("reservoir-shift_%.1f-ts-%d.txt", num.folder, num.filename)
+#folders <- str.num1("%.1f_shift", num.folder)
+
+for (i in c(1:length(num.folder))) {
+  folder <- sprintf("%.1f_shift", num.folder[i])
+  for (j in c(1:length(num.filename))) {
+    filename <- sprintf("reservoir-shift_%.1f-ts-%d.txt", num.folder[i], num.filename[j])
+    
+    file <- sprintf("~/MASON/21-may-2018/%s/%s", folder, filename)
+    stress <- read_delim(file, ' ')
+    
+    inflow <- ts(stress$observedInflow, frequency=12)
+    outflow <- ts(stress$outflow, frequency=12)
+    supply <- ts(stress$waterSupply, frequency=12)
+    storage <- ts(stress$storage, frequency=12) / 131395 * 100 # percent of full
+    storage <- ts(stress$storage, frequency=12)                # acre-feet
+    population <- ts(stress$population, frequency=12)
+    shiftFactor <- ts(stress$shiftFactor*100, frequency=12)
+    elevation <- ts(stress$elevation, frequency=12)-251.5
+
+
+    
+    stor <- stl(storage, s.window="periodic", t.window=13)$time.series[,2]
+    infl <- stl(inflow, s.window="periodic")$time.series[,2]
+    outf <- stl(outflow, s.window="periodic")$time.series[,2]
+    supp <- stl(supply, s.window="periodic")$time.series[,2]
+    elev <- stl(elevation, s.window="periodic")$time.series[,2]
+    stor <- StructTS(storage, type = c("BSM"))$fitted[,1]
+
+    all_vars <- infl+outf+supp
+
+    window <- 120
+    bp.storage <- breakpoints(stor ~ 1, h=window)
+    
+    create_very_specific_graph(num.folder[i], num.filename[j], stor, bp.storage,
+                                        population, shiftFactor, folder, filename)
+
+
+
+    file_path <- sprintf("~/MASON/21-may-2018/%s.csv", folder)
+    new.df <- find.bp(stress, window=120, folder, filename)
+    if(file.exists(file_path)){
+      write_csv(new.df, file_path, append=TRUE, col_names=FALSE)
+    } else {
+      write_csv(new.df, file_path, append=TRUE, col_names=TRUE)
+    }
+  }
+}
