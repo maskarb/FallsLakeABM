@@ -124,3 +124,4 @@ lines(fitted(bp.var, breaks=length(bp.var$breakpoints)), col='orange')
 lines(confint(bp.var, breaks=length(bp.var$breakpoints)))
 axis(side=4)
 mtext(side=4, line=3, 'Outflow (acre-feet)')
+
