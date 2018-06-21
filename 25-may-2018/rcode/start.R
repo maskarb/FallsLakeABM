@@ -5,12 +5,12 @@ library(lubridate)
 source('~/MASON/25-may-2018/rcode/funcs.R')
 
 num.folder <- c(1:10) / 10
-num.filename <- c(0:9)
+num.filename <- c(0:29)
 num.filename <- 9
 num.folder <- 0.7
 
 # params <- c("infl", "outf", "supp", "strp", "strv", "elev")
-params <- c("observedInflow", "storage", "outflow", "waterSupply", "elevation")
+params <- c("observedInflow", "storage", "outflow", "totalWaterSupply", "elevation")
 
 #filenames <- str.num2("reservoir-shift_%.1f-ts-%d.txt", num.folder, num.filename)
 #folders <- str.num1("%.1f_shift", num.folder)
@@ -25,9 +25,9 @@ for (i in c(1:length(num.folder))) {
 
     final.df <- tibble(index=c(1:600))
 
-    filename <- sprintf("reservoir-shift_%.1f-ts-%d.txt", num.folder[i], num.filename[j])
-    file <- sprintf("~/MASON/25-may-2018/%s", filename)
-    stress <- read_delim(file, ' ')
+    filename <- sprintf("reservoir-shift_%.1f-ts-%d.csv", num.folder[i], num.filename[j])
+    file <- sprintf("~/MASON/20-jun-2018/%s", filename)
+    stress <- read_csv(file)
     stress_ts <- ts(stress, frequency=12, class="ts")
 
     population  <- stress_ts[, "population"    ] / 100000
@@ -40,12 +40,7 @@ for (i in c(1:length(num.folder))) {
                             tibble("population"=population),
                             tibble("storage_asis"=storage_asis))
 
-#    stor <- StructTS(storage, type = c("BSM"))$fitted[,1] # could be another method worth looking into.
-
     window <- 120
-
-#    create_very_specific_graph(num.folder[i], num.filename[j], stor, bp.storage,
-#                                        population, shiftFactor, folder, filename)
 
     for (param in params) {
         if (param != "storage" && param != "elevation") {

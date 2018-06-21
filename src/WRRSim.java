@@ -719,8 +719,8 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 10;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 30;
+		numOfShifts = 9;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfRun = 1;
 		numOfManagementScenarios = 1;
 		endTime = 600;
 		endTime1 = 960;
