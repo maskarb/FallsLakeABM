@@ -3,7 +3,11 @@ library(tidyverse)
 library(lubridate)
 
 num_shift <- c(1:10) / 10
-num_run <- c(0:29)
+num_run   <- c(0:29)
+
+#num_shift <- 0.1
+#num_run   <- 0
+
 date <- "20-jun-2018"
 
 for (i in c(1:length(num_shift))) {
@@ -19,10 +23,11 @@ for (i in c(1:length(num_shift))) {
     stress <- read_csv(file)
     stress_ts <- ts(stress, frequency=12, class="ts")
 
-    population  <-  stress_ts[, "population"    ] / 100000
-    shiftFactor <-  stress_ts[, "shiftFactor"   ]
-    storage_asis<- (stress_ts[, "storage"      ] - (lake_vol - wssp)) / wssp * 100
-    dates <- month(seq(ymd('2013-01-01'), ymd('2062-12-01'), by='months'))
+    dates             <-  stress_ts[, "dates"      ]
+    population        <-  stress_ts[, "population" ] / 100000
+    shiftFactor       <-  stress_ts[, "shiftFactor"]
+    storage_asis      <-  stress_ts[, "storage"    ]
+    storage_asis_perc <- (stress_ts[, "storage"    ] - (lake_vol - wssp)) / wssp * 100
 
     inflow_ts    <- stress_ts[, "observedInflow"]
     storage_ts   <- ((stress_ts[, "storage"] - (lake_vol - wssp)) / wssp * 100)
@@ -69,11 +74,12 @@ for (i in c(1:length(num_shift))) {
     supply    <- tibble(supply_ts, supply_trend, supply_stl, supply_fac, supply_segment)
     elevation <- tibble(elevation_ts, elevation_trend, elevation_stl, elevation_fac, elevation_segment)
 
-    final.df <- bind_cols(final.df, tibble("dates"=dates), 
-                            tibble("shiftFactor"=shiftFactor), 
+    final.df <- bind_cols(final.df, tibble("dates"=dates),
+                            tibble("shiftFactor"=shiftFactor),
                             tibble("population"=population),
-                            tibble("storage_asis"=storage_asis),
-                            inflow, storage, outflow, supply, elevation)
+                            tibble("storage"=storage_asis),
+                            tibble("storage_perc"=storage_asis_perc),
+                            storage, inflow, outflow, supply, elevation)
 
     file_path <- sprintf("~/MASON/%s/reservoir-shift_%.1f-ts-%d_%s.csv", date, num_shift[i], num_run[j], "breakpoints")
     write_csv(final.df, file_path, append = FALSE, col_names=TRUE)
