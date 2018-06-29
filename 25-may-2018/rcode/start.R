@@ -6,8 +6,8 @@ source('~/MASON/25-may-2018/rcode/funcs.R')
 
 num.folder <- c(1:10) / 10
 num.filename <- c(0:29)
-num.filename <- 9
-num.folder <- 0.7
+num.filename <- 0
+num.folder <- 0.1
 
 # params <- c("infl", "outf", "supp", "strp", "strv", "elev")
 params <- c("observedInflow", "storage", "outflow", "totalWaterSupply", "elevation")
@@ -30,10 +30,10 @@ for (i in c(1:length(num.folder))) {
     stress <- read_csv(file)
     stress_ts <- ts(stress, frequency=12, class="ts")
 
-    population  <- stress_ts[, "population"    ] / 100000
-    shiftFactor <- stress_ts[, "shiftFactor"   ]
-    storage_asis<- (stress_ts[, "storage"      ] - (lake_vol - wssp)) / wssp * 100
-    dates <- month(seq(ymd('2013-01-01'), ymd('2062-12-01'), by='months'))
+    population  <- stress_ts[, "population" ] / 100000
+    shiftFactor <- stress_ts[, "shiftFactor"]
+    storage_asis<- (stress_ts[, "storage"   ] - (lake_vol - wssp)) / wssp * 100
+    dates <-       stress_ts[, "dates"      ]
 
     final.df <- bind_cols(final.df, tibble("dates"=dates), 
                             tibble("shiftFactor"=shiftFactor), 
