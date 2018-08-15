@@ -1,5 +1,6 @@
 package pertubing;
 
+import java.util.Arrays;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
@@ -162,6 +163,9 @@ public class IndependentJointDistribution {
 		pdf[pdf.length - 1] = 1.0;
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+//		System.out.println(Arrays.toString(pdf));
+//		System.out.println(Arrays.toString(values));
+//		System.out.println(Arrays.toString(function.getPolynomials()));
 
 		double prob1 = prob;
 		if (print)

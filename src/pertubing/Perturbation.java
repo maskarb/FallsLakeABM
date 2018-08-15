@@ -1,5 +1,7 @@
 package pertubing;
 
+import java.util.Arrays;
+
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -40,17 +42,23 @@ public class Perturbation {
 
 		double stDev = dataList.getStDeviation();
 
+		// Normal distribution for shifted mean:
 		NormalDistribution normalDistribution = new NormalDistribution(meanNew, stDev);
 
-		if (probOfQuantile < 0 && probOfQuantile > 1) {
+		if (probOfQuantile < 0 || probOfQuantile > 1) {
 			new Exception("Wrong input. Probability must be between 0 and 1.").printStackTrace();
 		}
 
+		// inverseCumulativeProbability = quantile function => returns quantile at probOfQuantile (the cumulative probability):
 		double inverseValue = normalDistribution.inverseCumulativeProbability(probOfQuantile);
-		// find p in the new distribution
+//		System.out.println("inverse Value: " + inverseValue);
+
+		// Normal distribution for original mean:
 		NormalDistribution normalDistributionOriginal = new NormalDistribution(mean, stDev);
 
+		// returns P(X <= inverseValue) from original CDF:
 		double newProbability = normalDistributionOriginal.cumulativeProbability(inverseValue);
+//		System.out.println("new probability: " + newProbability);
 
 		// create distributions
 		double[] values = new double[dataList.size() + 1];
@@ -76,9 +84,13 @@ public class Perturbation {
 		}
 		// reset the last element of pdf to 1.0
 		pdf[pdf.length - 1] = 1.0;
+//		System.out.println(Arrays.toString(pdf));
+//		System.out.println(Arrays.toString(values));
 
+		// creates PDF from original values
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
 
+		// samples the original PDF at newProbability
 		double newValue4GivenQuantile = function.value(newProbability);
 		
 		return newValue4GivenQuantile;

@@ -327,8 +327,9 @@ public class WRRSim extends SimState {
 		// boolean isReclaimed = true;
 		// int neighborDist = 1;
 		// double threshold = 0.3;
-
+		System.out.println("Generate timeseries.");
 		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81);
+		System.out.println("Timeseries generated.");
 		DataList flow = timeSeries.getFlow();
 		DataList precipitation = timeSeries.getPrecipitation();
 		DataList evaporation = timeSeries.getEvapotranspiration();
@@ -719,7 +720,7 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 9;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfShifts = 1;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
 		numOfRun = 1;
 		numOfManagementScenarios = 1;
 		endTime = 600;
@@ -743,7 +744,7 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 8; m < numOfShifts; m++) {
+			for (int m = 0; m < numOfShifts; m++) {
 				endShift = 0.1 * (m + 1);
 				// for (int n = 0; n < 1; n++) {
 				finalResult = new ArrayList<HashMap>();
@@ -753,7 +754,9 @@ public class WRRSim extends SimState {
 					// doLoop(WRRSim.class, args);
 					state = (new WRRSim(System.currentTimeMillis(), i, endShift, climate, isRetrofitting[n],
 							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
-					state.start();
+//					state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
+//							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
+							state.start();
 					do
 						if (!state.schedule.step(state))
 							break;
@@ -794,15 +797,6 @@ public class WRRSim extends SimState {
 						+ "sustainabilityIndex");
 
 				for (int j = 0; j < endTime; j++) {
-					// double storage = 0;
-					// double outflow = 0;
-					// double waterSupply = 0;
-					// double waterDelivered = 0;
-					// double elevation = 0;
-					// double totalIndoor = 0;
-					// double totalOutdoor = 0;
-					// double numOfHouseholds = 0;
-					// double population = 0;
 
 					ArrayList<Double> storage         = new ArrayList<Double>();
 					ArrayList<Double> outflow         = new ArrayList<Double>();

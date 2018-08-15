@@ -6,10 +6,6 @@ public class Timeseries {
 	private final DataList evapotranspiration = new DataList();
 	private final DataList shiftFac = new DataList();
 
-	public DataList getShiftFactor() {
-		return shiftFac;
-	}
-	
 	public DataList getFlow() {
 		return flow;
 	}
@@ -21,4 +17,9 @@ public class Timeseries {
 	public DataList getEvapotranspiration() {
 		return evapotranspiration;
 	}
+
+	public DataList getShiftFactor() {
+		return shiftFac;
+	}
+	
 }
