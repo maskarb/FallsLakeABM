@@ -81,12 +81,12 @@ public class FallsLake extends Reservoir implements Steppable {
 
 		this.outputStream = outputStreamReservoir;
 		// This is for labeling the output file.
-		outputStream.println("observedStorage" + " " + "observedOutflow" + " " + "observedWaterSupply" + " "
-				+ "elevationEnd" + " " + "observedInflow" + " " + "storage" + " " + "outflow" + " "
-				+ "totalWaterSupply" + " " + "waterSupply" + " " + "elevation" + " " + "totalIndoor" + " "
-				+ "totalOutdoor" + " " + "numOfHouseholds" + " " + "population" + " "  + "shiftFactor" + " " 
-				+ "inflow" + " " + "deficit" + " " +  "reliability" + " " + "resilience" + " " + "sumDeficit" + " "	
-				+ "nonzerodeficit" + " " + "maxDeficit" + " " + "averageDemand" + " " + "sustainabilityindex");
+		outputStream.println("observedStorage" + "," + "observedOutflow" + "," + "observedWaterSupply" + ","
+				+ "elevationEnd" + "," + "observedInflow" + "," + "storage,outflow" + ","
+				+ "totalWaterSupply" + "," + "waterSupply" + "," + "elevation" + "," + "totalIndoor" + ","
+				+ "totalOutdoor" + "," + "numOfHouseholds" + "," + "population" + "," + "shiftFactor" + ","
+				+ "inflow" + "," + "deficit" + "," + "reliability" + "," + "resilience" + "," + "sumDeficit" + ","
+				+ "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," + "sustainabilityindex");
 
 		elevationArray = (ArrayList<Double>) list.get(0);
 		areaArray = (ArrayList<Double>) list.get(1);
@@ -626,11 +626,11 @@ public class FallsLake extends Reservoir implements Steppable {
 		}
 		////////////////
 
-		outputStream.println(observedStorage + " " + observedOutflow + " " + observedWaterSupply + " " + elevationEnd
-				+ " " + observedInflow + " " + storage + " " + outflow + " " + totalWaterSupply + " " + waterSupply
-				+ " " + elevation + " " + totalIndoor + " " + totalOutdoor + " " + numOfHouseholds + " "
-				+ population + " " + newShiftFac + " " + inflow + " " + deficit + " " + reliability + " " + resilience + " " 
-				+ sumDeficit + " "	+ nonzerodeficit + " " + maxDeficit + " " + averageDemand + " " + sustainabilityindex);
+		outputStream.println(observedStorage + "," + observedOutflow + "," + observedWaterSupply + "," + elevationEnd
+				+ "," + observedInflow + "," + storage + "," + outflow + "," + totalWaterSupply + "," + waterSupply
+				+ "," + elevation + "," + totalIndoor + "," + totalOutdoor + "," + numOfHouseholds + ","
+				+ population + "," + newShiftFac + "," + inflow + "," + deficit + "," + reliability + "," + resilience + "," 
+				+ sumDeficit + ","	+ nonzerodeficit + "," + maxDeficit + "," + averageDemand + "," + sustainabilityindex);
 
 		// + " " + elevationMax + " " + elevationMin + " " + rainfall);
 //		outputStream.println(observedStorage + " " + observedOutflow + " " + observedWaterSupply + " " + elevationEnd

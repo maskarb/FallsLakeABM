@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Arrays;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class GenerateTimeseries {
 
 	public static Timeseries executeOld(double shiftFactor, int numberYears) {
@@ -309,7 +312,7 @@ public class GenerateTimeseries {
 		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
 
 			if (tMonth1 == null) {
-//				System.out.println("tMonth1 == null");
+				//System.out.println("tMonth1 == null");
 				tMonth1 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month++, 0.05, shiftFactor[i]);
 
 				flow = tMonth1.getFlow();
@@ -351,7 +354,7 @@ public class GenerateTimeseries {
 
 				month = 1;
 			}
-//			System.out.println("tMonth2 " + (i+1));
+			//System.out.println("tMonth2 " + (i+1));
 			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i+1]);
 
 			DataList flow2 = tMonth2.getFlow();
@@ -484,15 +487,16 @@ public class GenerateTimeseries {
 		}
 
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("Flow \t Preci \t Evatr \t ShiftFac\n");
+		stringBuffer.append("Flow,Preci,Evatr,ShiftFac\n");
 
 		for (int i = 0; i < result.getFlow().size(); i++) {
-			stringBuffer.append(result.getFlow().value(i) + "\t" + result.getPrecipitation().value(i) + "\t"
-					+ result.getEvapotranspiration().value(i) + "\t" + result.getShiftFactor().value(i) + "\n");
+			stringBuffer.append(result.getFlow().value(i) + "," + result.getPrecipitation().value(i) + ","
+					+ result.getEvapotranspiration().value(i) + "," + result.getShiftFactor().value(i) + "\n");
 		}
 		try {
-
-			File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
+			String datetime = getDateTime();
+			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
+			File file = new File("timeseries_" + datetime + ".csv");
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -514,6 +518,11 @@ public class GenerateTimeseries {
 		// System.out.println(result.getFlow().size());
 
 		return result;
+	}
+
+	private  final static String getDateTime() {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+		return df.format(System.currentTimeMillis());
 	}
 
 	public static void main(String[] args) {

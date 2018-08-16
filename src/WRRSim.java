@@ -304,7 +304,7 @@ public class WRRSim extends SimState {
 
 		PrintWriter outputStreamReservoir = null;
 		try {
-			String output = String.format("reservoir-shift_%.1f-ts-%d.txt", endShiftFac, runNum);
+			String output = String.format("reservoir-shift_%.1f-ts-%d.csv", endShiftFac, runNum);
 			outputStreamReservoir = new PrintWriter(new FileWriter(output));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -721,7 +721,7 @@ public class WRRSim extends SimState {
 		long t1 = System.currentTimeMillis();
 
 		numOfShifts = 7;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 50;
+		numOfRun = 1;
 		numOfManagementScenarios = 1;
 		endTime = 600;
 		endTime1 = 960;
@@ -769,7 +769,7 @@ public class WRRSim extends SimState {
 
 				PrintWriter outputStream = null;
 				try {
-					String output = String.format("final_result_Shift%.1f_Sc%d.txt", endShift, n+1);
+					String output = String.format("final_result_Shift%.1f_Sc%d.csv", endShift, n+1);
 					outputStream = new PrintWriter(new FileWriter(output));
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -777,23 +777,23 @@ public class WRRSim extends SimState {
 				HashMap<Integer, ArrayList<Double>> runMap = new HashMap<Integer, ArrayList<Double>>();
 				ArrayList<Double> mapList = new ArrayList<Double>();
 
-				outputStream.print("storage_mean" + " " + "outflow_mean" + " " + "waterSupply_mean" + " "
-						+ "waterDelivered_mean" + " " + "elevation_mean" + " " + "totalIndoor_mean" + " "
-						+ "totalOutdoor_mean" + " " + "numOfHouseholds_mean" + " " + "population_mean" + " "
-						+ "inflow_mean" + " " + "deficit_mean" + " ");
-				outputStream.print("storage_std" + " " + "outflow_std" + " " + "waterSupply_std" + " "
-						+ "waterDelivered_std" + " " + "elevation_std" + " " + "totalIndoor_std" + " "
-						+ "totalOutdoor_std" + " " + "numOfHouseholds_std" + " " + "population_std" + " " + "inflow_std"
-						+ " " + "deficit_std" + " ");
-				outputStream.print("storage_max" + " " + "outflow_max" + " " + "waterSupply_max" + " "
-						+ "waterDelivered_max" + " " + "elevation_max" + " " + "totalIndoor_max" + " "
-						+ "totalOutdoor_max" + " " + "numOfHouseholds_max" + " " + "population_max" + " " + "inflow_max"
-						+ " " + "deficit_max" + " ");
-				outputStream.println("storage_min" + " " + "outflow_min" + " " + "waterSupply_min" + " "
-						+ "waterDelivered_min" + " " + "elevation_min" + " " + "totalIndoor_min" + " "
-						+ "totalOutdoor_min" + " " + "numOfHouseholds_min" + " " + "population_min" + " " + "inflow_min"
-						+ " " + "deficit_min" + " " + "shiftFactor" + " " + "reliability" + " " + "resilience" + " " 
-						+ "sumDeficit" + " " + "nonzerodeficit" + " " + "maxDeficit" + " " + "averageDemand" + " " 
+				outputStream.print("storage_mean" + "," + "outflow_mean" + "," + "waterSupply_mean" + ","
+						+ "waterDelivered_mean" + "," + "elevation_mean" + "," + "totalIndoor_mean" + ","
+						+ "totalOutdoor_mean" + "," + "numOfHouseholds_mean" + "," + "population_mean" + ","
+						+ "inflow_mean" + "," + "deficit_mean" + ",");
+				outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
+						+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
+						+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," + "inflow_std"
+						+ "," + "deficit_std" + ",");
+				outputStream.print("storage_max" + "," + "outflow_max" + "," + "waterSupply_max" + ","
+						+ "waterDelivered_max" + "," + "elevation_max" + "," + "totalIndoor_max" + ","
+						+ "totalOutdoor_max" + "," + "numOfHouseholds_max" + "," + "population_max" + "," + "inflow_max"
+						+ "," + "deficit_max" + ",");
+				outputStream.println("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
+						+ "waterDelivered_min" + "," + "elevation_min" + "," + "totalIndoor_min" + ","
+						+ "totalOutdoor_min" + "," + "numOfHouseholds_min" + "," + "population_min" + "," + "inflow_min"
+						+ "," + "deficit_min" + "," + "shiftFactor" + "," + "reliability" + "," + "resilience" + "," 
+						+ "sumDeficit" + "," + "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," 
 						+ "sustainabilityIndex");
 
 				for (int j = 0; j < endTime; j++) {
@@ -902,29 +902,29 @@ public class WRRSim extends SimState {
 						sd = 0;
 					}
 					for (int k = 0; k < mean.size(); k++) {
-						outputStream.print(mean.get(k) + " ");
+						outputStream.print(mean.get(k) + ",");
 						// outputStream.print(std.get(k) + " ");
 					}
 					for (int i = 0; i < std.size(); i++) {
-						outputStream.print(std.get(i) + " ");
+						outputStream.print(std.get(i) + ",");
 					}
 					for (int i = 0; i < max.size(); i++) {
-						outputStream.print(max.get(i) + " ");
+						outputStream.print(max.get(i) + ",");
 					}
 					for (int i = 0; i < min.size(); i++) {
-						outputStream.print(min.get(i) + " ");
+						outputStream.print(min.get(i) + ",");
 					}
 
-					outputStream.print(shiftFac.get(0) + " ");
+					outputStream.print(shiftFac.get(0) + ",");
 
 					if (j < sustainabilityindex.size()) {
-						outputStream.print(reliability.get(j) + " ");
-						outputStream.print(resilience.get(j) + " ");
-						outputStream.print(sumDeficit.get(j) + " ");
-						outputStream.print(nonzerodeficit.get(j) + " ");
-						outputStream.print(maxDeficit.get(j) + " ");
-						outputStream.print(averageDemand.get(j) + " ");
-						outputStream.print(sustainabilityindex.get(j) + " ");
+						outputStream.print(reliability.get(j) + ",");
+						outputStream.print(resilience.get(j) + ",");
+						outputStream.print(sumDeficit.get(j) + ",");
+						outputStream.print(nonzerodeficit.get(j) + ",");
+						outputStream.print(maxDeficit.get(j) + ",");
+						outputStream.print(averageDemand.get(j) + ",");
+						outputStream.print(sustainabilityindex.get(j) + ",");
 					}
 					outputStream.println();
 
