@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
-import sim.field.continuous.Continuous2D;
+// import sim.field.continuous.Continuous2D;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Bag;
 import sim.util.IntBag;
-import sim.field.grid.Grid2D;
-import sim.field.network.Edge;
+// import sim.field.grid.Grid2D;
+// import sim.field.network.Edge;
 import sim.field.network.Network;
 
 /**

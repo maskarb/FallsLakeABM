@@ -23,7 +23,6 @@ public class Watershed implements Steppable {
 	private double streamflow;
 
 	public void step(SimState state) {
-		// TODO Auto-generated method stub
 
 	}
 

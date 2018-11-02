@@ -1,6 +1,6 @@
 package pertubing;
 
-import java.util.Arrays;
+// import java.util.Arrays;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
@@ -117,7 +117,7 @@ public class Perturbation {
 
 			Perturbation perturbaion = new Perturbation(0.75, n, dataList);
 
-			System.out.println(n + " " + perturbaion.workflow());
+			System.out.format("%.2f %f %n", n, perturbaion.workflow());
 
 		}
 	}

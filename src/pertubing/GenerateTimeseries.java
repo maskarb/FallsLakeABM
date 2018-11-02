@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
-import java.util.Arrays;
+// import java.util.Random;
+// import java.util.Arrays;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -262,7 +262,7 @@ public class GenerateTimeseries {
 			hresult.getEvapotranspiration().addData(i, hEva[i]);
 		}
 
-		int ref = hEva.length;
+		// int ref = hEva.length;
 
 		int month = 1;
 		Timeseries tMonth1 = null;
