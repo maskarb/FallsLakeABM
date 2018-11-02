@@ -34,7 +34,7 @@ for (i in c(1:length(num.folder))) {
     strp <- stl(storage_per, s.window="periodic")$time.series[,2]
     strv <- stl(storage_vol, s.window="periodic")$time.series[,2]
 #    popu <- stl(population, s.window="periodic")$time.series[,2] # do not decompose
-#    shif <- stl(shiftFactor, s.window="periodic")$time.series[,2] # do not decopose
+#    shif <- stl(shiftFactor, s.window="periodic")$time.series[,2] # do not decompose
     elev <- stl(elevation, s.window="periodic")$time.series[,2]
 #    stor <- StructTS(storage, type = c("BSM"))$fitted[,1] # could be another method worth looking into.
 

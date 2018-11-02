@@ -435,10 +435,10 @@ public class FallsLake extends Reservoir implements Steppable {
 		double elevationMax = (double) ((ArrayList<Double>) data.get(time)).get(4);
 		double elevationMin = (double) ((ArrayList<Double>) data.get(time)).get(6);
 
-		// cfs * (24 * 3600 / 43560) ((1.98347)) = acre-feet
+		// cfs * (24 * 3600 / 43560) ((1.98347)) = acre-feet/day
 
 		// observedInflow = (double) ((ArrayList<Double>) data.get(time)).get(8)
-		// * 1.98347
+		// * 1.98347 convert cfs to acre-feet per day
 		// * days;
 		observedInflow = (double) flow.value(time) * 1.98347 * days;
 		newShiftFac = (double) shiftFac.value(time);
