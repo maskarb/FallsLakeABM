@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 
 public class GenerateTimeseries {
 
-	// public static Timeseries executeOld(double shiftFactor, int numberYears) {
+	/* public static Timeseries executeOld(double shiftFactor, int numberYears) {
 
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("Flow \t Preci \t Evatr\n");
@@ -235,7 +235,7 @@ public class GenerateTimeseries {
 		// System.out.println(result.getFlow().size());
 
 		return result;
-	// }
+	} */
 
 	public static Timeseries execute(double[] shiftFactor, int numberYears) {
 
