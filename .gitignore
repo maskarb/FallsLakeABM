@@ -1,6 +1,7 @@
 final_result*
 reservoir-shift*
 timeseries_2018*
-
-/target
-/.vscode
+.classpath
+target
+.vscode
+.settings

@@ -328,7 +328,7 @@ public class WRRSim extends SimState {
 		// int neighborDist = 1;
 		// double threshold = 0.3;
 		System.out.println("Generate timeseries.");
-		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81);
+		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum);
 		System.out.println("Timeseries generated.");
 		DataList flow = timeSeries.getFlow();
 		DataList precipitation = timeSeries.getPrecipitation();

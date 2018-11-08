@@ -7,9 +7,6 @@ import java.io.IOException;
 // import java.util.Random;
 // import java.util.Arrays;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 public class GenerateTimeseries {
 
 	/* public static Timeseries executeOld(double shiftFactor, int numberYears) {
@@ -237,7 +234,7 @@ public class GenerateTimeseries {
 		return result;
 	} */
 
-	public static Timeseries execute(double[] shiftFactor, int numberYears) {
+	public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum) {
 
 		Timeseries result = new Timeseries();
 		Timeseries hresult = new Timeseries(); // historical data is imported. not used.
@@ -265,47 +262,33 @@ public class GenerateTimeseries {
 		// int ref = hEva.length;
 
 		int month = 1;
+		int len_shift = shiftFactor.length;
 		Timeseries tMonth1 = null;
-
 		Timeseries tMonth2 = null;
 
 		double meanF1 = 0;
-
-		double stF1 = 0;
-
 		double meanF2 = 0;
-
-		double stF2 = 0;
-
-		double sampleFlow = 0;
-
 		double meanE1 = 0;
-
-		double stE1 = 0;
-
 		double meanE2 = 0;
-
-		double stE2 = 0;
-
-		double sampleEva = 0;
-
 		double meanP1 = 0;
-
-		double stP1 = 0;
-
 		double meanP2 = 0;
 
+		double stF1 = 0;
+		double stF2 = 0;
+		double stE1 = 0;
+		double stE2 = 0;
+		double stP1 = 0;
 		double stP2 = 0;
 
+		double sampleFlow = 0;
+		double sampleEva = 0;
 		double samplePre = 0;
 
 		double prob = 0.5;
-
 		double probEva = 0.5;
 		double probPre = 0.5;
 
 		DataList flow = null;
-
 		DataList pre = null;
 		DataList eva = null;
 
@@ -316,69 +299,49 @@ public class GenerateTimeseries {
 				tMonth1 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month++, 0.05, shiftFactor[i]);
 
 				flow = tMonth1.getFlow();
-
 				pre = tMonth1.getPrecipitation();
-
 				eva = tMonth1.getEvapotranspiration();
 
 				flow.calculateStats();
-
 				pre.calculateStats();
-
 				eva.calculateStats();
 
 				meanF1 = flow.getMean();
-
 				meanP1 = pre.getMean();
-
 				meanE1 = eva.getMean();
 
 				stF1 = flow.getStDeviation();
-
 				stP1 = pre.getStDeviation();
-
 				stE1 = eva.getStDeviation();
 
 				sampleFlow = flow.sample();
-
 				samplePre = pre.sample();
-
 				sampleEva = eva.sample();
 
 			} else {
-
 				++month;
 			}
 
 			if (month == 13) {
-
 				month = 1;
 			}
 			//System.out.println("tMonth2 " + (i+1));
 			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i+1]);
 
 			DataList flow2 = tMonth2.getFlow();
-
 			DataList pre2 = tMonth2.getPrecipitation();
-
 			DataList eva2 = tMonth2.getEvapotranspiration();
 
 			flow2.calculateStats();
-
 			pre2.calculateStats();
-
 			eva2.calculateStats();
 
 			meanF2 = flow2.getMean();
-
 			meanP2 = pre2.getMean();
-
 			meanE2 = eva2.getMean();
 
 			stF2 = flow2.getStDeviation();
-
 			stP2 = pre2.getStDeviation();
-
 			stE2 = eva2.getStDeviation();
 
 			// IndependentJointDistribution inJointDisPre = new
@@ -412,11 +375,10 @@ public class GenerateTimeseries {
 			// double sampleEva2 = IndependentJointDistribution.sampleUsingData(
 			// eva, eva2, sampleEva, false);
 
-			if (i == 0 && i == 1) {
+			if (i == 0 && i == 1) { // impossible logic. not sure why this is here.
 				// System.out.println("adding data to " + (i + 1 + ref) + " " +
 				// sampleFlow2);
 				result.getFlow().addData(i, sampleFlow);
-
 				result.getFlow().addData(i + 1, sampleFlow2);
 
 				// result.getFlow().addData(i + ref, result.getFlow().value(i));
@@ -425,11 +387,9 @@ public class GenerateTimeseries {
 				// result.getFlow().value(i + 1));
 
 				result.getEvapotranspiration().addData(i, sampleEva);
-
 				result.getEvapotranspiration().addData(i + 1, sampleEva2);
 
 				result.getPrecipitation().addData(i, samplePre);
-
 				result.getPrecipitation().addData(i + 1, samplePre2);
 
 				// result.getEvapotranspiration().addData(i + 1 + ref,
@@ -444,20 +404,13 @@ public class GenerateTimeseries {
 				// result.getPrecipitation().addData(i + ref,
 				// result.getPrecipitation().value(i));
 			} else {
-
 				result.getFlow().addData(i + 1, sampleFlow2);
-				// result.getFlow().addData(i + 1 + ref,
-				// result.getFlow().value(i));
 				result.getEvapotranspiration().addData(i + 1, sampleEva2);
-
-				// result.getEvapotranspiration().addData(i + 1 + ref,
-				// result.getEvapotranspiration().value(i));
-
-				// result.getPrecipitation().addData(i + 1 + ref,
-				// result.getPrecipitation().value(i));
 				result.getPrecipitation().addData(i + 1, samplePre2);
 				result.getShiftFactor().addData(i + 1, shiftFactor[i]);
-
+				result.getFlowProb().addData(i + 1, prob);
+				result.getPrecipProb().addData(i + 1, probPre);
+				result.getEvapProb().addData(i + 1, probEva);
 			}
 
 			flow = flow2;
@@ -467,36 +420,31 @@ public class GenerateTimeseries {
 			tMonth1 = tMonth2;
 
 			sampleFlow = sampleFlow2;
-
 			samplePre = samplePre2;
-
 			sampleEva = sampleEva2;
 
 			meanF1 = meanF2;
-
 			meanE1 = meanE2;
-
 			meanP1 = meanP2;
 
 			stF1 = stF2;
-
 			stE1 = stE2;
-
 			stP1 = stP2;
 
 		}
 
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("Flow,Preci,Evatr,ShiftFac\n");
+		stringBuffer.append("Flow,Preci,Evatr,ShiftFac,FlowProb,PreciProb,EvatrProb\n");
 
 		for (int i = 0; i < result.getFlow().size(); i++) {
 			stringBuffer.append(result.getFlow().value(i) + "," + result.getPrecipitation().value(i) + ","
-					+ result.getEvapotranspiration().value(i) + "," + result.getShiftFactor().value(i) + "\n");
+					+ result.getEvapotranspiration().value(i) + "," + result.getShiftFactor().value(i) + ","
+					+ result.getFlowProb().value(i) + "," + result.getPrecipProb().value(i) + ","
+					+ result.getEvapProb().value(i) + "\n");
 		}
 		try {
-			String datetime = getDateTime();
 			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
-			File file = new File("timeseries_" + datetime + ".csv");
+			File file = new File("timeseries_" + RunNum + "_" + shiftFactor[len_shift - 1] + ".csv");
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -520,18 +468,13 @@ public class GenerateTimeseries {
 		return result;
 	}
 
-	private  final static String getDateTime() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
-		return df.format(System.currentTimeMillis());
-	}
-
 	public static void main(String[] args) {
 
 		Timeseries t = null;
 		for (int i = 0; i < 1; i++) {
 			// System.out.println("Run " + i);
 			double[] shift = {1,0.9,0.8,0.7};
-			t = GenerateTimeseries.execute(shift, 80);
+			t = GenerateTimeseries.execute(shift, 80, 0);
 
 		}
 
