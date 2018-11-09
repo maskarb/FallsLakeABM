@@ -200,7 +200,7 @@ public class WrrProject {
 		return aa;
 	}
 
-	public static double[] reconstruct(final int monthNumber1To12,
+	/* public static double[] reconstruct(final int monthNumber1To12,
 			final double interval, final double shiftFactor,
 			final boolean isFlow, final boolean isPrecipitation,
 			final boolean isEvapotranspiration) {
@@ -220,7 +220,7 @@ public class WrrProject {
 
 		return a;
 
-	}
+	} */
 
 	public static Timeseries reconstructAllTimeseriesWithRespectToShiftInFlow(
 			final int monthNumber1To12, final double interval,
@@ -374,12 +374,11 @@ public class WrrProject {
 	}
 
 	public static void main(String[] args) {
-		double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
+		/* double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
 		for (int i = 0; i < p.length; i++) {
 			System.out.println(p[i]);
-		}
+		}*/
 
-		//WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(1, 0.05,
-		//		0.75);
+		WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(1, 0.05, 0.75);
 	}
 }

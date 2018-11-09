@@ -32,7 +32,7 @@ public class IndependentJointDistribution {
 		this.stDvFun2 = stDvFunc2;
 	}
 
-	public static double sampleUsingData(DataList datalist1, DataList datalist2, double sample, boolean scale) {
+	/* public static double sampleUsingData(DataList datalist1, DataList datalist2, double sample, boolean scale) {
 
 		boolean print = true;
 		int scaleFactor = 10000;
@@ -127,7 +127,7 @@ public class IndependentJointDistribution {
 			f = f / scaleFactor;
 		}
 		return f;
-	}
+	} */
 
 	public static double[] sampleUsingData(DataList datalist1, double sample, double prob) {
 
@@ -137,22 +137,15 @@ public class IndependentJointDistribution {
 
 		// create distributions
 		double[] values = new double[datalist1.size()];
-
 		double[] pdf = new double[datalist1.size()];
 
 		for (int i = 0; i < values.length; i++) {
-
 			if (i == 0) {
-
 				pdf[0] = 0;
-
 				values[i] = datalist1.value(i);
-
 			} else {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
-
 				values[i] = datalist1.value(i);
-
 			}
 			if (print) {
 				System.out.println("F1 " + values[i] + " " + pdf[i]);
@@ -170,9 +163,7 @@ public class IndependentJointDistribution {
 		double prob1 = prob;
 		if (print)
 			System.out.println(sample + " sample " + prob1);
-
 		double r = new RandomDataGenerator().nextUniform(0, prob1);
-
 		double prob2 = r / prob1;
 
 		double f = function.value(prob2);
@@ -196,22 +187,15 @@ public class IndependentJointDistribution {
 
 		// create distributions
 		double[] values = new double[datalist1.size() - 4];
-
 		double[] pdf = new double[datalist1.size() - 4];
 
 		for (int i = 0; i < values.length; i++) {
-
 			if (i == 0) {
-
 				pdf[0] = 0;
-
 				values[i] = datalist1.value(i + 2);
-
 			} else {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 4 - 1);
-
 				values[i] = datalist1.value(i + 2);
-
 			}
 			if (print) {
 				System.out.println("F1 " + values[i] + " " + pdf[i]);
@@ -228,9 +212,7 @@ public class IndependentJointDistribution {
 			System.out.println(sample + " sample " + prob1);
 
 		double r = new RandomDataGenerator().nextUniform(0, prob1);
-
 		double prob2 = r / prob1;
-
 		double f = function.value(prob2);
 
 		if (print)
@@ -252,22 +234,15 @@ public class IndependentJointDistribution {
 
 		// create distributions
 		double[] values = new double[datalist1.size() - 4];
-
 		double[] pdf = new double[datalist1.size() - 4];
 
 		for (int i = 0; i < values.length; i++) {
-
 			if (i == 0) {
-
 				pdf[0] = 0;
-
 				values[i] = datalist1.value(i + 2);
-
 			} else {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 4 - 1);
-
 				values[i] = datalist1.value(i + 2);
-
 			}
 			if (print) {
 				System.out.println("F1 " + values[i] + " " + pdf[i]);
@@ -284,9 +259,7 @@ public class IndependentJointDistribution {
 			System.out.println(sample + " sample " + prob1);
 
 		double r = new RandomDataGenerator().nextUniform(0, prob1);
-
 		double prob2 = r / prob1;
-
 		double f = function.value(prob2);
 
 		if (print)
@@ -381,7 +354,7 @@ public class IndependentJointDistribution {
 			d2.addData(i, data2[i][1]);
 		}
 
-		System.out.println(sampleUsingData(d1, d2, 22.19248, false));
+		// System.out.println(sampleUsingData(d1, d2, 22.19248, false));
 
 	}
 }

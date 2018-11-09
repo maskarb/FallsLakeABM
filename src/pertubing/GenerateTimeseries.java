@@ -263,6 +263,7 @@ public class GenerateTimeseries {
 
 		int month = 1;
 		int len_shift = shiftFactor.length;
+		String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 		Timeseries tMonth1 = null;
 		Timeseries tMonth2 = null;
 
@@ -444,7 +445,7 @@ public class GenerateTimeseries {
 		}
 		try {
 			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
-			File file = new File("timeseries_" + RunNum + "_" + shiftFactor[len_shift - 1] + ".csv");
+			File file = new File("timeseries_" + RunNum + "_" + shifacStr + ".csv");
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
