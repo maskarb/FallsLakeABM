@@ -165,7 +165,6 @@ public class IndependentJointDistribution {
 			System.out.println(sample + " sample " + prob1);
 		double r = new RandomDataGenerator().nextUniform(0, prob1);
 		double prob2 = r / prob1;
-
 		double f = function.value(prob2);
 
 		if (print)
