@@ -7,3 +7,4 @@ target
 .settings
 timeseries_*
 hs_err*
+population-timeSeries.txt

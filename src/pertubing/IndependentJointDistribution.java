@@ -129,9 +129,7 @@ public class IndependentJointDistribution {
 		return f;
 	} */
 
-	public static double[] sampleUsingData(DataList datalist1, double sample, double prob) {
-
-		boolean print = false;
+	public static double[] sampleUsingData(DataList datalist1) {
 
 		datalist1.sortList();
 
@@ -147,40 +145,20 @@ public class IndependentJointDistribution {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
 				values[i] = datalist1.value(i);
 			}
-			if (print) {
-				System.out.println("F1 " + values[i] + " " + pdf[i]);
-			}
 		}
 
 		// reset the last element of pdf to 1.0
 		pdf[pdf.length - 1] = 1.0;
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
-//		System.out.println(Arrays.toString(pdf));
-//		System.out.println(Arrays.toString(values));
-//		System.out.println(Arrays.toString(function.getPolynomials()));
 
-		double prob1 = prob;
-		if (print)
-			System.out.println(sample + " sample " + prob1);
-		double r = new RandomDataGenerator().nextUniform(0, prob1);
-		double prob2 = r / prob1;
-		double f = function.value(prob2);
+		double prob = new RandomDataGenerator().nextUniform(0, 1);
+		double f = function.value(prob);
 
-		if (print)
-			System.out.println("F is " + f + " " + prob2);
-		if (c == 10) {
-			// System.exit(0);
-		} else {
-			c++;
-		}
-
-		return new double[] { f, prob2 };
+		return new double[] { f, prob };
 	}
 
-	public static double[] sampleUsingData_2(DataList datalist1, double sample, double prob) {
-
-		boolean print = false;
+	public static double[] sampleUsingData_2(DataList datalist1) {
 
 		datalist1.sortList();
 
@@ -196,9 +174,6 @@ public class IndependentJointDistribution {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 4 - 1);
 				values[i] = datalist1.value(i + 2);
 			}
-			if (print) {
-				System.out.println("F1 " + values[i] + " " + pdf[i]);
-			}
 		}
 
 		// reset the last element of pdf to 1.0
@@ -206,28 +181,13 @@ public class IndependentJointDistribution {
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
 
-		double prob1 = prob;
-		if (print)
-			System.out.println(sample + " sample " + prob1);
+		double prob = new RandomDataGenerator().nextUniform(0, 1);
+		double f = function.value(prob);
 
-		double r = new RandomDataGenerator().nextUniform(0, prob1);
-		double prob2 = r / prob1;
-		double f = function.value(prob2);
-
-		if (print)
-			System.out.println("F is " + f + " " + prob2);
-		if (c == 10) {
-			// System.exit(0);
-		} else {
-			c++;
-		}
-
-		return new double[] { f, prob2 };
+		return new double[] { f, prob };
 	}
 	
-	public static double[] sampleUsingData_3(DataList datalist1, double sample, double prob) {
-
-		boolean print = false;
+	public static double[] sampleUsingData_3(DataList datalist1) {
 
 		datalist1.sortList();
 
@@ -243,9 +203,6 @@ public class IndependentJointDistribution {
 				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 4 - 1);
 				values[i] = datalist1.value(i + 2);
 			}
-			if (print) {
-				System.out.println("F1 " + values[i] + " " + pdf[i]);
-			}
 		}
 
 		// reset the last element of pdf to 1.0
@@ -253,23 +210,10 @@ public class IndependentJointDistribution {
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
 
-		double prob1 = prob;
-		if (print)
-			System.out.println(sample + " sample " + prob1);
+		double prob = new RandomDataGenerator().nextUniform(0, 1);
+		double f = function.value(prob);
 
-		double r = new RandomDataGenerator().nextUniform(0, prob1);
-		double prob2 = r / prob1;
-		double f = function.value(prob2);
-
-		if (print)
-			System.out.println("F is " + f + " " + prob2);
-		if (c == 10) {
-			// System.exit(0);
-		} else {
-			c++;
-		}
-
-		return new double[] { f, prob2 };
+		return new double[] { f, prob };
 	}
 
 

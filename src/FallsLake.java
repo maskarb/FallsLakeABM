@@ -1,22 +1,14 @@
-// import java.io.BufferedReader;
-// import java.io.FileReader;
-// import java.io.IOException;
-// import java.io.InputStreamReader;
+
 import java.io.PrintWriter;
-// import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
 import java.util.HashMap;
-// import java.util.List;
-// import java.util.Scanner;
+
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
-// import sim.util.media.chart.TimeSeriesAttributes;
+
 import pertubing.*;
 
-/**
- * 
- */
 
 /**
  * @author amashha
@@ -24,9 +16,6 @@ import pertubing.*;
  */
 public class FallsLake extends Reservoir implements Steppable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private HashMap<Integer, ArrayList<Double>> data;
 	public double observedStorage;
