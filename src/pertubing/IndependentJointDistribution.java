@@ -11,8 +11,6 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class IndependentJointDistribution {
 
-	private static int c = 0;
-
 	private final double meanFunc1;
 
 	private final double meanFunc2;
@@ -32,102 +30,6 @@ public class IndependentJointDistribution {
 		this.stDvFun2 = stDvFunc2;
 	}
 
-	/* public static double sampleUsingData(DataList datalist1, DataList datalist2, double sample, boolean scale) {
-
-		boolean print = true;
-		int scaleFactor = 10000;
-
-		datalist1.sortList();
-		datalist2.sortList();
-		// create distributions
-		double[] values = new double[datalist1.size()];
-
-		double[] pdf = new double[datalist1.size()];
-
-		for (int i = 0; i < values.length; i++) {
-
-			if (i == 0) {
-
-				pdf[0] = 0;
-				if (!scale)
-					values[i] = datalist1.value(i);
-				else
-					values[i] = datalist1.value(i) * scaleFactor;
-
-			} else {
-				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
-				if (!scale)
-					values[i] = datalist1.value(i);
-				else
-					values[i] = datalist1.value(i) * scaleFactor;
-			}
-			if (print) {
-				System.out.println("F1 " + values[i] + " " + pdf[i]);
-			}
-		}
-
-		// reset the last element of pdf to 1.0
-		pdf[pdf.length - 1] = 1.0;
-
-		PolynomialSplineFunction function = new SplineInterpolator().interpolate(values, pdf);
-
-		double[] values2 = new double[datalist2.size()];
-
-		double[] pdf2 = new double[datalist2.size()];
-
-		for (int i = 0; i < values2.length; i++) {
-
-			if (i == 0) {
-				pdf2[0] = 0;
-				if (!scale)
-					values2[i] = datalist2.value(i);
-				else
-					values2[i] = datalist2.value(i) * scaleFactor;
-
-			} else {
-				pdf2[i] = pdf2[i - 1] + 1.0 / (datalist2.size() - 1);
-				if (!scale)
-					values2[i] = datalist2.value(i);
-				else
-					values2[i] = datalist2.value(i) * scaleFactor;
-			}
-			if (print)
-				System.out.println("F2 " + pdf2[i] + " " + values2[i]);
-
-		}
-		System.out.println(pdf2.length);
-		// reset the last element of pdf to 1.0
-		pdf2[pdf2.length - 1] = 1.0;
-
-		PolynomialSplineFunction function2 = new SplineInterpolator().interpolate(pdf2, values2);
-
-		double prob1 = function.value(sample);
-		if (print)
-			System.out.println(sample + " sample " + prob1);
-
-		if (prob1 <= 0) {
-			prob1 = function.value(sample + 0.5 * sample);
-		}
-		System.out.println(sample + " sample2 " + prob1);
-		double r = new RandomDataGenerator().nextUniform(0, prob1);
-
-		double prob2 = r / prob1;
-
-		double f = function2.value(prob2);
-
-		if (print)
-			System.out.println("F is " + f + " " + prob2);
-		if (c == 10) {
-			// System.exit(0);
-		} else {
-			c++;
-		}
-
-		if (scale) {
-			f = f / scaleFactor;
-		}
-		return f;
-	} */
 
 	public static double[] sampleUsingData(DataList datalist1) {
 
