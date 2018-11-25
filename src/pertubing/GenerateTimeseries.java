@@ -47,7 +47,7 @@ public class GenerateTimeseries {
 
 		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
 
-			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i+1]);
+			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i]);
 
 			DataList flow2 = tMonth2.getFlow();
 			DataList pre2 = tMonth2.getPrecipitation();

@@ -15,3 +15,4 @@ population-timeSeries.txt
 /25-may-2018/
 /jcommon-1.0.18/
 /jfreechart-1.0.15/
+*.pyc
