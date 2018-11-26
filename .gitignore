@@ -17,3 +17,6 @@ population-timeSeries.txt
 /jfreechart-1.0.15/
 *.pyc
 /reproducing/
+alltogether.txt
+*.xlsx
+FALLSMSR*
