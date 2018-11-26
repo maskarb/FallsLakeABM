@@ -20,5 +20,6 @@ population-timeSeries.txt
 alltogether.txt
 *.xlsx
 FALLSMSR*
+!FALLSMSR_DRY*
 Household-timeSeries.txt
 /bin/
