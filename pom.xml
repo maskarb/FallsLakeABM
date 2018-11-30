@@ -30,5 +30,12 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/mason/jar/mason.17.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>opt</groupId>
+			<artifactId>gurobi</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>C:/gurobi/win64/lib/gurobi.jar</systemPath>
+		</dependency>
 	</dependencies>
 </project>
