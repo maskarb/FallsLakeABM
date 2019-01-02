@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Log;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -15,7 +16,7 @@ public class DataList {
 	private double stDeviation;
 
 	public void addData(final Integer time, final Double value) {
-		dataList.add(new Data(time, value));
+		dataList.add(new Data(time, Log(value)));
 	}
 
 	public void sortList() {
