@@ -3,7 +3,6 @@ package pertubing;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.lang.Math;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 public class WrrProject {

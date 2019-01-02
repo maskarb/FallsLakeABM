@@ -46,7 +46,7 @@ public class GenerateTimeseries {
 		double probPre = 0;
 
 		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
-			prob = new RandomDataGenerator().nextUniform(0, 1);
+
 
 			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i]);
 
@@ -54,16 +54,16 @@ public class GenerateTimeseries {
 			DataList pre2 = tMonth2.getPrecipitation();
 			DataList eva2 = tMonth2.getEvapotranspiration();
 
-			double[] fa = sampleUsingData(flow2, prob);
+			double[] fa = sampleUsingData(flow2);
 
 			double sampleFlow2 = fa[0];
 			prob = fa[1];
 
-			double[] pa = sampleUsingData(pre2, prob);
+			double[] pa = sampleUsingData(pre2);
 			double samplePre2 = pa[0];
 			probPre = pa[1];
 
-			double[] ea = sampleUsingData(eva2, prob);
+			double[] ea = sampleUsingData(eva2);
 			double sampleEva2 = ea[0];
 			probEva = ea[1];
 
@@ -109,7 +109,7 @@ public class GenerateTimeseries {
 		return result;
 	}
 
-	public static double[] sampleUsingData(DataList datalist1, double prob) {
+	public static double[] sampleUsingData(DataList datalist1) {
 
 		datalist1.sortList();
 
@@ -132,7 +132,11 @@ public class GenerateTimeseries {
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
 
+		double prob = new RandomDataGenerator().nextUniform(0, 1);
+
 		double f = function.value(prob);
+		f = Math.exp(f);
+		System.out.println(f);
 
 		return new double[] { f, prob };
 	}
