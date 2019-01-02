@@ -755,12 +755,29 @@ public class WRRSim extends SimState {
 					// doLoop(WRRSim.class, args);
 					state = (new WRRSim(System.currentTimeMillis(), i, endShift, climate, isRetrofitting[n],
 							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
-//					state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
-//							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
+					// state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
+					// 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
 							state.start();
 					do
-						if (!state.schedule.step(state))
+						if (!state.schedule.step(state)) {
 							break;
+						} else if (state.schedule.getSteps() == endTime-1) {
+							System.out.print("|============|\n");
+						} else if (state.schedule.getSteps() == 500) {
+							System.out.print("|==========  |");
+						} else if (state.schedule.getSteps() == 400) {
+							System.out.print("|========    |");
+						} else if (state.schedule.getSteps() == 300) {
+							System.out.print("|======      |");
+						} else if (state.schedule.getSteps() == 200) {
+							System.out.print("|====        |");
+						} else if (state.schedule.getSteps() == 100) {
+							System.out.print("|==          |");
+						} else if (state.schedule.getSteps() ==   1) {
+							System.out.print("|            |");
+						} else {
+							;
+						}
 					while (state.schedule.getSteps() < endTime);
 					Household.totalWithdrawal = null;
 					Household.conservationFactor = 1;

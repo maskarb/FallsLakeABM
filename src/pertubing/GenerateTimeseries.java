@@ -136,7 +136,7 @@ public class GenerateTimeseries {
 
 		double f = function.value(prob);
 		f = Math.exp(f);
-		System.out.println(f);
+		// System.out.println(f);
 
 		return new double[] { f, prob };
 	}
