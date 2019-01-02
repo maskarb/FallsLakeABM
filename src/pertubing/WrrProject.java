@@ -363,13 +363,6 @@ public class WrrProject {
 		return logvals;
 	}
 
-
-
-
-
-
-
-
 	public static void main(String[] args) {
 		/* double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
 		for (int i = 0; i < p.length; i++) {
