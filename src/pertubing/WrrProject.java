@@ -3,6 +3,7 @@ package pertubing;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.lang.Math;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 public class WrrProject {
@@ -200,27 +201,6 @@ public class WrrProject {
 		return aa;
 	}
 
-	/* public static double[] reconstruct(final int monthNumber1To12,
-			final double interval, final double shiftFactor,
-			final boolean isFlow, final boolean isPrecipitation,
-			final boolean isEvapotranspiration) {
-
-		if ((isFlow && isPrecipitation) || (isEvapotranspiration && isFlow)
-				|| (isEvapotranspiration && isPrecipitation)) {
-
-			new Exception("Only one parameter can be true.").printStackTrace();
-
-		}
-
-		double[] values = getValueArray(monthNumber1To12, isFlow,
-				isPrecipitation, isEvapotranspiration);
-		System.out.println("not sure what this is doing");
-		double[] a = PerturbationManager.executeRecon(time, values, interval,
-				shiftFactor);
-
-		return a;
-
-	} */
 
 	public static Timeseries reconstructAllTimeseriesWithRespectToShiftInFlow(
 			final int monthNumber1To12, final double interval,
@@ -283,29 +263,29 @@ public class WrrProject {
 		if (isFlow) {
 			switch (monthNumber1To12) {
 			case (1):
-				return flowJan;
+				return convert(flowJan);
 			case (2):
-				return flowFeb;
+				return convert(flowFeb);
 			case (3):
-				return flowMar;
+				return convert(flowMar);
 			case (4):
-				return flowApr;
+				return convert(flowApr);
 			case (5):
-				return flowMay;
+				return convert(flowMay);
 			case (6):
-				return flowJun;
+				return convert(flowJun);
 			case (7):
-				return flowJul;
+				return convert(flowJul);
 			case (8):
-				return flowAug;
+				return convert(flowAug);
 			case (9):
-				return flowSep;
+				return convert(flowSep);
 			case (10):
-				return flowOct;
+				return convert(flowOct);
 			case (11):
-				return flowNov;
+				return convert(flowNov);
 			case (12):
-				return flowDec;
+				return convert(flowDec);
 
 			}
 		}
@@ -313,29 +293,29 @@ public class WrrProject {
 		if (isPrecipitation) {
 			switch (monthNumber1To12) {
 			case (1):
-				return prcipitationJan;
+				return convert(prcipitationJan);
 			case (2):
-				return prcipitationFeb;
+				return convert(prcipitationFeb);
 			case (3):
-				return prcipitationMar;
+				return convert(prcipitationMar);
 			case (4):
-				return prcipitationApr;
+				return convert(prcipitationApr);
 			case (5):
-				return prcipitationMay;
+				return convert(prcipitationMay);
 			case (6):
-				return prcipitationJun;
+				return convert(prcipitationJun);
 			case (7):
-				return prcipitationJul;
+				return convert(prcipitationJul);
 			case (8):
-				return prcipitationAug;
+				return convert(prcipitationAug);
 			case (9):
-				return prcipitationSep;
+				return convert(prcipitationSep);
 			case (10):
-				return prcipitationOct;
+				return convert(prcipitationOct);
 			case (11):
-				return prcipitationNov;
+				return convert(prcipitationNov);
 			case (12):
-				return prcipitationDec;
+				return convert(prcipitationDec);
 
 			}
 		}
@@ -343,35 +323,53 @@ public class WrrProject {
 		if (isEvapotranspiration) {
 			switch (monthNumber1To12) {
 			case (1):
-				return evaJan;
+				return convert(evaJan);
 			case (2):
-				return evaFeb;
+				return convert(evaFeb);
 			case (3):
-				return evaMar;
+				return convert(evaMar);
 			case (4):
-				return evaApr;
+				return convert(evaApr);
 			case (5):
-				return evaMay;
+				return convert(evaMay);
 			case (6):
-				return evaJun;
+				return convert(evaJun);
 			case (7):
-				return evaJul;
+				return convert(evaJul);
 			case (8):
-				return evaAug;
+				return convert(evaAug);
 			case (9):
-				return evaSep;
+				return convert(evaSep);
 			case (10):
-				return evaOct;
+				return convert(evaOct);
 			case (11):
-				return evaNov;
+				return convert(evaNov);
 			case (12):
-				return evaDec;
+				return convert(evaDec);
 
 			}
 		}
 
 		return null;
 	}
+
+	private static double[] convert(double[] vals) {
+		double[] logvals = new double[vals.length];
+
+		for (int i = 0; i < vals.length; i++) {
+
+			logvals[i] = (Math.log(vals[i]));
+
+		}
+		return logvals;
+	}
+
+
+
+
+
+
+
 
 	public static void main(String[] args) {
 		/* double[] p = WrrProject.reconstruct(1, 0.05, 0.75, true, false, false);
