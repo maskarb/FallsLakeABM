@@ -99,6 +99,7 @@ public class WRRWithUI extends GUIState{
 		
 		cityPortrayal.setPortrayalForAll(new OvalPortrayal2D()
 		{
+			static final long serialVersionUID = 1L;
 			public void draw(Object object, Graphics2D graphics, DrawInfo2D info){
 				Household user = (Household)object;
 				scale = 1;

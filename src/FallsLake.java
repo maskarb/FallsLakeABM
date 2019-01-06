@@ -150,8 +150,8 @@ public class FallsLake extends Reservoir implements Steppable {
 		double uncontroledDrainageAreaFlow = 4000;// 1000 + randomNum *
 													// 6000;//4000
 
-		double minimumReleaseSummer = 100;
-		double minimumReleaseWinter = 60;
+		// double minimumReleaseSummer = 100;
+		// double minimumReleaseWinter = 60;
 
 		int counter = 0;
 		double totalRelease = 0;
@@ -741,8 +741,8 @@ public class FallsLake extends Reservoir implements Steppable {
 		double freeOverflowing = lookupStorage(elevation) - lookupStorage(268);
 		double uncontroledDrainageAreaFlow = 4000;
 
-		double minimumReleaseSummer = 100;
-		double minimumReleaseWinter = 60;
+		// double minimumReleaseSummer = 100;
+		// double minimumReleaseWinter = 60;
 
 		int counter = 0;
 		double totalRelease = 0;

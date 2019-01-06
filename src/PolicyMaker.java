@@ -10,6 +10,7 @@ import sim.engine.Steppable;
  * 
  */
 public class PolicyMaker implements Steppable {
+	static final long serialVersionUID = 1L;
 
 	private double elevation;
 	private Reservoir reservoir;

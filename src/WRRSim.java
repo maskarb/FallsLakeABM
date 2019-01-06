@@ -24,6 +24,7 @@ import sim.util.Bag;
 import sim.util.IntBag;
 
 public class WRRSim extends SimState {
+	static final long serialVersionUID = 1L;
 
 	public SparseGrid2D city = new SparseGrid2D(570, 570);
 	// public Continuous2D city = new Continuous2D(1,1000,1000);
@@ -34,7 +35,6 @@ public class WRRSim extends SimState {
 	private static int numOfManagementScenarios;
 	private static int numOfShifts;
 	private static int endTime;
-	private static int endTime1;
 
 	private String scenario = "enduse"; // "probabilistic" or "enduse"
 	private String climate = "DRY_new";
@@ -52,7 +52,7 @@ public class WRRSim extends SimState {
 	private double threshold = 0.5;
 
 	private int runNum;
-	public static ArrayList<HashMap> finalResult = new ArrayList<HashMap>();
+	public static ArrayList<HashMap<Integer, ArrayList<Double>>> finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 
 	private double[] shift;
 	private static double endShift;
@@ -73,39 +73,12 @@ public class WRRSim extends SimState {
 		return bag.size();
 	}
 
-	// public double getConsumption() {
-	// Bag bag = socialNetwork.getAllNodes();
-	// double totalConsumption = 0;
-	// for (int i = 2; i < bag.size(); i++) {
-	// totalConsumption += ((Household) bag.get(i)).getConsumption();
-	// // * 3.06888328 * Math.pow(10, -6);
-	// }
-	//
-	//// System.out.println(totalConsumption + " time " + schedule.getTime() + "
-	// pop " + bag.size());
-	//
-	// return totalConsumption;
-	// }
-
-	// public double getReservoirLevel_data() {
-	// Bag bag = socialNetwork.getAllNodes();
-	// return ((Reservoir) bag.get(0)).getLevel();
-	// }
-
-	// public double getReservoirLevel_model() {
-	// return 0;
-	// }
-
 	public double getReservoirStorage_model() {
 		double storage = 0;
 		Bag bag = socialNetwork.getAllNodes();
 		if (bag.size() > 0) {
 			storage = ((Reservoir) bag.get(1)).getStorage();
 		}
-
-		// System.out.println("printed from WRRSim " + storage + " time " +
-		// schedule.getTime());
-
 		return storage;
 	}
 
@@ -121,7 +94,7 @@ public class WRRSim extends SimState {
 	public double getOutdoor_Demand() {
 		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		double totalConsumption = 0;
+		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
 		// double totalWaterSupply = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(2);
@@ -169,7 +142,7 @@ public class WRRSim extends SimState {
 	public double getIndoor_Demand() {
 		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		double totalConsumption = 0;
+		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
 		// double totalWaterSupply = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(2);
@@ -721,11 +694,10 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 3;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfShifts = 4;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
 		numOfRun = 30;
 		numOfManagementScenarios = 1;
 		endTime = 600;
-		endTime1 = 960;
 
 		SimState state = null;
 
@@ -745,10 +717,10 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 2; m < numOfShifts; m++) {
+			for (int m = 3; m < numOfShifts; m++) {
 				endShift = 0.1 * (m + 1);
 				// for (int n = 0; n < 1; n++) {
-				finalResult = new ArrayList<HashMap>();
+				finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 				for (int i = 0; i < numOfRun; i++) {
 					int z = n + 1;
 					System.out.printf("Trial " + i + " Manag Sc. " + z + " Shift %.1f \n", endShift);
@@ -843,18 +815,18 @@ public class WRRSim extends SimState {
 					ArrayList<Double> sustainabilityindex = new ArrayList<Double>();
 
 					for (int i = 0; i < finalResult.size(); i++) {
-						reliability.add((Double)         ((ArrayList) finalResult.get(i).get(endTime - 1)).get(12));
-						resilience.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(13));
-						sumDeficit.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(14));
-						nonzerodeficit.add((Double)      ((ArrayList) finalResult.get(i).get(endTime - 1)).get(15));
-						maxDeficit.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(16));
-						averageDemand.add((Double)       ((ArrayList) finalResult.get(i).get(endTime - 1)).get(17));
-						sustainabilityindex.add((Double) ((ArrayList) finalResult.get(i).get(endTime - 1)).get(18));
+						reliability.add((Double)         ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(12));
+						resilience.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(13));
+						sumDeficit.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(14));
+						nonzerodeficit.add((Double)      ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(15));
+						maxDeficit.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(16));
+						averageDemand.add((Double)       ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(17));
+						sustainabilityindex.add((Double) ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(18));
 					}
 
 					for (int i = 0; i < finalResult.size(); i++) {
 						runMap = finalResult.get(i);
-						mapList = (ArrayList) runMap.get(j);
+						mapList = (ArrayList<Double>) runMap.get(j);
 
 						storage.add((Double) mapList.get(0));
 						outflow.add((Double) mapList.get(1));
@@ -911,7 +883,7 @@ public class WRRSim extends SimState {
 					for (int k = 0; k < 11; k++) {
 						for (int i = 0; i < finalResult.size(); i++) {
 							runMap = finalResult.get(i);
-							mapList = (ArrayList) runMap.get(j);
+							mapList = (ArrayList<Double>) runMap.get(j);
 
 							sd += Math.pow((Double) mapList.get(k) - (Double) mean.get(k), 2);
 
