@@ -695,7 +695,7 @@ public class WRRSim extends SimState {
 		long t1 = System.currentTimeMillis();
 
 		numOfShifts = 4;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 30;
+		numOfRun = 1;
 		numOfManagementScenarios = 1;
 		endTime = 600;
 
@@ -731,25 +731,8 @@ public class WRRSim extends SimState {
 					// 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
 							state.start();
 					do
-						if (!state.schedule.step(state)) {
+						if (!state.schedule.step(state))
 							break;
-						} else if (state.schedule.getSteps() == endTime-1) {
-							System.out.print("|============|\n");
-						} else if (state.schedule.getSteps() == 500) {
-							System.out.print("|==========  |");
-						} else if (state.schedule.getSteps() == 400) {
-							System.out.print("|========    |");
-						} else if (state.schedule.getSteps() == 300) {
-							System.out.print("|======      |");
-						} else if (state.schedule.getSteps() == 200) {
-							System.out.print("|====        |");
-						} else if (state.schedule.getSteps() == 100) {
-							System.out.print("|==          |");
-						} else if (state.schedule.getSteps() ==   1) {
-							System.out.print("|            |");
-						} else {
-							;
-						}
 					while (state.schedule.getSteps() < endTime);
 					Household.totalWithdrawal = null;
 					Household.conservationFactor = 1;
