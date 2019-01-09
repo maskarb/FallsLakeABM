@@ -38,7 +38,7 @@ public class Perturbation {
 
 		double mean = dataList.getMean();
 
-		double meanNew = mean * shiftFactor;
+		double meanNew = mean + Math.log(shiftFactor);
 
 		double stDev = dataList.getStDeviation();
 

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+// import java.util.Arrays;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
@@ -59,11 +60,11 @@ public class GenerateTimeseries {
 			double sampleFlow2 = fa[0];
 			prob = fa[1];
 
-			double[] pa = sampleUsingData(pre2);
+			double[] pa = sampleUsingData1(pre2);
 			double samplePre2 = pa[0];
 			probPre = pa[1];
 
-			double[] ea = sampleUsingData(eva2);
+			double[] ea = sampleUsingData1(eva2);
 			double sampleEva2 = ea[0];
 			probEva = ea[1];
 
@@ -131,12 +132,44 @@ public class GenerateTimeseries {
 		pdf[pdf.length - 1] = 1.0;
 
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+		//System.out.println(Arrays.toString(values));
 
 		double prob = new RandomDataGenerator().nextUniform(0, 1);
 
 		double f = function.value(prob);
 		f = Math.exp(f);
 		// System.out.println(f);
+
+		return new double[] { f, prob };
+	}
+
+	public static double[] sampleUsingData1(DataList datalist1) {
+
+		datalist1.sortList();
+
+		// create distributions
+		double[] values = new double[datalist1.size()];
+		double[] pdf = new double[datalist1.size()];
+
+		for (int i = 0; i < values.length; i++) {
+			if (i == 0) {
+				pdf[0] = 0;
+				values[i] = datalist1.value(i);
+			} else {
+				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
+				values[i] = datalist1.value(i);
+			}
+		}
+
+		// reset the last element of pdf to 1.0
+		pdf[pdf.length - 1] = 1.0;
+
+		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+
+		double prob = new RandomDataGenerator().nextUniform(0, 1);
+
+		double f = function.value(prob);
+		f = Math.exp(f);
 
 		return new double[] { f, prob };
 	}
