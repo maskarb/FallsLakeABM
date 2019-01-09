@@ -161,6 +161,10 @@ public class FallsLake extends Reservoir implements Steppable {
 				release = 100;// + 254 ;
 				storage -= release * 3600 * 24 * days / 43560;
 				totalRelease = release * 3600 * 24 * days / 43560;
+				if (storage < 0) {
+					storage = 0;
+					totalRelease = lookupStorage(elevation);
+				}
 			} else {
 				while (elevation > normalElavation && counter < days) {
 					if (elevation <= 255) {
@@ -216,7 +220,11 @@ public class FallsLake extends Reservoir implements Steppable {
 			if (elevation <= normalElavation) {
 				release = 60;// + 184;
 				storage -= release * 3600 * 24 * days / 43560;
-				totalRelease += (release * 3600 * 24 * days / 43560);
+				totalRelease = release * 3600 * 24 * days / 43560;
+				if (storage < 0) {
+					storage = 0;
+					totalRelease = lookupStorage(elevation);
+				}
 			} else {
 				while (elevation > normalElavation && counter < days) {
 					if (elevation <= 255) {
@@ -450,7 +458,7 @@ public class FallsLake extends Reservoir implements Steppable {
 		double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
 		double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
 
-//		System.out.println(totalDemand.get(time));
+		// System.out.println(totalDemand.get(time));
 
 		// double numOfRW = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(5);
