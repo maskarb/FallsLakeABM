@@ -88,7 +88,7 @@ public class GenerateTimeseries {
 		}
 		try {
 			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
-			File file = new File("timeseries_" + RunNum + "_" + shifacStr + ".csv");
+			File file = new File("ts-s-" + shifacStr + "-" + RunNum + ".csv");
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {

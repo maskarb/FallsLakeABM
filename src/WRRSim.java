@@ -277,7 +277,7 @@ public class WRRSim extends SimState {
 
 		PrintWriter outputStreamReservoir = null;
 		try {
-			String output = String.format("reservoir-shift_%.1f-ts-%d.csv", endShiftFac, runNum);
+			String output = String.format("res-s-%.1f-%d.csv", endShiftFac, runNum);
 			outputStreamReservoir = new PrintWriter(new FileWriter(output));
 		} catch (IOException e) {
 			e.printStackTrace();
