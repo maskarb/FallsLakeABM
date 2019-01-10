@@ -695,7 +695,7 @@ public class WRRSim extends SimState {
 		long t1 = System.currentTimeMillis();
 
 		numOfShifts = 10;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 1;
+		numOfRun = 30;
 		numOfManagementScenarios = 1;
 		endTime = 600;
 
@@ -750,14 +750,23 @@ public class WRRSim extends SimState {
 				HashMap<Integer, ArrayList<Double>> runMap = new HashMap<Integer, ArrayList<Double>>();
 				ArrayList<Double> mapList = new ArrayList<Double>();
 
-				outputStream.print("storage_mean" + "," + "outflow_mean" + "," + "waterSupply_mean" + ","
-						+ "waterDelivered_mean" + "," + "elevation_mean" + "," + "totalIndoor_mean" + ","
-						+ "totalOutdoor_mean" + "," + "numOfHouseholds_mean" + "," + "population_mean" + ","
-						+ "inflow_mean" + "," + "deficit_mean" + ",");
-				outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
-						+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
-						+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," + "inflow_std"
-						+ "," + "deficit_std" + ",");
+				outputStream.print(
+					"storage_mean" + "," + "storage_std" + "," + "storage_rsd" + "," 
+					+ "outflow_mean" + "," + "outflow_std" + "," + "outflow_rsd" + "," 
+					+ "waterSupply_mean" + "," + "waterSupply_std" + "," + "waterSupply_rsd" + "," 
+					+ "waterDelivered_mean" + "," + "waterDelivered_std" + "," + "waterDelivered_rsd" + "," 
+					+ "elevation_mean" + "," + "elevation_std" + "," + "elevation_rsd" + "," 
+					+ "totalIndoor_mean" + "," + "totalIndoor_std" + "," + "totalIndoor_rsd" + "," 
+					+ "totalOutdoor_mean" + "," + "totalOutdoor_std" + "," + "totalOutdoor_rsd" + "," 
+					+ "numOfHouseholds_mean" + "," + "numOfHouseholds_std" + "," + "numOfHouseholds_rsd" + "," 
+					+ "population_mean" + "," + "population_std" + "," + "population_rsd" + "," 
+					+ "inflow_mean" + "," + "inflow_std" + "," + "inflow_rsd" + "," 
+					+ "deficit_mean" + "," + "deficit_std" + "," + "deficit_rsd" + "," 
+					);
+				//outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
+				//		+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
+				//		+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," + "inflow_std"
+				//		+ "," + "deficit_std" + ",");
 				outputStream.print("storage_max" + "," + "outflow_max" + "," + "waterSupply_max" + ","
 						+ "waterDelivered_max" + "," + "elevation_max" + "," + "totalIndoor_max" + ","
 						+ "totalOutdoor_max" + "," + "numOfHouseholds_max" + "," + "population_max" + "," + "inflow_max"
@@ -765,7 +774,8 @@ public class WRRSim extends SimState {
 				outputStream.println("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
 						+ "waterDelivered_min" + "," + "elevation_min" + "," + "totalIndoor_min" + ","
 						+ "totalOutdoor_min" + "," + "numOfHouseholds_min" + "," + "population_min" + "," + "inflow_min"
-						+ "," + "deficit_min" + "," + "shiftFactor" + "," + "reliability" + "," + "resilience" + "," 
+						+ "," + "deficit_min" + ",");
+				outputStream.println("shiftFactor" + "," + "reliability" + "," + "resilience" + "," 
 						+ "sumDeficit" + "," + "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," 
 						+ "sustainabilityIndex");
 
@@ -786,9 +796,12 @@ public class WRRSim extends SimState {
 
 					ArrayList<Double> mean = new ArrayList<Double>();
 					ArrayList<Double> std  = new ArrayList<Double>();
+					ArrayList<Double> rsd  = new ArrayList<Double>();
 					ArrayList<Double> max  = new ArrayList<Double>();
 					ArrayList<Double> min  = new ArrayList<Double>();
+					double std_temp = 0;
 					double sd = 0;
+					double mean_temp = 0;
 					ArrayList<Double> reliability         = new ArrayList<Double>();
 					ArrayList<Double> resilience          = new ArrayList<Double>();
 					ArrayList<Double> sumDeficit          = new ArrayList<Double>();
@@ -871,16 +884,20 @@ public class WRRSim extends SimState {
 							sd += Math.pow((Double) mapList.get(k) - (Double) mean.get(k), 2);
 
 						}
-						std.add(Math.sqrt(sd / (finalResult.size() - 1)));
+						mean_temp = mean.get(k);
+						std_temp = Math.sqrt(sd / (finalResult.size() - 1));
+						std.add(std_temp);
+						rsd.add(std_temp / mean_temp * 100);
 						sd = 0;
 					}
 					for (int k = 0; k < mean.size(); k++) {
 						outputStream.print(mean.get(k) + ",");
-						// outputStream.print(std.get(k) + " ");
+						outputStream.print(std.get(k) + " ");
+						outputStream.print(rsd.get(k) + " ");
 					}
-					for (int i = 0; i < std.size(); i++) {
-						outputStream.print(std.get(i) + ",");
-					}
+					//for (int i = 0; i < std.size(); i++) {
+					//	outputStream.print(std.get(i) + ",");
+					//}
 					for (int i = 0; i < max.size(); i++) {
 						outputStream.print(max.get(i) + ",");
 					}
