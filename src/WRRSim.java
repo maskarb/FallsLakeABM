@@ -57,8 +57,9 @@ public class WRRSim extends SimState {
 	private double[] shift;
 	private static double endShift;
 	private double endShiftFac;
+	private int manage;
 
-	public WRRSim(long seed, int runNum, double endShiftFac, String climate, boolean r, boolean d, double[] per) {
+	public WRRSim(long seed, int runNum, double endShiftFac, String climate, boolean r, boolean d, double[] per, int manage) {
 		super(seed);
 		this.runNum = runNum;
 		this.endShiftFac = endShiftFac;
@@ -277,7 +278,7 @@ public class WRRSim extends SimState {
 
 		PrintWriter outputStreamReservoir = null;
 		try {
-			String output = String.format("res-s-%.1f-%d.csv", endShiftFac, runNum);
+			String output = String.format("res-mgmt-%d-s-%.1f-%d.csv", manage, endShiftFac, runNum);
 			outputStreamReservoir = new PrintWriter(new FileWriter(output));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -591,10 +592,18 @@ public class WRRSim extends SimState {
 	}
 	public static double[] spacedArray(double min, double max, int points) {
 		double[] spaced = new double[points];
+		double k = 0;
+		double[] shifts = new double[points];
+
+		k = (1/max - 1/min)/points;
+
 		for (int i = 0; i < points; i++) {
 			spaced[i] = min + i * (max - min) / (points - 1);
 		}
-		return spaced;
+		for (int i = 0; i < points; i++) {
+			shifts[i] = 1/(k*i + Math.pow(min, -1));
+		}
+		return shifts;
 	}
 
 	public WRRSim setShift(double number) {
@@ -694,8 +703,8 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 10;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 30;
+		numOfShifts = 7;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfRun = 10;
 		numOfManagementScenarios = 1;
 		endTime = 600;
 
@@ -717,16 +726,16 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 0; m < numOfShifts; m++) {
+			for (int m = 1; m < numOfShifts; m++) {
 				endShift = 0.1 * (m + 1);
 				// for (int n = 0; n < 1; n++) {
 				finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 				for (int i = 0; i < numOfRun; i++) {
 					int z = n + 1;
-					System.out.printf("Trial " + i + " Manag Sc. " + z + " Shift %.1f \n", endShift);
+					System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f \n", endShift);
 					// doLoop(WRRSim.class, args);
 					state = (new WRRSim(System.currentTimeMillis(), i, endShift, climate, isRetrofitting[n],
-							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
+							isDroughtRestriction[n], percentages.get(n), z)).setShift(endShift);
 					// state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
 					// 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
 							state.start();
@@ -742,7 +751,7 @@ public class WRRSim extends SimState {
 
 				PrintWriter outputStream = null;
 				try {
-					String output = String.format("final_result_Shift%.1f_Sc%d.csv", endShift, n+1);
+					String output = String.format("final-result-s-%.1f-sc-%d.csv", endShift, n+1);
 					outputStream = new PrintWriter(new FileWriter(output));
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -771,7 +780,7 @@ public class WRRSim extends SimState {
 						+ "waterDelivered_max" + "," + "elevation_max" + "," + "totalIndoor_max" + ","
 						+ "totalOutdoor_max" + "," + "numOfHouseholds_max" + "," + "population_max" + "," + "inflow_max"
 						+ "," + "deficit_max" + ",");
-				outputStream.println("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
+				outputStream.print("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
 						+ "waterDelivered_min" + "," + "elevation_min" + "," + "totalIndoor_min" + ","
 						+ "totalOutdoor_min" + "," + "numOfHouseholds_min" + "," + "population_min" + "," + "inflow_min"
 						+ "," + "deficit_min" + ",");
@@ -892,8 +901,8 @@ public class WRRSim extends SimState {
 					}
 					for (int k = 0; k < mean.size(); k++) {
 						outputStream.print(mean.get(k) + ",");
-						outputStream.print(std.get(k) + " ");
-						outputStream.print(rsd.get(k) + " ");
+						outputStream.print(std.get(k) + ",");
+						outputStream.print(rsd.get(k) + ",");
 					}
 					//for (int i = 0; i < std.size(); i++) {
 					//	outputStream.print(std.get(i) + ",");

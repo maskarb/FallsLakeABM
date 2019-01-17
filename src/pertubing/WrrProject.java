@@ -356,8 +356,8 @@ public class WrrProject {
 		double[] logvals = new double[vals.length];
 
 		for (int i = 0; i < vals.length; i++) {
-			if (vals[i] == 0) {
-				vals[i] = 0.0000001;
+			if (vals[i] <= 0) {
+				vals[i] = 0.01;
 				// System.out.println("Convert 0 to 0.0000001");
 			}
 

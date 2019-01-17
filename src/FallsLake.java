@@ -71,10 +71,10 @@ public class FallsLake extends Reservoir implements Steppable {
 		this.outputStream = outputStreamReservoir;
 		// This is for labeling the output file.
 		outputStream.println("observedStorage" + "," + "observedOutflow" + "," + "observedWaterSupply" + ","
-				+ "elevationEnd" + "," + "observedInflow" + "," + "storage,outflow" + ","
+				+ "elevationEnd" + "," + "inflow" + "," + "storage" + "," + "outflow" + ","
 				+ "totalWaterSupply" + "," + "waterSupply" + "," + "elevation" + "," + "totalIndoor" + ","
 				+ "totalOutdoor" + "," + "numOfHouseholds" + "," + "population" + "," + "shiftFactor" + ","
-				+ "inflow" + "," + "deficit" + "," + "reliability" + "," + "resilience" + "," + "sumDeficit" + ","
+				+ "ignore" + "," + "deficit" + "," + "reliability" + "," + "resilience" + "," + "sumDeficit" + ","
 				+ "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," + "sustainabilityindex");
 
 		elevationArray = (ArrayList<Double>) list.get(0);
