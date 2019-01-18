@@ -310,8 +310,8 @@ public class WRRSim extends SimState {
 		DataList shiftFac = timeSeries.getShiftFactor();
 
 		// instead of 90626 for June 83 , this for January 83
-		double initialStorage = 125314.09; // acre-feet
-		double initialElevation = 251.0; // feet
+		double initialStorage = 135985.83; // acre-feet
+		double initialElevation = 251.86; // feet -> 251.86 is end elevation in Jan 2014
 		Reservoir reservoir = new FallsLake(isReleaseModel, initialStorage, initialElevation, lowestStorage,
 				readData("FALLSMSR_" + climate + ".txt"), readStageStorageData("elevationAreaStorage.txt"),
 				outputStreamReservoir, flow, shiftFac);
@@ -603,6 +603,7 @@ public class WRRSim extends SimState {
 		for (int i = 0; i < points; i++) {
 			shifts[i] = 1/(k*i + Math.pow(min, -1));
 		}
+		// return spaced;
 		return shifts;
 	}
 
@@ -726,7 +727,7 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 1; m < numOfShifts; m++) {
+			for (int m = 0; m < numOfShifts; m++) {
 				endShift = 0.1 * (m + 1);
 				// for (int n = 0; n < 1; n++) {
 				finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
