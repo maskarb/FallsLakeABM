@@ -258,8 +258,97 @@ public class WrrProject {
 	private static double[] getValueArray(final int monthNumber1To12,
 			final boolean isFlow, final boolean isPrecipitation,
 			final boolean isEvapotranspiration) {
-
+		
 		if (isFlow) {
+			switch (monthNumber1To12) {
+			case (1):
+				return flowJan;
+			case (2):
+				return flowFeb;
+			case (3):
+				return flowMar;
+			case (4):
+				return flowApr;
+			case (5):
+				return flowMay;
+			case (6):
+				return flowJun;
+			case (7):
+				return flowJul;
+			case (8):
+				return flowAug;
+			case (9):
+				return flowSep;
+			case (10):
+				return flowOct;
+			case (11):
+				return flowNov;
+			case (12):
+				return flowDec;
+
+			}
+		}
+
+		if (isPrecipitation) {
+			switch (monthNumber1To12) {
+			case (1):
+				return prcipitationJan;
+			case (2):
+				return prcipitationFeb;
+			case (3):
+				return prcipitationMar;
+			case (4):
+				return prcipitationApr;
+			case (5):
+				return prcipitationMay;
+			case (6):
+				return prcipitationJun;
+			case (7):
+				return prcipitationJul;
+			case (8):
+				return prcipitationAug;
+			case (9):
+				return prcipitationSep;
+			case (10):
+				return prcipitationOct;
+			case (11):
+				return prcipitationNov;
+			case (12):
+				return prcipitationDec;
+
+			}
+		}
+
+		if (isEvapotranspiration) {
+			switch (monthNumber1To12) {
+			case (1):
+				return evaJan;
+			case (2):
+				return evaFeb;
+			case (3):
+				return evaMar;
+			case (4):
+				return evaApr;
+			case (5):
+				return evaMay;
+			case (6):
+				return evaJun;
+			case (7):
+				return evaJul;
+			case (8):
+				return evaAug;
+			case (9):
+				return evaSep;
+			case (10):
+				return evaOct;
+			case (11):
+				return evaNov;
+			case (12):
+				return evaDec;
+			}
+		}
+
+		/*if (isFlow) {
 			switch (monthNumber1To12) {
 			case (1):
 				return convert(flowJan);
@@ -347,7 +436,7 @@ public class WrrProject {
 				return convert(evaDec);
 
 			}
-		}
+		}*/
 
 		return null;
 	}

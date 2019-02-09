@@ -137,7 +137,7 @@ public class GenerateTimeseries {
 		double prob = new RandomDataGenerator().nextUniform(0, 1);
 
 		double f = function.value(prob);
-		f = Math.exp(f);
+		// f = Math.exp(f);
 		// System.out.println(f);
 
 		return new double[] { f, prob };
@@ -169,7 +169,7 @@ public class GenerateTimeseries {
 		double prob = new RandomDataGenerator().nextUniform(0, 1);
 
 		double f = function.value(prob);
-		f = Math.exp(f);
+		// f = Math.exp(f);
 
 		return new double[] { f, prob };
 	}

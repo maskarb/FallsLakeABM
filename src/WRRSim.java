@@ -592,19 +592,10 @@ public class WRRSim extends SimState {
 	}
 	public static double[] spacedArray(double min, double max, int points) {
 		double[] spaced = new double[points];
-		double k = 0;
-		double[] shifts = new double[points];
-
-		k = (1/max - 1/min)/points;
-
 		for (int i = 0; i < points; i++) {
 			spaced[i] = min + i * (max - min) / (points - 1);
 		}
-		for (int i = 0; i < points; i++) {
-			shifts[i] = 1/(k*i + Math.pow(min, -1));
-		}
-		// return spaced;
-		return shifts;
+		return spaced;
 	}
 
 	public WRRSim setShift(double number) {
