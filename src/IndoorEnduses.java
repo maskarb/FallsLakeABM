@@ -170,13 +170,7 @@ public class IndoorEnduses {
 		double volume = 0;
 		for (int j = 0; j < distribution.length; j++) {
 			if (randomNum * 100 < distribution[j]) {
-				volume = volumeDist[j] + randomNum * (volumeDist[j + 1] - volumeDist[j]); // kGal
-																							// per
-																							// Year
-																							// to
-																							// Gal
-																							// per
-																							// month
+				volume = volumeDist[j] + randomNum * (volumeDist[j + 1] - volumeDist[j]); // kGal/yr to Gal/Mo
 				break;
 			}
 		}
@@ -189,8 +183,6 @@ public class IndoorEnduses {
 
 	private void calculateBath(SimState state, double randomNum) {
 		SimState wrrSim = state;
-
-		// Gamma dist = new Gamma(0.775280899, 5.349438202, wrrSim.random);
 
 		Normal dist = new Normal(3.2, 1, wrrSim.random);
 
@@ -225,7 +217,7 @@ public class IndoorEnduses {
 		// double showerHead , toiletFlush, clothVolume, faucetVolume;
 		int applianceYear = 0;
 
-		if (builtYear < 1950) {
+		/*if (builtYear < 1950) {
 			applianceYear = 1950;
 		} else if (builtYear < 1980) {
 			applianceYear = 1980;
@@ -233,85 +225,16 @@ public class IndoorEnduses {
 			applianceYear = 1990;
 		} else if (builtYear < 2010) {
 			applianceYear = 2010;
+		}*/
+
+		if (builtYear <= 2030 && state.random.nextDouble(true, true) < 0.20) {
+			applianceYear = 1990;
+		} else if (builtYear <= 2030) {
+			applianceYear = 2010;
 		}
 
-		// switch (applianceYear) {
-		// case 1950:
-		// toiletFlush = 7;// volume of per flush
-		// showerHead = 23;// volume of per shower
-		// clothVolume = state.random.nextDouble(false, true)*(5) + 51; //
-		// volume of per cloth wash
-		// faucetVolume = 3.3; // volume of per faucet
-		// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush); //
-		// calculate number of flushes based on probability distribution.
-		// calculateShower(state, randomNum,showerHead);
-		// calculateClothes(state, randomNum,clothVolume);
-		// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// this.dish = 14;
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		// break;
-		// case 1980:
-		// toiletFlush = 5.5;
-		// showerHead = 23;
-		// clothVolume = state.random.nextDouble(false, true)*(5) + 51;
-		// faucetVolume = 3.3;
-		// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		// calculateShower(state, randomNum,showerHead);
-		// calculateClothes(state, randomNum,clothVolume);
-		// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// this.dish = 14;
-		// calculateLeak(randomNum);
-		// calculateBath(state, randomNum);
-		// calculateOther(state, randomNum);
-		// break;
-		// case 1990:
-		// showerHead = state.random.nextDouble(false, true)*(14.1-9.7) + 14.1;
-		// toiletFlush= state.random.nextDouble(false, true)*(4.5-3.5) + 3.5;
-		// clothVolume = state.random.nextDouble(false, true)*(4) + 39;
-		// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		// calculateShower(state, randomNum, showerHead);
-		// calculateClothes(state, randomNum, clothVolume);
-		// faucetVolume = state.random.nextDouble(false, true)*(0.2) + 1.8;
-		// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// this.dish = 14;
-		// calculateLeak(randomNum);
-		// calculateBath(state, randomNum);
-		// calculateOther(state, randomNum);
-		// break;
-		// case 2010:
-		// showerHead = 8.8;
-		// toiletFlush= 1.6;
-		// clothVolume = state.random.nextDouble(false, true)*(12) + 27;
-		// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		// calculateShower(state, randomNum, showerHead);
-		// calculateClothes(state, randomNum, clothVolume);
-		// faucetVolume = state.random.nextDouble(false, true)*(0.7) + 1;
-		// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// this.dish = state.random.nextDouble(false, true)*(5) + 7;
-		// calculateLeak(randomNum);
-		// calculateBath(state, randomNum);
-		// calculateOther(state, randomNum);
-		// break;
-		// default:
-		// showerHead = 7.2;
-		// toiletFlush= 1.28;
-		// clothVolume = state.random.nextDouble(false, true)*(12) + 27;
-		// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		// calculateShower(state, randomNum, showerHead);
-		// calculateClothes(state, randomNum, clothVolume);
-		// faucetVolume = 1;
-		// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// this.dish = 4.5;
-		// calculateLeak(randomNum);
-		// calculateBath(state, randomNum);
-		// calculateOther(state, randomNum);
-		// break;
-		// }
-
 		switch (applianceYear) {
-		case 1950:
+		/*case 1950:
 			this.shower = (5 + state.random.nextDouble(true, true) * (8 - 5)) * 5.3 * sizeOfHousehold;
 			this.toilet = 7 * 5.1 * sizeOfHousehold;
 			this.faucet = (3 + state.random.nextDouble(true, true) * (7 - 3)) * 8.1;
@@ -320,13 +243,7 @@ public class IndoorEnduses {
 
 			calculateLeak(randomNum); // Based on probability distribution
 			calculateBath(state, randomNum);// Based on probability distribution
-			calculateOther(state, randomNum);// Based on probability
-												// distribution
-
-			// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-			// calculateShower(state, randomNum,showerHead);
-			// calculateClothes(state, randomNum,clothVolume);
-			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
+			calculateOther(state, randomNum);// Based on probability distribution
 
 			break;
 
@@ -339,14 +256,9 @@ public class IndoorEnduses {
 
 			calculateLeak(randomNum); // Based on probability distribution
 			calculateBath(state, randomNum);// Based on probability distribution
-			calculateOther(state, randomNum);// Based on probability
-												// distribution
+			calculateOther(state, randomNum);// Based on probability distribution
 
-			// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-			// calculateShower(state, randomNum,showerHead);
-			// calculateClothes(state, randomNum,clothVolume);
-			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-			break;
+			break;*/
 		case 1990:
 			this.shower = (2.75 + state.random.nextDouble(true, true) * (4 - 2.75)) * 5.3;
 			this.toilet = (3.5 + state.random.nextDouble(true, true) * (4.5 - 3.5)) * 5.1 * sizeOfHousehold;
@@ -356,13 +268,8 @@ public class IndoorEnduses {
 
 			calculateLeak(randomNum); // Based on probability distribution
 			calculateBath(state, randomNum);// Based on probability distribution
-			calculateOther(state, randomNum);// Based on probability
-												// distribution
+			calculateOther(state, randomNum);// Based on probability distribution
 
-			// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-			// calculateShower(state, randomNum,showerHead);
-			// calculateClothes(state, randomNum,clothVolume);
-			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
 			break;
 		case 2010:
 			this.shower = 2.5 * 5.3;
@@ -373,13 +280,8 @@ public class IndoorEnduses {
 
 			calculateLeak(randomNum); // Based on probability distribution
 			calculateBath(state, randomNum);// Based on probability distribution
-			calculateOther(state, randomNum);// Based on probability
-												// distribution
+			calculateOther(state, randomNum);// Based on probability distribution
 
-			// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-			// calculateShower(state, randomNum,showerHead);
-			// calculateClothes(state, randomNum,clothVolume);
-			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
 			break;
 		default:
 			this.shower = 1.4 * 5.3;
@@ -390,100 +292,11 @@ public class IndoorEnduses {
 
 			calculateLeak(randomNum); // Based on probability distribution
 			calculateBath(state, randomNum);// Based on probability distribution
-			calculateOther(state, randomNum);// Based on probability
-												// distribution
+			calculateOther(state, randomNum);// Based on probability distribution
 
-			// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-			// calculateShower(state, randomNum,showerHead);
-			// calculateClothes(state, randomNum,clothVolume);
-			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
 			break;
 		}
-
-		// switch (applianceYear) {
-		// case 1950:
-		// this.shower = (8) * 5.3;
-		// this.toilet = 7 * 5.1;
-		// this.faucet = (7) * 8.1;
-		// this.dish = 14 * 0.1;
-		// this.clothes = 56 * 0.37;
-		//
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		//
-		// break;
-		//
-		// case 1980:
-		// this.shower = (8) * 5.3;
-		// this.toilet = 5.5 * 5.1;
-		// this.faucet = (7) * 8.1;
-		// this.dish = 14 * 0.1;
-		// this.clothes = 56 * 0.37;
-		//
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		//
-		//// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		//// calculateShower(state, randomNum,showerHead);
-		//// calculateClothes(state, randomNum,clothVolume);
-		//// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// break;
-		// case 1990:
-		// this.shower = (4) * 5.3;
-		// this.toilet = (4.5) * 5.1;
-		// this.faucet = (3) * 8.1;
-		// this.dish = (9.5 + state.random.nextDouble(true, true)*(14-9.5)) *
-		// 0.1;
-		// this.clothes = (43 + state.random.nextDouble(true, true)*(51-43)) *
-		// 0.37;
-		//
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		//
-		//// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		//// calculateShower(state, randomNum,showerHead);
-		//// calculateClothes(state, randomNum,clothVolume);
-		//// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// break;
-		// case 2010:
-		// this.shower = 2.5 * 5.3;
-		// this.toilet = 1.6 * 5.1;
-		// this.faucet = (1.5 + state.random.nextDouble(true, true)*(2.5-1.5)) *
-		// 8.1;
-		// this.dish = (7 + state.random.nextDouble(true, true)*(10.5-7)) * 0.1;
-		// this.clothes = (27 + state.random.nextDouble(true, true)*(43-27)) *
-		// 0.37;
-		//
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		//
-		//// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		//// calculateShower(state, randomNum,showerHead);
-		//// calculateClothes(state, randomNum,clothVolume);
-		//// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// break;
-		// default:
-		// this.shower = 1.4 * 5.3;
-		// this.toilet = 1 * 5.1;
-		// this.faucet = 1.5 * 8.1;
-		// this.dish = 4.5 * 0.1;
-		// this.clothes = 27 * 0.37;
-		//
-		// calculateLeak(randomNum); // Based on probability distribution
-		// calculateBath(state, randomNum);// Based on probability distribution
-		// calculateOther(state, randomNum);// Based on probability distribution
-		//
-		//// calculateToilet(state, randomNum, sizeOfHousehold, toiletFlush);
-		//// calculateShower(state, randomNum,showerHead);
-		//// calculateClothes(state, randomNum,clothVolume);
-		//// calculateFaucet(state, sizeOfHousehold, faucetVolume);
-		// break;
-		// }
-
+		/*
 		switch (applianceYear) {
 		case 1950:
 			this.shower = (4.3) * 5.3 * sizeOfHousehold;
@@ -564,7 +377,7 @@ public class IndoorEnduses {
 			// calculateClothes(state, randomNum,clothVolume);
 			// calculateFaucet(state, sizeOfHousehold, faucetVolume);
 			break;
-		}
+		}*/
 
 	}
 
