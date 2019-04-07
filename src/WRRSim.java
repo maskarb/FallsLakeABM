@@ -35,7 +35,7 @@ public class WRRSim extends SimState {
 	private static int numOfManagementScenarios;
 	private static int numOfShifts;
 	private static int endTime;
-	private static long seed;
+	private static long randomseed;
 
 	private String scenario = "enduse"; // "probabilistic" or "enduse"
 	private String climate = "DRY_new";
@@ -261,6 +261,7 @@ public class WRRSim extends SimState {
 
 	public void start() {
 
+		long ranSeed = this.seed();
 		super.start();
 
 		PrintWriter outputStream = null;
@@ -304,7 +305,7 @@ public class WRRSim extends SimState {
 		// double threshold = 0.3;
 
 		System.out.println("Generate timeseries.");
-		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, seed);
+		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, ranSeed);
 		System.out.println("Timeseries generated.");
 
 		DataList flow = timeSeries.getFlow();
@@ -726,10 +727,11 @@ public class WRRSim extends SimState {
 				// for (int n = 0; n < 1; n++) {
 				finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 				for (int i = 0; i < numOfRun; i++) {
+					long ranSeed = System.currentTimeMillis();
 					int z = n + 1;
-					System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f \n", endShift);
-					// doLoop(WRRSim.class, args);
-					state = (new WRRSim(System.currentTimeMillis(), i, endShift, climate, isRetrofitting[n],
+					System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f", endShift);
+					System.out.println("Seed: " + Long.toString(ranSeed));
+					state = (new WRRSim(ranSeed, i, endShift, climate, isRetrofitting[n],
 							isDroughtRestriction[n], percentages.get(n), z)).setShift(endShift);
 					// state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
 					// 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
