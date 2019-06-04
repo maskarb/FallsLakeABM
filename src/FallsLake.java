@@ -71,10 +71,10 @@ public class FallsLake extends Reservoir implements Steppable {
 		this.outputStream = outputStreamReservoir;
 		// This is for labeling the output file.
 		outputStream.println("observedStorage" + "," + "observedOutflow" + "," + "observedWaterSupply" + ","
-				+ "elevationEnd" + "," + "observedInflow" + "," + "storage,outflow" + ","
+				+ "elevationEnd" + "," + "inflow" + "," + "storage" + "," + "outflow" + ","
 				+ "totalWaterSupply" + "," + "waterSupply" + "," + "elevation" + "," + "totalIndoor" + ","
 				+ "totalOutdoor" + "," + "numOfHouseholds" + "," + "population" + "," + "shiftFactor" + ","
-				+ "inflow" + "," + "deficit" + "," + "reliability" + "," + "resilience" + "," + "sumDeficit" + ","
+				+ "ignore" + "," + "deficit" + "," + "reliability" + "," + "resilience" + "," + "sumDeficit" + ","
 				+ "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," + "sustainabilityindex");
 
 		elevationArray = (ArrayList<Double>) list.get(0);
@@ -150,8 +150,8 @@ public class FallsLake extends Reservoir implements Steppable {
 		double uncontroledDrainageAreaFlow = 4000;// 1000 + randomNum *
 													// 6000;//4000
 
-		double minimumReleaseSummer = 100;
-		double minimumReleaseWinter = 60;
+		// double minimumReleaseSummer = 100;
+		// double minimumReleaseWinter = 60;
 
 		int counter = 0;
 		double totalRelease = 0;
@@ -161,6 +161,10 @@ public class FallsLake extends Reservoir implements Steppable {
 				release = 100;// + 254 ;
 				storage -= release * 3600 * 24 * days / 43560;
 				totalRelease = release * 3600 * 24 * days / 43560;
+				if (storage < 0) {
+					storage = 0;
+					totalRelease = lookupStorage(elevation);
+				}
 			} else {
 				while (elevation > normalElavation && counter < days) {
 					if (elevation <= 255) {
@@ -216,7 +220,11 @@ public class FallsLake extends Reservoir implements Steppable {
 			if (elevation <= normalElavation) {
 				release = 60;// + 184;
 				storage -= release * 3600 * 24 * days / 43560;
-				totalRelease += (release * 3600 * 24 * days / 43560);
+				totalRelease = release * 3600 * 24 * days / 43560;
+				if (storage < 0) {
+					storage = 0;
+					totalRelease = lookupStorage(elevation);
+				}
 			} else {
 				while (elevation > normalElavation && counter < days) {
 					if (elevation <= 255) {
@@ -450,7 +458,7 @@ public class FallsLake extends Reservoir implements Steppable {
 		double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
 		double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
 
-//		System.out.println(totalDemand.get(time));
+		// System.out.println(totalDemand.get(time));
 
 		// double numOfRW = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(5);
@@ -741,8 +749,8 @@ public class FallsLake extends Reservoir implements Steppable {
 		double freeOverflowing = lookupStorage(elevation) - lookupStorage(268);
 		double uncontroledDrainageAreaFlow = 4000;
 
-		double minimumReleaseSummer = 100;
-		double minimumReleaseWinter = 60;
+		// double minimumReleaseSummer = 100;
+		// double minimumReleaseWinter = 60;
 
 		int counter = 0;
 		double totalRelease = 0;

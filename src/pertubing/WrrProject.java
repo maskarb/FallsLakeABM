@@ -200,27 +200,6 @@ public class WrrProject {
 		return aa;
 	}
 
-	/* public static double[] reconstruct(final int monthNumber1To12,
-			final double interval, final double shiftFactor,
-			final boolean isFlow, final boolean isPrecipitation,
-			final boolean isEvapotranspiration) {
-
-		if ((isFlow && isPrecipitation) || (isEvapotranspiration && isFlow)
-				|| (isEvapotranspiration && isPrecipitation)) {
-
-			new Exception("Only one parameter can be true.").printStackTrace();
-
-		}
-
-		double[] values = getValueArray(monthNumber1To12, isFlow,
-				isPrecipitation, isEvapotranspiration);
-		System.out.println("not sure what this is doing");
-		double[] a = PerturbationManager.executeRecon(time, values, interval,
-				shiftFactor);
-
-		return a;
-
-	} */
 
 	public static Timeseries reconstructAllTimeseriesWithRespectToShiftInFlow(
 			final int monthNumber1To12, final double interval,
@@ -279,7 +258,7 @@ public class WrrProject {
 	private static double[] getValueArray(final int monthNumber1To12,
 			final boolean isFlow, final boolean isPrecipitation,
 			final boolean isEvapotranspiration) {
-
+		
 		if (isFlow) {
 			switch (monthNumber1To12) {
 			case (1):
@@ -366,11 +345,115 @@ public class WrrProject {
 				return evaNov;
 			case (12):
 				return evaDec;
+			}
+		}
+
+		/*if (isFlow) {
+			switch (monthNumber1To12) {
+			case (1):
+				return convert(flowJan);
+			case (2):
+				return convert(flowFeb);
+			case (3):
+				return convert(flowMar);
+			case (4):
+				return convert(flowApr);
+			case (5):
+				return convert(flowMay);
+			case (6):
+				return convert(flowJun);
+			case (7):
+				return convert(flowJul);
+			case (8):
+				return convert(flowAug);
+			case (9):
+				return convert(flowSep);
+			case (10):
+				return convert(flowOct);
+			case (11):
+				return convert(flowNov);
+			case (12):
+				return convert(flowDec);
 
 			}
 		}
 
+		if (isPrecipitation) {
+			switch (monthNumber1To12) {
+			case (1):
+				return convert(prcipitationJan);
+			case (2):
+				return convert(prcipitationFeb);
+			case (3):
+				return convert(prcipitationMar);
+			case (4):
+				return convert(prcipitationApr);
+			case (5):
+				return convert(prcipitationMay);
+			case (6):
+				return convert(prcipitationJun);
+			case (7):
+				return convert(prcipitationJul);
+			case (8):
+				return convert(prcipitationAug);
+			case (9):
+				return convert(prcipitationSep);
+			case (10):
+				return convert(prcipitationOct);
+			case (11):
+				return convert(prcipitationNov);
+			case (12):
+				return convert(prcipitationDec);
+
+			}
+		}
+
+		if (isEvapotranspiration) {
+			switch (monthNumber1To12) {
+			case (1):
+				return convert(evaJan);
+			case (2):
+				return convert(evaFeb);
+			case (3):
+				return convert(evaMar);
+			case (4):
+				return convert(evaApr);
+			case (5):
+				return convert(evaMay);
+			case (6):
+				return convert(evaJun);
+			case (7):
+				return convert(evaJul);
+			case (8):
+				return convert(evaAug);
+			case (9):
+				return convert(evaSep);
+			case (10):
+				return convert(evaOct);
+			case (11):
+				return convert(evaNov);
+			case (12):
+				return convert(evaDec);
+
+			}
+		}*/
+
 		return null;
+	}
+
+	private static double[] convert(double[] vals) {
+		double[] logvals = new double[vals.length];
+
+		for (int i = 0; i < vals.length; i++) {
+			if (vals[i] <= 0) {
+				vals[i] = 0.01;
+				// System.out.println("Convert 0 to 0.0000001");
+			}
+
+			logvals[i] = (Math.log(vals[i]));
+
+		}
+		return logvals;
 	}
 
 	public static void main(String[] args) {

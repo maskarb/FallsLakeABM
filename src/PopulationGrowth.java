@@ -21,6 +21,7 @@ import sim.util.IntBag;
  * 
  */
 public class PopulationGrowth implements Steppable {
+	static final long serialVersionUID = 1L;
 
 	private double householdTracker = 0;
 	public PrintWriter outputStreamPopGrowth;

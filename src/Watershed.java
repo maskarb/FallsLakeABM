@@ -18,8 +18,9 @@ import sim.engine.Steppable;
  *
  */
 public class Watershed implements Steppable {
+	static final long serialVersionUID = 1L;
 
-	private Climate climate;
+	// private Climate climate;
 	private double streamflow;
 
 	public void step(SimState state) {

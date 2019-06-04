@@ -1,9 +1,12 @@
 package pertubing;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+// import java.util.Arrays;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
@@ -11,7 +14,29 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class GenerateTimeseries {
 
-	public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum) {
+	public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum, long seed) {
+		int len_shift = shiftFactor.length;
+		String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
+
+		double[] copProbs = new double[600];
+		try {
+			Process child = Runtime.getRuntime().exec("/usr/bin/Rscript analysis_flows.R "
+														+ Long.toString(seed) + " "
+														+ shifacStr + " "
+														+ Integer.toString(RunNum));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+			String item;
+			for(int i = 0; i < 600; i++){
+				item = reader.readLine();
+				copProbs[i] = Double.parseDouble(item);
+			}
+			int exitCode = child.waitFor();
+			System.out.println("Probability CSV created. Rscript exited with error code : " + exitCode);
+		} catch (IOException|InterruptedException e) {
+			e.printStackTrace();
+		}
+
+
 
 		Timeseries result = new Timeseries();
 		Timeseries hresult = new Timeseries(); // historical data is imported. not used.
@@ -36,8 +61,6 @@ public class GenerateTimeseries {
 		}
 
 		int month = 1;
-		int len_shift = shiftFactor.length;
-		String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 
 		Timeseries tMonth2 = null;
 
@@ -46,6 +69,7 @@ public class GenerateTimeseries {
 		double probPre = 0;
 
 		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
+			month = i % 12 + 1;
 
 			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i]);
 
@@ -53,16 +77,17 @@ public class GenerateTimeseries {
 			DataList pre2 = tMonth2.getPrecipitation();
 			DataList eva2 = tMonth2.getEvapotranspiration();
 
-			double[] fa = sampleUsingData(flow2);
+			double[] fa = sampleUsingData(flow2, copProbs[i]);
+			// System.out.println(i + " " + copProbs[i]);
 
 			double sampleFlow2 = fa[0];
 			prob = fa[1];
 
-			double[] pa = sampleUsingData(pre2);
+			double[] pa = sampleUsingData1(pre2);
 			double samplePre2 = pa[0];
 			probPre = pa[1];
 
-			double[] ea = sampleUsingData(eva2);
+			double[] ea = sampleUsingData1(eva2);
 			double sampleEva2 = ea[0];
 			probEva = ea[1];
 
@@ -86,7 +111,7 @@ public class GenerateTimeseries {
 		}
 		try {
 			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
-			File file = new File("timeseries_" + RunNum + "_" + shifacStr + ".csv");
+			File file = new File("ts-s-" + shifacStr + "-" + RunNum + ".csv");
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -108,7 +133,40 @@ public class GenerateTimeseries {
 		return result;
 	}
 
-	public static double[] sampleUsingData(DataList datalist1) {
+	public static double[] sampleUsingData(DataList datalist1, double prob) {
+
+		datalist1.sortList();
+
+		// create distributions
+		double[] values = new double[datalist1.size()];
+		double[] pdf = new double[datalist1.size()];
+
+		for (int i = 0; i < values.length; i++) {
+			if (i == 0) {
+				pdf[0] = 0;
+				values[i] = datalist1.value(i);
+			} else {
+				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
+				values[i] = datalist1.value(i);
+			}
+		}
+
+		// reset the last element of pdf to 1.0
+		pdf[pdf.length - 1] = 1.0;
+
+		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+		//System.out.println(Arrays.toString(values));
+
+		//double prob = new RandomDataGenerator().nextUniform(0, 1);
+
+		double f = function.value(prob);
+		// f = Math.exp(f);
+		// System.out.println(f);
+
+		return new double[] { f, prob };
+	}
+
+	public static double[] sampleUsingData1(DataList datalist1) {
 
 		datalist1.sortList();
 
@@ -132,7 +190,9 @@ public class GenerateTimeseries {
 		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
 
 		double prob = new RandomDataGenerator().nextUniform(0, 1);
+
 		double f = function.value(prob);
+		// f = Math.exp(f);
 
 		return new double[] { f, prob };
 	}
@@ -143,7 +203,7 @@ public class GenerateTimeseries {
 		for (int i = 0; i < 1; i++) {
 			// System.out.println("Run " + i);
 			double[] shift = {1,0.9,0.8,0.7};
-			t = GenerateTimeseries.execute(shift, 80, 0);
+			t = GenerateTimeseries.execute(shift, 80, 0, 100);
 		}
 
 		// System.out.println(t.getFlow().size());

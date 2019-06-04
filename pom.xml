@@ -9,10 +9,10 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.6.2</version>
 				<configuration>
-					<source>1.11</source>
-					<target>1.11</target>
+					<source>1.10</source>
+					<target>1.10</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -29,13 +29,6 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/mason/jar/mason.17.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>opt</groupId>
-			<artifactId>gurobi</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>C:/gurobi/win64/lib/gurobi.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>

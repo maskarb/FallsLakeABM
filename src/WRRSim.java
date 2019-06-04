@@ -24,6 +24,7 @@ import sim.util.Bag;
 import sim.util.IntBag;
 
 public class WRRSim extends SimState {
+	static final long serialVersionUID = 1L;
 
 	public SparseGrid2D city = new SparseGrid2D(570, 570);
 	// public Continuous2D city = new Continuous2D(1,1000,1000);
@@ -34,7 +35,7 @@ public class WRRSim extends SimState {
 	private static int numOfManagementScenarios;
 	private static int numOfShifts;
 	private static int endTime;
-	private static int endTime1;
+	private static long randomseed;
 
 	private String scenario = "enduse"; // "probabilistic" or "enduse"
 	private String climate = "DRY_new";
@@ -52,13 +53,14 @@ public class WRRSim extends SimState {
 	private double threshold = 0.5;
 
 	private int runNum;
-	public static ArrayList<HashMap> finalResult = new ArrayList<HashMap>();
+	public static ArrayList<HashMap<Integer, ArrayList<Double>>> finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 
 	private double[] shift;
 	private static double endShift;
 	private double endShiftFac;
+	private int manage;
 
-	public WRRSim(long seed, int runNum, double endShiftFac, String climate, boolean r, boolean d, double[] per) {
+	public WRRSim(long seed, int runNum, double endShiftFac, String climate, boolean r, boolean d, double[] per, int manage) {
 		super(seed);
 		this.runNum = runNum;
 		this.endShiftFac = endShiftFac;
@@ -73,39 +75,12 @@ public class WRRSim extends SimState {
 		return bag.size();
 	}
 
-	// public double getConsumption() {
-	// Bag bag = socialNetwork.getAllNodes();
-	// double totalConsumption = 0;
-	// for (int i = 2; i < bag.size(); i++) {
-	// totalConsumption += ((Household) bag.get(i)).getConsumption();
-	// // * 3.06888328 * Math.pow(10, -6);
-	// }
-	//
-	//// System.out.println(totalConsumption + " time " + schedule.getTime() + "
-	// pop " + bag.size());
-	//
-	// return totalConsumption;
-	// }
-
-	// public double getReservoirLevel_data() {
-	// Bag bag = socialNetwork.getAllNodes();
-	// return ((Reservoir) bag.get(0)).getLevel();
-	// }
-
-	// public double getReservoirLevel_model() {
-	// return 0;
-	// }
-
 	public double getReservoirStorage_model() {
 		double storage = 0;
 		Bag bag = socialNetwork.getAllNodes();
 		if (bag.size() > 0) {
 			storage = ((Reservoir) bag.get(1)).getStorage();
 		}
-
-		// System.out.println("printed from WRRSim " + storage + " time " +
-		// schedule.getTime());
-
 		return storage;
 	}
 
@@ -121,7 +96,7 @@ public class WRRSim extends SimState {
 	public double getOutdoor_Demand() {
 		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		double totalConsumption = 0;
+		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
 		// double totalWaterSupply = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(2);
@@ -169,7 +144,7 @@ public class WRRSim extends SimState {
 	public double getIndoor_Demand() {
 		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		double totalConsumption = 0;
+		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
 		// double totalWaterSupply = (double) ((ArrayList<Double>)
 		// totalDemand.get(time)).get(2);
@@ -286,6 +261,7 @@ public class WRRSim extends SimState {
 
 	public void start() {
 
+		long ranSeed = this.seed();
 		super.start();
 
 		PrintWriter outputStream = null;
@@ -304,7 +280,7 @@ public class WRRSim extends SimState {
 
 		PrintWriter outputStreamReservoir = null;
 		try {
-			String output = String.format("reservoir-shift_%.1f-ts-%d.csv", endShiftFac, runNum);
+			String output = String.format("res-mgmt-%d-s-%.1f-%d.csv", manage, endShiftFac, runNum);
 			outputStreamReservoir = new PrintWriter(new FileWriter(output));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -327,17 +303,19 @@ public class WRRSim extends SimState {
 		// boolean isReclaimed = true;
 		// int neighborDist = 1;
 		// double threshold = 0.3;
+
 		System.out.println("Generate timeseries.");
-		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum);
+		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, ranSeed);
 		System.out.println("Timeseries generated.");
+
 		DataList flow = timeSeries.getFlow();
 		DataList precipitation = timeSeries.getPrecipitation();
 		DataList evaporation = timeSeries.getEvapotranspiration();
 		DataList shiftFac = timeSeries.getShiftFactor();
 
 		// instead of 90626 for June 83 , this for January 83
-		double initialStorage = 125314.09; // acre-feet
-		double initialElevation = 251.0; // feet
+		double initialStorage = 135985.83; // acre-feet
+		double initialElevation = 251.86; // feet -> 251.86 is end elevation in Jan 2014
 		Reservoir reservoir = new FallsLake(isReleaseModel, initialStorage, initialElevation, lowestStorage,
 				readData("FALLSMSR_" + climate + ".txt"), readStageStorageData("elevationAreaStorage.txt"),
 				outputStreamReservoir, flow, shiftFac);
@@ -721,11 +699,10 @@ public class WRRSim extends SimState {
 		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
-		numOfShifts = 8;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-		numOfRun = 1;
+		numOfShifts = 4;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
+		numOfRun = 50;
 		numOfManagementScenarios = 1;
 		endTime = 600;
-		endTime1 = 960;
 
 		SimState state = null;
 
@@ -745,18 +722,19 @@ public class WRRSim extends SimState {
 		percentages.add(reductionPercentages4);
 
 		for (int n = 0; n < numOfManagementScenarios; n++) {
-			for (int m = 7; m < numOfShifts; m++) {
+			for (int m = 2; m < numOfShifts; m++) {
 				endShift = 0.1 * (m + 1);
 				// for (int n = 0; n < 1; n++) {
-				finalResult = new ArrayList<HashMap>();
+				finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
 				for (int i = 0; i < numOfRun; i++) {
+					long ranSeed = System.currentTimeMillis();
 					int z = n + 1;
-					System.out.printf("Trial " + i + " Manag Sc. " + z + " Shift %.1f \n", endShift);
-					// doLoop(WRRSim.class, args);
-					state = (new WRRSim(System.currentTimeMillis(), i, endShift, climate, isRetrofitting[n],
-							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
-//					state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
-//							isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
+					System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f", endShift);
+					System.out.println("Seed: " + Long.toString(ranSeed));
+					state = (new WRRSim(ranSeed, i, endShift, climate, isRetrofitting[n],
+							isDroughtRestriction[n], percentages.get(n), z)).setShift(endShift);
+					// state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
+					// 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
 							state.start();
 					do
 						if (!state.schedule.step(state))
@@ -770,7 +748,7 @@ public class WRRSim extends SimState {
 
 				PrintWriter outputStream = null;
 				try {
-					String output = String.format("final_result_Shift%.1f_Sc%d.csv", endShift, n+1);
+					String output = String.format("final-result-s-%.1f-sc-%d.csv", endShift, n+1);
 					outputStream = new PrintWriter(new FileWriter(output));
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -778,22 +756,32 @@ public class WRRSim extends SimState {
 				HashMap<Integer, ArrayList<Double>> runMap = new HashMap<Integer, ArrayList<Double>>();
 				ArrayList<Double> mapList = new ArrayList<Double>();
 
-				outputStream.print("storage_mean" + "," + "outflow_mean" + "," + "waterSupply_mean" + ","
-						+ "waterDelivered_mean" + "," + "elevation_mean" + "," + "totalIndoor_mean" + ","
-						+ "totalOutdoor_mean" + "," + "numOfHouseholds_mean" + "," + "population_mean" + ","
-						+ "inflow_mean" + "," + "deficit_mean" + ",");
-				outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
-						+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
-						+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," + "inflow_std"
-						+ "," + "deficit_std" + ",");
+				outputStream.print(
+					"storage_mean" + "," + "storage_std" + "," + "storage_rsd" + "," 
+					+ "outflow_mean" + "," + "outflow_std" + "," + "outflow_rsd" + "," 
+					+ "waterSupply_mean" + "," + "waterSupply_std" + "," + "waterSupply_rsd" + "," 
+					+ "waterDelivered_mean" + "," + "waterDelivered_std" + "," + "waterDelivered_rsd" + "," 
+					+ "elevation_mean" + "," + "elevation_std" + "," + "elevation_rsd" + "," 
+					+ "totalIndoor_mean" + "," + "totalIndoor_std" + "," + "totalIndoor_rsd" + "," 
+					+ "totalOutdoor_mean" + "," + "totalOutdoor_std" + "," + "totalOutdoor_rsd" + "," 
+					+ "numOfHouseholds_mean" + "," + "numOfHouseholds_std" + "," + "numOfHouseholds_rsd" + "," 
+					+ "population_mean" + "," + "population_std" + "," + "population_rsd" + "," 
+					+ "inflow_mean" + "," + "inflow_std" + "," + "inflow_rsd" + "," 
+					+ "deficit_mean" + "," + "deficit_std" + "," + "deficit_rsd" + "," 
+					);
+				//outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
+				//		+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
+				//		+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," + "inflow_std"
+				//		+ "," + "deficit_std" + ",");
 				outputStream.print("storage_max" + "," + "outflow_max" + "," + "waterSupply_max" + ","
 						+ "waterDelivered_max" + "," + "elevation_max" + "," + "totalIndoor_max" + ","
 						+ "totalOutdoor_max" + "," + "numOfHouseholds_max" + "," + "population_max" + "," + "inflow_max"
 						+ "," + "deficit_max" + ",");
-				outputStream.println("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
+				outputStream.print("storage_min" + "," + "outflow_min" + "," + "waterSupply_min" + ","
 						+ "waterDelivered_min" + "," + "elevation_min" + "," + "totalIndoor_min" + ","
 						+ "totalOutdoor_min" + "," + "numOfHouseholds_min" + "," + "population_min" + "," + "inflow_min"
-						+ "," + "deficit_min" + "," + "shiftFactor" + "," + "reliability" + "," + "resilience" + "," 
+						+ "," + "deficit_min" + ",");
+				outputStream.println("shiftFactor" + "," + "reliability" + "," + "resilience" + "," 
 						+ "sumDeficit" + "," + "nonzerodeficit" + "," + "maxDeficit" + "," + "averageDemand" + "," 
 						+ "sustainabilityIndex");
 
@@ -814,9 +802,12 @@ public class WRRSim extends SimState {
 
 					ArrayList<Double> mean = new ArrayList<Double>();
 					ArrayList<Double> std  = new ArrayList<Double>();
+					ArrayList<Double> rsd  = new ArrayList<Double>();
 					ArrayList<Double> max  = new ArrayList<Double>();
 					ArrayList<Double> min  = new ArrayList<Double>();
+					double std_temp = 0;
 					double sd = 0;
+					double mean_temp = 0;
 					ArrayList<Double> reliability         = new ArrayList<Double>();
 					ArrayList<Double> resilience          = new ArrayList<Double>();
 					ArrayList<Double> sumDeficit          = new ArrayList<Double>();
@@ -826,18 +817,18 @@ public class WRRSim extends SimState {
 					ArrayList<Double> sustainabilityindex = new ArrayList<Double>();
 
 					for (int i = 0; i < finalResult.size(); i++) {
-						reliability.add((Double)         ((ArrayList) finalResult.get(i).get(endTime - 1)).get(12));
-						resilience.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(13));
-						sumDeficit.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(14));
-						nonzerodeficit.add((Double)      ((ArrayList) finalResult.get(i).get(endTime - 1)).get(15));
-						maxDeficit.add((Double)          ((ArrayList) finalResult.get(i).get(endTime - 1)).get(16));
-						averageDemand.add((Double)       ((ArrayList) finalResult.get(i).get(endTime - 1)).get(17));
-						sustainabilityindex.add((Double) ((ArrayList) finalResult.get(i).get(endTime - 1)).get(18));
+						reliability.add((Double)         ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(12));
+						resilience.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(13));
+						sumDeficit.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(14));
+						nonzerodeficit.add((Double)      ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(15));
+						maxDeficit.add((Double)          ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(16));
+						averageDemand.add((Double)       ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(17));
+						sustainabilityindex.add((Double) ((ArrayList<Double>) finalResult.get(i).get(endTime - 1)).get(18));
 					}
 
 					for (int i = 0; i < finalResult.size(); i++) {
 						runMap = finalResult.get(i);
-						mapList = (ArrayList) runMap.get(j);
+						mapList = (ArrayList<Double>) runMap.get(j);
 
 						storage.add((Double) mapList.get(0));
 						outflow.add((Double) mapList.get(1));
@@ -894,21 +885,25 @@ public class WRRSim extends SimState {
 					for (int k = 0; k < 11; k++) {
 						for (int i = 0; i < finalResult.size(); i++) {
 							runMap = finalResult.get(i);
-							mapList = (ArrayList) runMap.get(j);
+							mapList = (ArrayList<Double>) runMap.get(j);
 
 							sd += Math.pow((Double) mapList.get(k) - (Double) mean.get(k), 2);
 
 						}
-						std.add(Math.sqrt(sd / (finalResult.size() - 1)));
+						mean_temp = mean.get(k);
+						std_temp = Math.sqrt(sd / (finalResult.size() - 1));
+						std.add(std_temp);
+						rsd.add(std_temp / mean_temp * 100);
 						sd = 0;
 					}
 					for (int k = 0; k < mean.size(); k++) {
 						outputStream.print(mean.get(k) + ",");
-						// outputStream.print(std.get(k) + " ");
+						outputStream.print(std.get(k) + ",");
+						outputStream.print(rsd.get(k) + ",");
 					}
-					for (int i = 0; i < std.size(); i++) {
-						outputStream.print(std.get(i) + ",");
-					}
+					//for (int i = 0; i < std.size(); i++) {
+					//	outputStream.print(std.get(i) + ",");
+					//}
 					for (int i = 0; i < max.size(); i++) {
 						outputStream.print(max.get(i) + ",");
 					}

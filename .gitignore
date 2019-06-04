@@ -1,11 +1,12 @@
 final_result*
-reservoir-shift*
+final-result*
+res-*
 timeseries_2018*
 .classpath
 target
 .vscode
 .settings
-timeseries_*
+ts-*
 hs_err*
 population-timeSeries.txt
 /03-may-2018/
@@ -24,3 +25,4 @@ FALLSMSR*
 Household-timeSeries.txt
 /bin/
 *.log
+probs*
