@@ -31,7 +31,11 @@ public class GenerateTimeseries {
 				copProbs[i] = Double.parseDouble(item);
 			}
 			int exitCode = child.waitFor();
-			System.out.println("Probability CSV created. Rscript exited with error code : " + exitCode);
+			System.out.println("Probability CSV created. Rscript exited with error code : " + exitCode + " (zero is what ya want)");
+		} catch ( NullPointerException e) {
+			e.printStackTrace();
+			System.out.println("Check Rscript analysis_flows.R. VineCopula might be missing. Terminating program.");
+			System.exit(-1);
 		} catch (IOException|InterruptedException e) {
 			e.printStackTrace();
 		}
