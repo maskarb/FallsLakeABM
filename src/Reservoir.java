@@ -13,17 +13,11 @@ public abstract class Reservoir {
   protected double waterSupply;
 
   public abstract void withdraw(double amount);
-
   public abstract void inflow();
-
   public abstract void precipitation(double depth);
-
   public abstract void evaporation();
-
   public abstract void release(double d);
-
   public abstract double lookupElevation(double storage);
-
   public abstract double lookupSpreadArea(double storage);
 
   public double getElevation() {
