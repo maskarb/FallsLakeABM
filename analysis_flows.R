@@ -1,4 +1,4 @@
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=TRUE)
 
 source("historical_data.R")
 library(VineCopula)
