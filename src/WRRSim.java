@@ -323,11 +323,6 @@ public class WRRSim extends SimState {
 		PolicyMaker policyMaker = new PolicyMaker(reservoir, initialElevation, initialStorage, isDroughtRestriction,
 				reductionPercentages);
 
-		// Climate climate = new
-		// Climate(readPrecipEvapoData("precip_evapotran.txt"));
-		// Climate.readClimateData("Pr_ET_" + climate +
-		// ".txt");//"precip_evapotran.txt"
-		/* new code perturbing */
 		Climate climate = new Climate();
 		climate.setPrecipitation(precipitation);
 		climate.setEvapotrans(evaporation);
@@ -338,15 +333,6 @@ public class WRRSim extends SimState {
 		// instead of pop for 80 , this is for January 2013
 		int popSize = 316605;// 151951
 		int totalNumOfHouseholds = (int) Math.round(popSize / 2.55);
-
-		// int singleHouseholds = (int) Math.round(totalNumOfHouseholds *
-		// 0.328);
-		// int coupleHouseholds = (int) Math.round(totalNumOfHouseholds *
-		// 0.384);
-		// int restOfPop = popSize - singleHouseholds - 2 * coupleHouseholds;
-		// int restOfHouseholds = totalNumOfHouseholds - singleHouseholds
-		// - coupleHouseholds;
-		// double averageHouseholdSize = restOfPop / restOfHouseholds;
 
 		int sizeOfHousehold;
 		Household user = null;
@@ -387,33 +373,6 @@ public class WRRSim extends SimState {
 				perviousAreaPercentage = 0.8;
 			}
 
-			// if (randomNum <= 32.8) {
-			// sizeOfHousehold = 1;
-			// } else if (randomNum <= 76.9) {
-			// sizeOfHousehold = 2;
-			// } else {
-			// sizeOfHousehold = (int) Math
-			// .round((-averageHouseholdSize * Math.log(1 - (randomNum /
-			// 100.0))));
-			// }
-
-			// if (randomNum <= 29.32) {
-			// sizeOfHousehold = 1;
-			// } else if (randomNum <= 63.81) {
-			// sizeOfHousehold = 2;
-			// } else if (randomNum <= 79.35) {
-			// sizeOfHousehold = 3;
-			// } else if (randomNum <= 92.86) {
-			// sizeOfHousehold = 4;
-			// } else if (randomNum <= 97.80) {
-			// sizeOfHousehold = 5;
-			// } else if (randomNum <= 99.93) {
-			// sizeOfHousehold = 6;
-			// } else {
-			// sizeOfHousehold = (int) Math
-			// .round((-1 * Math.log(1 - (randomNum / 100.0))));
-			// System.out.println((double) sizeOfHousehold);
-			// }
 			if (randomNum <= 22.8) {
 				sizeOfHousehold = 1;
 			} else if (randomNum <= 54.6) {
@@ -446,17 +405,6 @@ public class WRRSim extends SimState {
 				income = incomeTable[index];
 				index++;
 			}
-			// if (randomNum <= 11.98) {
-			// builtYear = (int) (1900 + random.nextLong(50));//1900
-			// } else if (randomNum <= (11.98+11.18)) {
-			// builtYear = (int) (1950 + random.nextLong(10));//1955
-			// } else if (randomNum <= (23.15+15.57)) {
-			// builtYear = (int) (1960 + random.nextLong(10));//1965
-			// } else if ( randomNum <= (38.72+23.95)) {
-			// builtYear = (int) (1970 + random.nextLong(10));//1975
-			// } else {
-			// builtYear = (int) (1980 + random.nextLong(4));
-			// }
 
 			if (randomNum <= 8.71) {
 				builtYear = (int) (1939 - random.nextLong(40));// 1939 or
@@ -493,22 +441,11 @@ public class WRRSim extends SimState {
 
 			// xCor = i % endTime;
 			// yCor = i / endTime;
-			xCor = random.nextInt(city.getWidth());// (int) (city.getWidth() *
-													// 0.25 +
-													// random.nextInt(400));
-			yCor = random.nextInt(city.getHeight());// (int) (city.getHeight() *
-													// 0.25 +
-													// random.nextInt(400));
-			// Double2D position = new Double2D(city.getWidth() * 0.5 +
-			// random.nextInt(300),city.getHeight() * 0.5 +
-			// random.nextInt(300));
-
-			// System.out.println(xCor + " " + yCor);
+			xCor = random.nextInt(city.getWidth());
+			yCor = random.nextInt(city.getHeight());
 
 			boolean isWaterReuser = false;
-			// if(isReclaimed && randomNum < 10){
-			// isWaterReuser = true;
-			// }
+
 			if (isReclaimed && randomNum < 10) { // && xCor > city.getWidth() *
 													// 0.4 && xCor <
 													// city.getWidth() * 0.6 &&
@@ -542,21 +479,6 @@ public class WRRSim extends SimState {
 				Bag neighbors = null;
 				neighbors = city.getVonNeumannNeighbors(xCor, yCor, neighborDist, Grid2D.BOUNDED, neighbors, xPos,
 						yPos);
-				// if( xPos == null )
-				// xPos = new IntBag();
-				// if( yPos == null )
-				// yPos = new IntBag();
-				//
-				// city.getVonNeumannLocations(xCor, yCor,neighborDist,
-				// Grid2D.BOUNDED, false, xPos, yPos );
-				// neighbors =
-				// city.getObjectsAtLocations(xPos,yPos,neighbors);
-
-				// neighbors = city.getHexagonalNeighbors(xCor, yCor, 1,
-				// Grid2D.BOUNDED, neighbors, xPos, yPos);
-				// neighbors = city.getNeighborsExactlyWithinDistance(position,
-				// 2);
-				// System.out.println(neighbors.size());
 				for (int j = 0; j < neighbors.size(); j++) {
 					socialNetwork.addEdge(user, (Household) neighbors.get(j), 0.20);// random.nextDouble()
 				}
@@ -571,9 +493,6 @@ public class WRRSim extends SimState {
 		// Household.setCity(city);
 		Household.setSocialNet(socialNetwork);
 
-		// xCor = totalNumOfHouseholds % endTime;
-		// yCor = totalNumOfHouseholds / endTime;
-		// System.out.println(xCor + " end " + yCor);
 
 		Bag bag = socialNetwork.getAllNodes();
 
