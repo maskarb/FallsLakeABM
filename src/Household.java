@@ -8,14 +8,10 @@ import sim.field.network.Network;
 import sim.util.Bag;
 import sim.util.IntBag;
 
-/** */
-
 /** @author amashha */
 public class Household implements Steppable {
 
-  /** */
   private static final long serialVersionUID = 1L;
-
   private int householdSize;
   private int income;
   private int houseType;
@@ -27,11 +23,8 @@ public class Household implements Steppable {
   private double complianceRate;
   private Reservoir reservoir;
   public PrintWriter outputStream;
-  public static HashMap<Integer, ArrayList<Double>> totalWithdrawal; // = new
-  // HashMap<>();
-  // public static double popCounter;
+  public static HashMap<Integer, ArrayList<Double>> totalWithdrawal;
   private int builtYear;
-  // public static int conservationStage;
   public static double conservationFactor = 1;
   public boolean isRetrofitting;
   private int retrofitPeriod;
@@ -83,34 +76,20 @@ public class Household implements Steppable {
     this.complianceRate = complianceDegree;
     this.income = income;
     this.houseType = houseType;
-
     this.outdoorEnduses = outdoor;
     this.indoorEnduses = indoor;
-
     this.defaultConsumption =
         (indoorEnduses.getIndoorDemand() + outdoorEnduses.getOutdoorDemand() * 31)
             * 3.06888328
             * Math.pow(10, -6);
-
     this.householdSize = householdSize;
     this.reservoir = reservoir;
-
-    // totalWithdrawal = new double[365];
-
     this.outputStream = outputStream;
-
     this.builtYear = builtYear;
-
-    // conservationStage = 0;
-    // conservationFactor = 1;
-
     this.isRetrofitting = isRetrofitting;
     this.retrofitPeriod = retrofitPeriod;
-
     this.xCor = xCor;
     this.yCor = yCor;
-    // city.getVonNeumannNeighbors(xCor, yCor, 1, Grid2D.BOUNDED, neighbors,
-    // xPos, yPos);
     this.isWaterReuser = isWaterReuser;
     this.receiptTime = 0;
     this.threshold = threshold;
@@ -127,17 +106,9 @@ public class Household implements Steppable {
 
     double randomNum = wrrSim.random.nextDouble();
 
-    // double tempIndoorDemand = 0;
-
-    // boolean isRetrofitting = true;
-
     if (isRetrofitting) {
       int currentYear = (int) (2014 + (time / 12));
       if ((this.builtYear + retrofitPeriod) <= currentYear) {
-
-        // this.builtYear = currentYear;
-        // this.indoorEnduses.calculateAll(wrrSim, randomNum,
-        // this.householdSize, this.builtYear);
 
         double builtYearPrecentage;
         if (currentYear < 1990) {
@@ -154,23 +125,8 @@ public class Household implements Steppable {
       }
     }
 
-    // conservationStage = PolicyMaker.getStage();
-
-    // indoorEnduses.calculateAll(wrrSim, randomNum, householdSize);
-    // indoorEnduses.calculateAll(wrrSim, randomNum, householdSize,
-    // builtYear);
-    // totalIndoorDemand = indoorEnduses.getIndoorDemand() * days;
-    //
-    // defaultConsumption = (outdoorEnduses.getOutdoorDemand() +
-    // totalIndoorDemand)
-    // * 3.06888328 * Math.pow(10, -6);// convert
-    // to
-    // acre-feet
-
     indoorDemand = indoorEnduses.getIndoorDemand() * days;
 
-    // outdoorEnduses.calculateOutdoorDemand(month);
-    // System.out.println(conservationFactor);
     if (isWaterReuser) { // && receiptTime + 3 < time){
       // outdoorEnduses.calculateOutdoorDemand(month, 0);
     } else {
@@ -188,16 +144,8 @@ public class Household implements Steppable {
     agentDemands.add(defaultConsumption);
     agentDemands.add(1.0);
     agentDemands.add((double) householdSize);
-    // if (!isWaterReuser) {
-    // agentDemands.add(0.0);
-    // } else {
-    // agentDemands.add(1.0);
-    // }
-
-    // reservoir.withdraw(defaultConsumption);
 
     int index = (int) time;
-    // totalWithdrawal[index] += defaultConsumption;
 
     ArrayList<Double> tempArray = new ArrayList<Double>();
     double tempVar = 0;
@@ -215,51 +163,6 @@ public class Household implements Steppable {
     } else {
       totalWithdrawal.put(index, agentDemands);
     }
-
-    // }
-
-    // double utility = 0.0;
-    // double alpha = 0;
-    // double beta = 1;
-    // if (!isWaterReuser) {
-    // Bag relations = socialNet.getEdgesIn(this);
-    // double numOfNeighbors = 0;
-    // double influence = 0;
-    // for (int i = 0; i < relations.size(); i++) {
-    // Edge e = (Edge) (relations.get(i));
-    //
-    // if (( (Household) e.getOtherNode(this)).isWaterReuser()) {
-    // numOfNeighbors += 1;
-    // influence += ((Double) (e.info)).doubleValue();
-    // }
-    // }
-    // double percentOfNeighbors = numOfNeighbors / relations.size();
-    //// if (numOfNeighbors != 0 && (influence / relations.size() ) >
-    // threshold){
-    // utility = alpha * external + beta * (influence);
-    // if (utility > threshold){
-    //// if (percentOfNeighbors > threshold){
-    //
-    //// if ((influence / relations.size()) > 0.1 && percentOfNeighbors >
-    // 0.5) {
-    // isWaterReuser = true;
-    // receiptTime = time;
-    // }
-    // }
-    // } else {
-    // Bag relations = socialNet.getEdgesOut(this);
-    // for (int i = 0; i < relations.size(); i++) {
-    // Edge e = (Edge) (relations.get(i));
-    // e.setInfo(((Double) (e.info)).doubleValue() + 0.0015);
-    // }
-    // }
-
-    // if (time == 0) {
-    // System.out.println("Totalwithdrawal " + totalWithdrawal[1]);
-    // outputStream.println("consumption " + defaultConsumption
-    // / (3.06888328 * Math.pow(10, -6)));
-    // }
-
   }
 
   public double getConsumption() {
