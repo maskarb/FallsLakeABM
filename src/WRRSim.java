@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-// import java.util.List;
 import java.util.Scanner;
 
 import pertubing.DataList;
@@ -15,19 +14,16 @@ import pertubing.Timeseries;
 import pertubing.WrrProject;
 import sim.engine.SimState;
 import sim.engine.Steppable;
-// import sim.field.continuous.Continuous2D;
 import sim.field.grid.Grid2D;
 import sim.field.grid.SparseGrid2D;
 import sim.field.network.Network;
 import sim.util.Bag;
-// import sim.util.Double2D;
 import sim.util.IntBag;
 
 public class WRRSim extends SimState {
 	static final long serialVersionUID = 1L;
 
 	public SparseGrid2D city = new SparseGrid2D(570, 570);
-	// public Continuous2D city = new Continuous2D(1,1000,1000);
 	public Network socialNetwork = new Network(false);
 	public PopulationGrowth populationGrowth = null;
 
@@ -37,7 +33,7 @@ public class WRRSim extends SimState {
 	private static int endTime;
 	private static long randomseed;
 
-	private String scenario = "enduse"; // "probabilistic" or "enduse"
+	private String scenario = "enduse";
 	private String climate = "DRY_new";
 
 	private boolean isRetrofitting = true;
@@ -94,28 +90,13 @@ public class WRRSim extends SimState {
 	}
 
 	public double getOutdoor_Demand() {
-		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
-		// double totalWaterSupply = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(2);
-		// double totalIndoor = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(0);
 		double totalOutdoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(1);
-		// double numOfHouseholds = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(3);
 		double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
 		System.out.println("Population: " + population);
-		// for (int i = 2; i < bag.size(); i++) {
-		// totalConsumption += ((Household) bag.get(i)).getConsumption();
-		// // * 3.06888328 * Math.pow(10, -6);
-		// }
 
-		// System.out.println(totalConsumption + " time " + schedule.getTime() +
-		// " pop " + bag.size());
 		int currentMonth = (int) (time % 12);
-		;
 		int days = 0;
 
 		switch (currentMonth) {
@@ -142,26 +123,11 @@ public class WRRSim extends SimState {
 	}
 
 	public double getIndoor_Demand() {
-		// Bag bag = socialNetwork.getAllNodes();
 		int time = (int) schedule.getTime();
-		// double totalConsumption = 0;
 		HashMap<Integer, ArrayList<Double>> totalDemand = Household.getTotalConsumption();
-		// double totalWaterSupply = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(2);
 		double totalIndoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(0);
-		// double totalOutdoor = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(1);
-		// double numOfHouseholds = (double) ((ArrayList<Double>)
-		// totalDemand.get(time)).get(3);
 		double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
 		System.out.println("Population: " + population);
-		// for (int i = 2; i < bag.size(); i++) {
-		// totalConsumption += ((Household) bag.get(i)).getConsumption();
-		// // * 3.06888328 * Math.pow(10, -6);
-		// }
-
-		// System.out.println(totalConsumption + " time " + schedule.getTime() +
-		// " pop " + bag.size());
 
 		int currentMonth = (int) (time % 12);
 		;
@@ -291,18 +257,6 @@ public class WRRSim extends SimState {
 
 		// clear the city
 		city.clear();
-
-		// String scenario = "enduse"; // "probabilistic" or "enduse"
-		// boolean isRetrofitting = true;
-		// boolean isDroughtRestriction = false;
-		// boolean isReleaseModel = true;
-		// double[] reductionPercentages = {0.7, 0.5, 0.3, 0.1};
-		// double lowestStorage = 25073;//acre-feet
-		// int retrofitPeriod = 30;
-		//
-		// boolean isReclaimed = true;
-		// int neighborDist = 1;
-		// double threshold = 0.3;
 
 		System.out.println("Generate timeseries.");
 		Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, ranSeed);
@@ -604,18 +558,6 @@ public class WRRSim extends SimState {
 
 	public static void main(String[] args) {
 		System.out.println("Starting simulation");
-
-		// String scenario = "enduse"; // "probabilistic" or "enduse"
-		// boolean isRetrofitting = true;
-		// boolean isDroughtRestriction = true;
-		// String climate = "DRY";
-		// boolean isReleaseModel = true;
-		// double[] reductionPercentages = {0.7, 0.5, 0.3, 0.1};
-		// double lowestStorage = 25073;//acre-feet
-		// int retrofitPeriod = 30;
-		// boolean isReclaimed = false;
-		// int neighborDist = 2;
-		// double threshold = 0.5;
 		long t1 = System.currentTimeMillis();
 
 		numOfShifts = 8;// 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
