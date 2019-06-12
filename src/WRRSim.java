@@ -606,7 +606,7 @@ public class WRRSim extends SimState {
 
     numOfShifts = 8; // 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
     numOfRun = 50;
-    numOfManagementScenarios = 1;
+    numOfManagementScenarios = 2;
     endTime = 600;
 
     SimState state = null;
@@ -634,7 +634,7 @@ public class WRRSim extends SimState {
         for (int i = 0; i < numOfRun; i++) {
           long ranSeed = System.currentTimeMillis();
           int z = n + 1;
-          System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f", endShift);
+          System.out.printf("Trial " + i + " Management Scenario " + z + " Shift %.1f\n", endShift);
           System.out.println("Seed: " + Long.toString(ranSeed));
           state =
               (new WRRSim(
@@ -647,8 +647,6 @@ public class WRRSim extends SimState {
                       percentages.get(n),
                       z))
                   .setShift(endShift);
-          // state = (new WRRSim(1, i, endShift, climate, isRetrofitting[n],
-          // 		isDroughtRestriction[n], percentages.get(n))).setShift(endShift);
           state.start();
           do if (!state.schedule.step(state)) break;
           while (state.schedule.getSteps() < endTime);

@@ -10,7 +10,7 @@ public class PolicyMaker implements Steppable {
   public int stage;
   private boolean isDroughtRestriction;
   private double storage;
-  private double waterQualityStorage = 61322; // acre-feet
+  // private double waterQualityStorage = 61322; // acre-feet
   private double waterSupplyStorage = 45000; // acre-feet
   private double[] reductionPercentages;
 
@@ -42,44 +42,14 @@ public class PolicyMaker implements Steppable {
 
   public void step(SimState state) {
     // WRRSim wrrSim = (WRRSim) state;
-
     // int time = (int) wrrSim.schedule.getTime();
-
     // Household.setConservationStage(stage);
 
     if (isDroughtRestriction) {
       this.elevation = getelevation();
       this.storage = getStorage();
 
-      // if (elevation >= 250.8) {
-      // stage = 0;
-      // } else if (elevation >= 250.06) {
-      // stage = 1;
-      // } else if (elevation >= 249.24) {
-      // stage = 2;
-      // } else if (elevation >= 248.33) {
-      // stage = 3;
-      // } else {
-      // stage = 4;
-      // }
-      double baseStorage = ((FallsLake) reservoir).getLowestStorage(); // +
-      // waterQualityStorage;
-      double conservationPool = waterSupplyStorage + waterQualityStorage;
-      // if (storage >= (baseStorage +
-      // reductionPercentages[0]*conservationPool)) {
-      // stage = 0;
-      // } else if (storage >= (baseStorage +
-      // reductionPercentages[1]*conservationPool)) {
-      // stage = 1;
-      // } else if (storage >= (baseStorage +
-      // reductionPercentages[2]*conservationPool)) {
-      // stage = 2;
-      // } else if (storage >= (baseStorage +
-      // reductionPercentages[3]*conservationPool)) {
-      // stage = 3;
-      // } else {
-      // stage = 4;
-      // }
+      double baseStorage = ((FallsLake) reservoir).getLowestStorage();
 
       double wssp = 0.423 * (storage - baseStorage);
       if (wssp >= (reductionPercentages[0] * waterSupplyStorage)) {
@@ -111,8 +81,6 @@ public class PolicyMaker implements Steppable {
           reductionFactor = (25 / 65.0);
           break;
       }
-      // System.out.println(time + " " + stage + " " + elevation);
-      // reductionFactor = 1;
       Household.setConservationFactor(reductionFactor);
     }
   }
