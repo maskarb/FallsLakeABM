@@ -78,6 +78,7 @@ public class WRRSim extends SimState {
     this.reductionPercentages = per;
     this.droughtStages = droughtStages;
     this.recisionStages = recisionStages;
+    this.manage = manage;
   }
 
   public double getPopulation() {
@@ -269,7 +270,7 @@ public class WRRSim extends SimState {
     city.clear();
 
     System.out.println("Generate timeseries.");
-    Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, ranSeed);
+    Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, manage, runNum, ranSeed);
     System.out.println("Timeseries generated.");
 
     DataList flow = timeSeries.getFlow();
@@ -666,7 +667,6 @@ public class WRRSim extends SimState {
     for (int n = 3; n < numOfManagementScenarios; n++) {
       for (int m = 7; m < numOfShifts; m++) {
         endShift = 0.1 * (m + 1);
-        // for (int n = 0; n < 1; n++) {
         finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
         for (int i = 0; i < numOfRun; i++) {
           long ranSeed = System.currentTimeMillis();
@@ -772,11 +772,6 @@ public class WRRSim extends SimState {
                 + ","
                 + "deficit_rsd"
                 + ",");
-        // outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
-        //		+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
-        //		+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," +
-        // "inflow_std"
-        //		+ "," + "deficit_std" + ",");
         outputStream.print(
             "storage_max"
                 + ","
@@ -942,12 +937,10 @@ public class WRRSim extends SimState {
           min.add(Collections.min(inflow));
           min.add(Collections.min(deficit));
 
-          // for (int k = 0; k < mapList.size(); k++) {
           for (int k = 0; k < 11; k++) {
             for (int i = 0; i < finalResult.size(); i++) {
               runMap = finalResult.get(i);
               mapList = (ArrayList<Double>) runMap.get(j);
-
               sd += Math.pow((Double) mapList.get(k) - (Double) mean.get(k), 2);
             }
             mean_temp = mean.get(k);
@@ -961,18 +954,13 @@ public class WRRSim extends SimState {
             outputStream.print(std.get(k) + ",");
             outputStream.print(rsd.get(k) + ",");
           }
-          // for (int i = 0; i < std.size(); i++) {
-          //	outputStream.print(std.get(i) + ",");
-          // }
           for (int i = 0; i < max.size(); i++) {
             outputStream.print(max.get(i) + ",");
           }
           for (int i = 0; i < min.size(); i++) {
             outputStream.print(min.get(i) + ",");
           }
-
           outputStream.print(shiftFac.get(0) + ",");
-
           if (j < sustainabilityindex.size()) {
             outputStream.print(reliability.get(j) + ",");
             outputStream.print(resilience.get(j) + ",");
@@ -999,7 +987,6 @@ public class WRRSim extends SimState {
     for (int i = 0; i < m.size(); i++) {
       sum += m.get(i);
     }
-
     return sum;
   }
 }

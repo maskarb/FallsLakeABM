@@ -39,5 +39,5 @@ for (i in c(2:600)) {
   probs <- c(probs, u_i)
   u_i_prev <- u_i
 }
-filename <- paste("probs-", toString(args[2]), "-", toString(args[3]), ".csv", sep="")
+filename <- paste("probs-mgmt-", toString(args[2]), "-s-", toString(args[3]), "-", toString(args[4]), ".csv", sep="")
 write.table(probs, file=filename, row.names=FALSE, col.names=FALSE, sep=",")
