@@ -638,31 +638,31 @@ public class WRRSim extends SimState {
     HashMap<Integer, double[]> droughtStages = new HashMap<Integer, double[]>();
     HashMap<Integer, double[]> recisionStages = new HashMap<Integer, double[]>();
 
-    droughtStages.put(1, new double[]{.40, .30, .25});
-    droughtStages.put(2, new double[]{.50, .35, .25});
-    droughtStages.put(3, new double[]{.65, .45, .30});
-    droughtStages.put(4, new double[]{.85, .60, .35});
-    droughtStages.put(5, new double[]{.75, .55, .35});
-    droughtStages.put(6, new double[]{.65, .45, .30});
-    droughtStages.put(7, new double[]{.55, .45, .25});
-    droughtStages.put(8, new double[]{.50, .40, .25});
-    droughtStages.put(9, new double[]{.45, .35, .25});
-    droughtStages.put(10, new double[]{.40, .30, .25});
-    droughtStages.put(11, new double[]{.35, .30, .25});
-    droughtStages.put(12, new double[]{.35, .30, .25});
+    droughtStages.put(1, new double[] {.40, .30, .25});
+    droughtStages.put(2, new double[] {.50, .35, .25});
+    droughtStages.put(3, new double[] {.65, .45, .30});
+    droughtStages.put(4, new double[] {.85, .60, .35});
+    droughtStages.put(5, new double[] {.75, .55, .35});
+    droughtStages.put(6, new double[] {.65, .45, .30});
+    droughtStages.put(7, new double[] {.55, .45, .25});
+    droughtStages.put(8, new double[] {.50, .40, .25});
+    droughtStages.put(9, new double[] {.45, .35, .25});
+    droughtStages.put(10, new double[] {.40, .30, .25});
+    droughtStages.put(11, new double[] {.35, .30, .25});
+    droughtStages.put(12, new double[] {.35, .30, .25});
 
-    recisionStages.put(1, new double[]{.60, .50, .45});
-    recisionStages.put(2, new double[]{.70, .55, .45});
-    recisionStages.put(3, new double[]{.85, .55, .45});
-    recisionStages.put(4, new double[]{1.00, .80, .55});
-    recisionStages.put(5, new double[]{.95, .75, .55});
-    recisionStages.put(6, new double[]{.85, .65, .50});
-    recisionStages.put(7, new double[]{.75, .65, .50});
-    recisionStages.put(8, new double[]{.70, .60, .45});
-    recisionStages.put(9, new double[]{.65, .55, .45});
-    recisionStages.put(10, new double[]{.60, .50, .45});
-    recisionStages.put(11, new double[]{.55, .50, .45});
-    recisionStages.put(12, new double[]{.55, .50, .45});
+    recisionStages.put(1, new double[] {.60, .50, .45});
+    recisionStages.put(2, new double[] {.70, .55, .45});
+    recisionStages.put(3, new double[] {.85, .55, .45});
+    recisionStages.put(4, new double[] {1.00, .80, .55});
+    recisionStages.put(5, new double[] {.95, .75, .55});
+    recisionStages.put(6, new double[] {.85, .65, .50});
+    recisionStages.put(7, new double[] {.75, .65, .50});
+    recisionStages.put(8, new double[] {.70, .60, .45});
+    recisionStages.put(9, new double[] {.65, .55, .45});
+    recisionStages.put(10, new double[] {.60, .50, .45});
+    recisionStages.put(11, new double[] {.55, .50, .45});
+    recisionStages.put(12, new double[] {.55, .50, .45});
 
     for (int n = 3; n < numOfManagementScenarios; n++) {
       for (int m = 7; m < numOfShifts; m++) {

@@ -69,8 +69,7 @@ public class PolicyMaker implements Steppable {
       } else if (wssp >= (droughtPercent[2] * waterSupplyStorage)
           && wssp >= (recisionPercent[2] * waterSupplyStorage)) {
         stage = 2;
-      } else if (wssp >= (0 * waterSupplyStorage) 
-          && wssp >= (0 * waterSupplyStorage)) {
+      } else if (wssp >= 0) {
         stage = 3;
       } else {
         stage = 4;

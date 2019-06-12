@@ -12,7 +12,8 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class GenerateTimeseries {
 
-  public static Timeseries execute(double[] shiftFactor, int numberYears, int manage, int RunNum, long seed) {
+  public static Timeseries execute(
+      double[] shiftFactor, int numberYears, int manage, int RunNum, long seed) {
     int len_shift = shiftFactor.length;
     String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 

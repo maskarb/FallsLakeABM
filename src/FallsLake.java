@@ -269,7 +269,7 @@ public class FallsLake extends Reservoir implements Steppable {
   }
 
   public boolean investigateReservoirStatus(
-    double storage, double inflow, double waterSupply, int month, int days) {
+      double storage, double inflow, double waterSupply, int month, int days) {
     double normalElavation = 0;
     double instantaneousRelease = 0;
     double totalRelease = 0;
@@ -686,5 +686,6 @@ public class FallsLake extends Reservoir implements Steppable {
     elevation = currentElevation;
     outflow = totalRelease;
   }
+
   public static void main(String[] args) {}
 }
