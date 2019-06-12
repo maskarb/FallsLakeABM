@@ -53,6 +53,7 @@ public class PolicyMaker implements Steppable {
     int month = time % 12 + 1;
     // Household.setConservationStage(stage);
     double[] droughtPercent = droughtStages.get(month);
+    System.out.println(month);
 
     // if drought state from previous month is greater than 0, get the recision stage
     if (stage > 0) {
@@ -98,6 +99,7 @@ public class PolicyMaker implements Steppable {
           reductionFactor = (25 / 65.0);
           break;
       }
+      System.out.println(stage);
       Household.setConservationFactor(reductionFactor);
     }
   }
