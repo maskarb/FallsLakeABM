@@ -7,7 +7,6 @@ import sim.engine.Steppable;
 
 /** @author amashha */
 public class FallsLake extends Reservoir implements Steppable {
-
   private static final long serialVersionUID = 1L;
   private HashMap<Integer, ArrayList<Double>> data;
   public double observedStorage;
@@ -24,16 +23,10 @@ public class FallsLake extends Reservoir implements Steppable {
   private double maxDeficit;
   private double averageDemand;
   private double sustainabilityindex;
-
-  // private double capacity;
-
   private final ArrayList<Double> elevationArray;
   private final ArrayList<Double> areaArray;
   private final ArrayList<Double> storageArray;
-  // private final ArrayList<Double> deficitArray;
-
   public PrintWriter outputStream;
-
   private boolean isReleaseModel;
   private double lowestStorage; // 25073
 
@@ -53,17 +46,12 @@ public class FallsLake extends Reservoir implements Steppable {
       PrintWriter outputStreamReservoir,
       DataList flow,
       DataList shiftFac) {
-
     this.flow = flow;
     this.shiftFac = shiftFac;
-
     this.storage = initialStorage;
     this.observedStorage = initialStorage;
     this.elevation = elevation;
     this.data = hashMap;
-
-    // this.capacity = 450000;// 352577;// sum of all storage parts of the
-    // reservoir
     this.inflow = 0;
     this.outflow = 0;
     this.rainfall = 0;
@@ -139,7 +127,6 @@ public class FallsLake extends Reservoir implements Steppable {
       actual = remainedWater;
     }
     waterSupply += actual;
-    // System.out.println(totalWater + " " + actual);
   }
 
   @Override
@@ -184,12 +171,7 @@ public class FallsLake extends Reservoir implements Steppable {
     double maxDischarge = 8000; // (cfs) approximate at elevation 250 m.s.l.
     double lakeLevelForecast = 268;
     double freeOverflowing = lookupStorage(elevation) - lookupStorage(268);
-    double uncontroledDrainageAreaFlow = 4000; // 1000 + randomNum *
-    // 6000;//4000
-
-    // double minimumReleaseSummer = 100;
-    // double minimumReleaseWinter = 60;
-
+    double uncontroledDrainageAreaFlow = 4000;
     int counter = 0;
     double totalRelease = 0;
     if (month >= 4 && month <= 8) {
@@ -208,31 +190,19 @@ public class FallsLake extends Reservoir implements Steppable {
             if (clayton >= 7000) {
               release = 100;
             } else {
-              // release = Math.min(7000 - clayton, 4000);
-              // release = 7000 -
-              // Math.min(uncontroledDrainageAreaFlow, 4000);
-              // release = Math.min(7000 -
-              // uncontroledDrainageAreaFlow, 7000 - 4000);
               release = Math.min(7000 - uncontroledDrainageAreaFlow, 4000);
-              // release = 3000;//3000
             }
           } else if (elevation <= 258) {
             if (clayton >= 7000) {
               release = 100;
             } else {
-              // release = Math.min(7000 - clayton, 4000 +
-              // liftedAmount);
               release = Math.min(7000 - uncontroledDrainageAreaFlow, 4000 + liftedAmount);
-              // release = 3500;//3000
             }
           } else if (elevation <= 264) {
             if (clayton >= 8000) {
               release = 100;
             } else {
-              // release = Math.min(8000 - clayton, 4000 +
-              // liftedAmount);
               release = Math.min(8000 - uncontroledDrainageAreaFlow, 4000 + liftedAmount);
-              // release = 4500;//4000
             }
           } else if (elevation <= 268) {
             if (lakeLevelForecast <= 268 && clayton >= 8000) {
@@ -247,9 +217,6 @@ public class FallsLake extends Reservoir implements Steppable {
           elevation = lookupElevation(storage);
           counter++;
           totalRelease += (release * 3600 * 24 / 43560);
-          // System.out.println(release * 3600 * 24 * days / 43560
-          // + " month " + month + " counter " + counter
-          // + " ele " + elevation);
         }
       }
     } else if (month >= 9 || month <= 3) {
@@ -269,14 +236,12 @@ public class FallsLake extends Reservoir implements Steppable {
               release = 60;
             } else {
               release = Math.min(7000 - clayton, 4000);
-              // release =
             }
           } else if (elevation <= 258) {
             if (clayton >= 7000) {
               release = 60;
             } else {
               release = Math.min(7000 - clayton, 4000 + liftedAmount);
-              // release =
             }
           } else if (elevation <= 264) {
             if (clayton >= 8000) {
@@ -297,180 +262,46 @@ public class FallsLake extends Reservoir implements Steppable {
           elevation = lookupElevation(storage);
           counter++;
           totalRelease += (release * 3600 * 24 / 43560);
-          // System.out.println(release * 3600 * 24 * days / 43560
-          // + " month " + month + " counter " + counter
-          // + " ele " + elevation);
         }
       }
     }
-    // System.out.println(totalRelease);
     outflow = totalRelease;
   }
 
   public boolean investigateReservoirStatus(
-      double storage, double inflow, double waterSupply, int month, int days) {
+    double storage, double inflow, double waterSupply, int month, int days) {
     double normalElavation = 0;
     double instantaneousRelease = 0;
     double totalRelease = 0;
     if (month >= 4 && month <= 8) {
       normalElavation = 251.5;
       instantaneousRelease = 100;
-
     } else {
       normalElavation = 250.1;
       instantaneousRelease = 60; // 60 or 184;
     }
     totalRelease += (instantaneousRelease * 3600 * 24 * days / 43560);
-
     if (storage + inflow - waterSupply - totalRelease <= lookupStorage(237)) {
       return true;
     } else {
       return false;
     }
   }
-  /*
-  	// public void release(boolean isFlood, int month, int days){
-  	// double normalElavation = 0;
-  	// double instantaneousRelease = 0;
-  	// double otherRelease = 0;
-  	// double totalRelease = 0;
-  	//
-  	//
-  	// elevation = lookupElevation(storage);
-  	//// double normalElavation = 0;
-  	//// double release = 0;
-  	// double clayton = 6000;
-  	// double liftedAmount = 2000;
-  	// double maxDischarge = 8000;// (cfs) approximate at elevation 250 m.s.l.
-  	// double lakeLevelForecast = 268;
-  	// double freeOverflowing = lookupStorage(elevation) - lookupStorage(268);
-  	// double uncontroledDrainageAreaFlow = 4000;
-  	// int counter = 0;
-  	//
-  	// if (isFlood) {
-  	// if (month >= 4 && month <= 8) {
-  	// normalElavation = 251.5;
-  	// while (elevation > normalElavation && counter < days) {
-  	// if (elevation <= 255) {
-  	// if (clayton >= 7000) {
-  	// otherRelease = 100;
-  	// } else {
-  	// // release = Math.min(7000 - clayton, 4000);
-  	// // release = 7000 -
-  	// // Math.min(uncontroledDrainageAreaFlow, 4000);
-  	// // release = Math.min(7000 -
-  	// // uncontroledDrainageAreaFlow, 7000 - 4000);
-  	// otherRelease = Math.min(
-  	// 7000 - uncontroledDrainageAreaFlow, 4000);
-  	// }
-  	// } else if (elevation <= 258) {
-  	// if (clayton >= 7000) {
-  	// otherRelease = 100;
-  	// } else {
-  	// // release = Math.min(7000 - clayton, 4000 +
-  	// // liftedAmount);
-  	// otherRelease = Math.min(
-  	// 7000 - uncontroledDrainageAreaFlow,
-  	// 4000 + liftedAmount);
-  	// }
-  	// } else if (elevation <= 264) {
-  	// if (clayton >= 8000) {
-  	// otherRelease = 100;
-  	// } else {
-  	// // release = Math.min(8000 - clayton, 4000 +
-  	// // liftedAmount);
-  	// otherRelease = Math.min(
-  	// 8000 - uncontroledDrainageAreaFlow,
-  	// 4000 + liftedAmount);
-  	// }
-  	// } else if (elevation <= 268) {
-  	// if (lakeLevelForecast <= 268 && clayton >= 8000) {
-  	// otherRelease = freeOverflowing;
-  	// } else {
-  	// otherRelease = maxDischarge;
-  	// }
-  	// } else {
-  	// otherRelease = maxDischarge;
-  	// }
-  	// storage -= (otherRelease * 3600 * 24) / 43560;
-  	// elevation = lookupElevation(storage);
-  	// counter++;
-  	// totalRelease += (otherRelease * 3600 * 24 / 43560);
-  	//// System.out.println(release * 3600 * 24 * days / 43560
-  	//// + " month " + month + " counter " + counter
-  	//// + " ele " + elevation);
-  	// }
-  	// } else {
-  	// normalElavation = 250.1;
-  	// while (elevation > normalElavation && counter < days) {
-  	// if (elevation <= 255) {
-  	// if (clayton >= 7000) {
-  	// otherRelease = 60;
-  	// } else {
-  	// otherRelease = Math.min(7000 - clayton, 4000);
-  	// }
-  	// } else if (elevation <= 258) {
-  	// if (clayton >= 7000) {
-  	// otherRelease = 60;
-  	// } else {
-  	// otherRelease = Math.min(7000 - clayton,
-  	// 4000 + liftedAmount);
-  	// }
-  	// } else if (elevation <= 264) {
-  	// if (clayton >= 8000) {
-  	// otherRelease = 60;
-  	// } else {
-  	// otherRelease = Math.min(8000 - clayton,
-  	// 4000 + liftedAmount);
-  	// }
-  	// } else if (elevation <= 268) {
-  	// if (lakeLevelForecast <= 268 && clayton >= 8000) {
-  	// otherRelease = freeOverflowing;
-  	// } else {
-  	// otherRelease = maxDischarge;
-  	// }
-  	// } else {
-  	// otherRelease = maxDischarge;
-  	// }
-  	// storage -= otherRelease * 3600 * 24 / 43560;
-  	// elevation = lookupElevation(storage);
-  	// counter++;
-  	// totalRelease += (otherRelease * 3600 * 24 / 43560);
-  	//
-  	// }
-  	// }
-  	// }else{
-  	// if (month >= 4 && month <= 8) {
-  	// normalElavation = 251.5;
-  	// instantaneousRelease = 100;// 100 or 254 ;
-  	// totalRelease = instantaneousRelease * 3600 * 24 * days / 43560;
-  	// }else {
-  	// normalElavation = 250.1;
-  	// instantaneousRelease = 60 ;//60 or 184;
-  	// totalRelease += (instantaneousRelease * 3600 * 24 * days / 43560);
-  	// }
-  	// storage -= totalRelease;
-  	// }
-  	// outflow = totalRelease;
-  	// }
-  */
+
   public void step(SimState state) {
     WRRSim wrrSim = (WRRSim) state;
     int time = (int) wrrSim.schedule.getTime();
-
     PopulationGrowth popGrowth = wrrSim.populationGrowth;
     int month = (int) popGrowth.getMonthNum();
     int days = (int) popGrowth.getNumOfDays(month);
 
     waterSupply = 0;
-    //	System.out.println(data.get(time));
     double elevationStart = (double) ((ArrayList<Double>) data.get(time)).get(2);
     double elevationEnd = (double) ((ArrayList<Double>) data.get(time)).get(3);
     double elevationMax = (double) ((ArrayList<Double>) data.get(time)).get(4);
     double elevationMin = (double) ((ArrayList<Double>) data.get(time)).get(6);
 
     // cfs * (24 * 3600 / 43560) ((1.98347)) = acre-feet/day
-
     // observedInflow = (double) ((ArrayList<Double>) data.get(time)).get(8)
     // * 1.98347 convert cfs to acre-feet per day
     // * days;
@@ -478,11 +309,7 @@ public class FallsLake extends Reservoir implements Steppable {
     newShiftFac = (double) shiftFac.value(time);
 
     observedOutflow = (double) ((ArrayList<Double>) data.get(time)).get(9) * 1.98347 * days;
-
     observedWaterSupply = (double) ((ArrayList<Double>) data.get(time)).get(10) * 1.98347 * days;
-
-    // double rainfallDepth = (double) ((ArrayList<Double>)
-    // data.get(time)).get(11);
 
     // Residential consumption
     double residentialUsageFromData = observedWaterSupply * 0.566; // *
@@ -495,76 +322,29 @@ public class FallsLake extends Reservoir implements Steppable {
     double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
     double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
 
-    // System.out.println(totalDemand.get(time));
-
-    // double numOfRW = (double) ((ArrayList<Double>)
-    // totalDemand.get(time)).get(5);
-
     // Non-residential consumption
     // double nonResidentialUsage = observedWaterSupply *
     // 0.362;//nonResidentail from data
     double nonResidentialWaterSupply = residentialWaterSupply * 0.767; // *
-    // (36/64)
-    // nonresidentail
-    // from
-    // agents
+    // (36/64) nonresidentail from agents
     // Residential = 0.566 of total then nonResidential = (1 - 0.566)/0.566
     // = 0.767
 
     double totalWaterSupply = 0.855 * (residentialWaterSupply + nonResidentialWaterSupply);
-    /*
-    		// boolean isDrought = investigateReservoirStatus(storage,
-    		// observedInflow, totalWaterSupply, month, days);
-    		//
-    		// if(isDrought){
-    		// this.inflow(observedInflow);
-    		//
-    		// if (isReleaseModel) {
-    		// this.release(month, days, wrrSim.random.nextDouble());
-    		// }else {
-    		// this.release(observedOutflow);
-    		// }
-    		//
-    		// this.withdraw(totalWaterSupply);
-    		// } else {
-    		// this.inflow(observedInflow);
-    		// this.withdraw(totalWaterSupply);
-    		// if (isReleaseModel) {
-    		// this.release(month, days, wrrSim.random.nextDouble());
-    		// }else {
-    		// this.release(observedOutflow);
-    		// }
-    		//
-    		// }
-    */
     this.inflow(observedInflow);
-
-    // this.withdraw(nonResidentialUsage);
-
     if (isReleaseModel) {
       this.release(month, days, wrrSim.random.nextDouble());
-      // this.release(isFlood, month, days);
     } else {
       this.release(observedOutflow);
     }
-
-    // this.precipitation(rainfallDepth);
-    // this.evaporation();
-
     this.withdraw(totalWaterSupply); // 66.1/77.3 = 0.855
-    // this.withdraw(residentialUsageFromData + nonResidentialUsage);
-    // System.out.println(storage);
     this.elevation = lookupElevation(storage);
-
     this.observedStorage =
         this.observedStorage + observedInflow - observedOutflow - observedWaterSupply;
-    // if (observedStorage < lowestStorage)
-    // observedStorage = lowestStorage;
     this.deficit = 0;
     if (totalWaterSupply > waterSupply) {
       deficit = totalWaterSupply - waterSupply;
     }
-
     ArrayList<Double> finalResultArray = new ArrayList<Double>();
     finalResultArray.add(storage);
     finalResultArray.add(outflow);
@@ -578,10 +358,7 @@ public class FallsLake extends Reservoir implements Steppable {
     finalResultArray.add(newShiftFac); // 9
     finalResultArray.add(observedInflow);
     finalResultArray.add(deficit); // 11
-
     finalResultMap.put(time, finalResultArray);
-
-    //		System.out.println(finalResultMap);
 
     int endTime = 600; // length of simulation in months
     int futureData = 0; // What time point starts future data? - 372 if historic data goes in model.
@@ -596,9 +373,6 @@ public class FallsLake extends Reservoir implements Steppable {
       sustainabilityindex = 0.0;
     }
     if (time == endTime - 1) {
-      // System.out.println(finalResultMap);
-
-      ////////////////
       // calculate sustainability metrics based on deficit
       int zeroDeficit = 0;
       int resilienceCount = 0;
@@ -614,16 +388,13 @@ public class FallsLake extends Reservoir implements Steppable {
           if (m < endTime - 1) {
             if (finalResultMap.get(m + 1).get(11) > 0) resilienceCount++;
           }
-
         } else { // deficit is greater than zero
           if (finalResultMap.get(m).get(11) > maxDeficit)
             maxDeficit = finalResultMap.get(m).get(11);
         }
         averageDemand += finalResultMap.get(m).get(2);
       }
-
       nonzerodeficit = (endTime - futureData) - zeroDeficit; // 228 points in future data
-
       if (nonzerodeficit == 0) { // if there are no deficits
         resilience = 1.0;
         reliability = 1.0;
@@ -666,7 +437,6 @@ public class FallsLake extends Reservoir implements Steppable {
       System.out.println("maxDeficit/averageDemand:... " + maxDeficit / averageDemand);
       System.out.println(" ");
     }
-    ////////////////
 
     outputStream.println(
         observedStorage
@@ -717,17 +487,6 @@ public class FallsLake extends Reservoir implements Steppable {
             + ","
             + sustainabilityindex);
 
-    // + " " + elevationMax + " " + elevationMin + " " + rainfall);
-    //		outputStream.println(observedStorage + " " + observedOutflow + " " + observedWaterSupply + "
-    // " + elevationEnd
-    //				+ " " + observedInflow + " " + storage + " " + outflow + "  " + totalWaterSupply + "  " +
-    // waterSupply
-    //				+ " " + elevation + "  " + totalIndoor + "  " + totalOutdoor + "  " + numOfHouseholds + "
-    // "
-    //				+ population + " " + deficit + " " + reliability + " " + resilience + " "
-    //				+ sumDeficit + " "	+ nonzerodeficit + " " + maxDeficit + " " + averageDemand + " " +
-    // sustainabilityindex);
-
     finalResultArray.add(reliability);
     finalResultArray.add(resilience); // 12
     finalResultArray.add(sumDeficit);
@@ -735,13 +494,10 @@ public class FallsLake extends Reservoir implements Steppable {
     finalResultArray.add(maxDeficit);
     finalResultArray.add(averageDemand); // 16
     finalResultArray.add(sustainabilityindex);
-
     finalResultMap.put(time, finalResultArray);
 
     if (time == endTime - 1) {
-
       outputStream.close();
-
       WRRSim.finalResult.add(finalResultMap);
     }
   }
@@ -829,7 +585,6 @@ public class FallsLake extends Reservoir implements Steppable {
   }
 
   public void release_2(int month, int days) {
-
     elevation = lookupElevation(storage);
     double normalElavation = 0;
     double release = 0;
@@ -839,13 +594,8 @@ public class FallsLake extends Reservoir implements Steppable {
     double lakeLevelForecast = 268;
     double freeOverflowing = lookupStorage(elevation) - lookupStorage(268);
     double uncontroledDrainageAreaFlow = 4000;
-
-    // double minimumReleaseSummer = 100;
-    // double minimumReleaseWinter = 60;
-
     int counter = 0;
     double totalRelease = 0;
-
     double currentStorage = storage;
     double currentElevation = elevation;
 
@@ -861,27 +611,18 @@ public class FallsLake extends Reservoir implements Steppable {
             if (clayton >= 7000) {
               release = 100;
             } else {
-              // release = Math.min(7000 - clayton, 4000);
-              // release = 7000 -
-              // Math.min(uncontroledDrainageAreaFlow, 4000);
-              // release = Math.min(7000 -
-              // uncontroledDrainageAreaFlow, 7000 - 4000);
               release = Math.min(7000 - uncontroledDrainageAreaFlow, 4000);
             }
           } else if (currentElevation <= 258) {
             if (clayton >= 7000) {
               release = 100;
             } else {
-              // release = Math.min(7000 - clayton, 4000 +
-              // liftedAmount);
               release = Math.min(7000 - uncontroledDrainageAreaFlow, 4000 + liftedAmount);
             }
           } else if (currentElevation <= 264) {
             if (clayton >= 8000) {
               release = 100;
             } else {
-              // release = Math.min(8000 - clayton, 4000 +
-              // liftedAmount);
               release = Math.min(8000 - uncontroledDrainageAreaFlow, 4000 + liftedAmount);
             }
           } else if (currentElevation <= 268) {
@@ -893,15 +634,10 @@ public class FallsLake extends Reservoir implements Steppable {
           } else {
             release = maxDischarge;
           }
-          // storage -= (release * 3600 * 24) / 43560;
           currentStorage -= (release * 3600 * 24) / 43560;
-          // elevation = lookupElevation(storage);
           currentElevation = lookupElevation(currentStorage);
           counter++;
           totalRelease += (release * 3600 * 24 / 43560);
-          // System.out.println(release * 3600 * 24 * days / 43560
-          // + " month " + month + " counter " + counter
-          // + " ele " + elevation);
         }
       }
     } else if (month >= 9 || month <= 3) {
@@ -943,17 +679,12 @@ public class FallsLake extends Reservoir implements Steppable {
           currentElevation = lookupElevation(currentStorage);
           counter++;
           totalRelease += (release * 3600 * 24 / 43560);
-          // System.out.println(release * 3600 * 24 * days / 43560
-          // + " month " + month + " counter " + counter
-          // + " ele " + elevation);
         }
       }
     }
-    // System.out.println(storage - totalRelease - currentStorage);
     storage = currentStorage;
     elevation = currentElevation;
     outflow = totalRelease;
   }
-
   public static void main(String[] args) {}
 }
