@@ -614,7 +614,7 @@ public class WRRSim extends SimState {
     long t1 = System.currentTimeMillis();
 
     numOfShifts = 8; // 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-    numOfRun = 50;
+    numOfRun = 1;
     numOfManagementScenarios = 4;
     endTime = 600;
 

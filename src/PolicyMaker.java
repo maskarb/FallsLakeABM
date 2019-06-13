@@ -7,7 +7,7 @@ public class PolicyMaker implements Steppable {
   static final long serialVersionUID = 1L;
   private double elevation;
   private Reservoir reservoir;
-  public int stage;
+  private int stage = 0;
   private boolean isDroughtRestriction;
   private double storage;
   // private double waterQualityStorage = 61322; // acre-feet
@@ -15,6 +15,7 @@ public class PolicyMaker implements Steppable {
   private double[] reductionPercentages;
   private HashMap<Integer, double[]> droughtStages;
   private HashMap<Integer, double[]> recisionStages;
+  public static HashMap<Integer, Double> reportedStages;
 
   public PolicyMaker(
       Reservoir reservoir,
@@ -27,15 +28,15 @@ public class PolicyMaker implements Steppable {
     this.reservoir = reservoir;
     this.elevation = initialElevation;
     this.storage = initialStorage;
-    this.stage = 0;
     this.isDroughtRestriction = isDroughtRestriction;
     this.reductionPercentages = reductionPercentages;
+    this.stage = 0;
     this.droughtStages = droughtStages;
     this.recisionStages = recisionStages;
   }
 
-  public int getStage() {
-    return stage;
+  public static double getStage(int time) {
+    return reportedStages.get(time);
   }
 
   public double getelevation() {
@@ -93,6 +94,11 @@ public class PolicyMaker implements Steppable {
           break;
       }
       Household.setConservationFactor(reductionFactor);
+      if (reportedStages == null) {
+        reportedStages = new HashMap<Integer, Double>();
+      }
+      double temp = stage;
+      reportedStages.put(time, temp);
     }
   }
 }

@@ -10,6 +10,7 @@ public class FallsLake extends Reservoir implements Steppable {
   private static final long serialVersionUID = 1L;
   private HashMap<Integer, ArrayList<Double>> data;
   public double observedStorage;
+  public double droughtStage;
   private double observedInflow;
   private double newShiftFac;
   private double observedOutflow;
@@ -73,7 +74,7 @@ public class FallsLake extends Reservoir implements Steppable {
             + ","
             + "outflow"
             + ","
-            + "totalWaterSupply"
+            + "waterDemand"
             + ","
             + "waterSupply"
             + ","
@@ -89,7 +90,7 @@ public class FallsLake extends Reservoir implements Steppable {
             + ","
             + "shiftFactor"
             + ","
-            + "ignore"
+            + "droughtStage"
             + ","
             + "deficit"
             + ","
@@ -321,6 +322,8 @@ public class FallsLake extends Reservoir implements Steppable {
     double totalOutdoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(1);
     double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
     double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
+    double droughtStage = 0; // due to the ridiculous complicatedness of this model, droughtStage is set below when model is done.
+    System.out.println(time);
 
     // Non-residential consumption
     // double nonResidentialUsage = observedWaterSupply *
@@ -356,7 +359,7 @@ public class FallsLake extends Reservoir implements Steppable {
     finalResultArray.add(numOfHouseholds);
     finalResultArray.add(population);
     finalResultArray.add(newShiftFac); // 9
-    finalResultArray.add(observedInflow);
+    finalResultArray.add(droughtStage);
     finalResultArray.add(deficit); // 11
     finalResultMap.put(time, finalResultArray);
 
@@ -382,6 +385,7 @@ public class FallsLake extends Reservoir implements Steppable {
       averageDemand = 0;
 
       for (int m = futureData; m < endTime; m++) { // m = 372 for future data
+        finalResultMap.get(m).set(10, PolicyMaker.getStage(m));
         sumDeficit += finalResultMap.get(m).get(11);
         if (finalResultMap.get(m).get(11) == 0) { // deficit is equal to zero
           zeroDeficit++;
