@@ -66,11 +66,11 @@ public class FallsLake extends Reservoir implements Steppable {
     this.inflow = 0;
     this.outflow = 0;
     this.rainfall = 0;
+    this.droughtStage = 0;
     this.isDroughtRestriction = isDroughtRestriction;
     this.droughtStages = droughtStages;
     this.recisionStages = recisionStages;
     this.prevStage = 0;
-    this.recisionPercent = new double[]{0, 0, 0};
 
     this.outputStream = outputStreamReservoir;
     // This is for labeling the output file.
@@ -131,28 +131,20 @@ public class FallsLake extends Reservoir implements Steppable {
     this.lowestStorage = lowestStorage;
   }
 
-  public double[] getDroughtStages(int month){
+  public double[] getDroughtStages(int month) {
     return this.droughtStages.get(month);
   }
 
-  public double[] getRecisionStages(int month){
+  public double[] getRecisionStages(int month) {
     return this.recisionStages.get(month);
   }
 
-  private void resetRecisionPercent(){
-    this.recisionPercent = new double[]{0, 0, 0};
-  }
-
-  public int calcDroughtStage(int time){
+  public int calcDroughtStage(int time) {
     int month = (time % 12) + 1;
     double[] droughtPercent = getDroughtStages(month);
-    if (prevStage > 0){
-      recisionPercent = getRecisionStages(month);
-    }
-
-    double tmpStorage = storage;
+    recisionPercent = prevStage > 0 ? getRecisionStages(month) : new double[] {0, 0, 0};
     double baseStorage = getLowestStorage();
-    double wssp = 0.423 * (tmpStorage - baseStorage);
+    double wssp = 0.423 * (storage - baseStorage);
     if (wssp >= (droughtPercent[0] * waterSupplyStorage)
         && wssp >= (recisionPercent[0] * waterSupplyStorage)) {
       stage = 0;
@@ -168,7 +160,6 @@ public class FallsLake extends Reservoir implements Steppable {
       stage = 4;
     }
     this.prevStage = stage;
-    resetRecisionPercent();
     return stage;
   }
 
@@ -378,8 +369,6 @@ public class FallsLake extends Reservoir implements Steppable {
     double totalOutdoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(1);
     double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
     double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
-    double droughtStage = isDroughtRestriction ? calcDroughtStage(time) : 0;
-    System.out.println(time + " " + droughtStage + " " + storage);
 
     // Non-residential consumption
     // double nonResidentialUsage = observedWaterSupply *
@@ -404,6 +393,13 @@ public class FallsLake extends Reservoir implements Steppable {
     if (totalWaterSupply > waterSupply) {
       deficit = totalWaterSupply - waterSupply;
     }
+    this.droughtStage = isDroughtRestriction ? calcDroughtStage(time) : 0;
+    System.out.println(
+        time
+            + " "
+            + droughtStage
+            + " "
+            + storage); // ###################################################################
     ArrayList<Double> finalResultArray = new ArrayList<Double>();
     finalResultArray.add(storage);
     finalResultArray.add(outflow);
