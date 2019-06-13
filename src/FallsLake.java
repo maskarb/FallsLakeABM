@@ -30,6 +30,13 @@ public class FallsLake extends Reservoir implements Steppable {
   public PrintWriter outputStream;
   private boolean isReleaseModel;
   private double lowestStorage; // 25073
+  public HashMap<Integer, double[]> droughtStages;
+  public HashMap<Integer, double[]> recisionStages;
+  public double waterSupplyStorage = 45000; // acre-feet
+  private int stage;
+  private int prevStage;
+  private boolean isDroughtRestriction;
+  public double[] recisionPercent;
 
   DataList flow;
   DataList shiftFac;
@@ -46,7 +53,10 @@ public class FallsLake extends Reservoir implements Steppable {
       ArrayList<ArrayList<Double>> list,
       PrintWriter outputStreamReservoir,
       DataList flow,
-      DataList shiftFac) {
+      DataList shiftFac,
+      boolean isDroughtRestriction,
+      HashMap<Integer, double[]> droughtStages,
+      HashMap<Integer, double[]> recisionStages) {
     this.flow = flow;
     this.shiftFac = shiftFac;
     this.storage = initialStorage;
@@ -56,6 +66,11 @@ public class FallsLake extends Reservoir implements Steppable {
     this.inflow = 0;
     this.outflow = 0;
     this.rainfall = 0;
+    this.isDroughtRestriction = isDroughtRestriction;
+    this.droughtStages = droughtStages;
+    this.recisionStages = recisionStages;
+    this.prevStage = 0;
+    this.recisionPercent = new double[]{0, 0, 0};
 
     this.outputStream = outputStreamReservoir;
     // This is for labeling the output file.
@@ -114,6 +129,47 @@ public class FallsLake extends Reservoir implements Steppable {
 
     this.isReleaseModel = isReleaseModel;
     this.lowestStorage = lowestStorage;
+  }
+
+  public double[] getDroughtStages(int month){
+    return this.droughtStages.get(month);
+  }
+
+  public double[] getRecisionStages(int month){
+    return this.recisionStages.get(month);
+  }
+
+  private void resetRecisionPercent(){
+    this.recisionPercent = new double[]{0, 0, 0};
+  }
+
+  public int calcDroughtStage(int time){
+    int month = (time % 12) + 1;
+    double[] droughtPercent = getDroughtStages(month);
+    if (prevStage > 0){
+      recisionPercent = getRecisionStages(month);
+    }
+
+    double tmpStorage = storage;
+    double baseStorage = getLowestStorage();
+    double wssp = 0.423 * (tmpStorage - baseStorage);
+    if (wssp >= (droughtPercent[0] * waterSupplyStorage)
+        && wssp >= (recisionPercent[0] * waterSupplyStorage)) {
+      stage = 0;
+    } else if (wssp >= (droughtPercent[1] * waterSupplyStorage)
+        && wssp >= (recisionPercent[1] * waterSupplyStorage)) {
+      stage = 1;
+    } else if (wssp >= (droughtPercent[2] * waterSupplyStorage)
+        && wssp >= (recisionPercent[2] * waterSupplyStorage)) {
+      stage = 2;
+    } else if (wssp >= 0) {
+      stage = 3;
+    } else {
+      stage = 4;
+    }
+    this.prevStage = stage;
+    resetRecisionPercent();
+    return stage;
   }
 
   @Override
@@ -322,8 +378,8 @@ public class FallsLake extends Reservoir implements Steppable {
     double totalOutdoor = (double) ((ArrayList<Double>) totalDemand.get(time)).get(1);
     double numOfHouseholds = (double) ((ArrayList<Double>) totalDemand.get(time)).get(3);
     double population = (double) ((ArrayList<Double>) totalDemand.get(time)).get(4);
-    double droughtStage = 0; // due to the ridiculous complicatedness of this model, droughtStage is set below when model is done.
-    System.out.println(time);
+    double droughtStage = isDroughtRestriction ? calcDroughtStage(time) : 0;
+    System.out.println(time + " " + droughtStage + " " + storage);
 
     // Non-residential consumption
     // double nonResidentialUsage = observedWaterSupply *
@@ -385,7 +441,6 @@ public class FallsLake extends Reservoir implements Steppable {
       averageDemand = 0;
 
       for (int m = futureData; m < endTime; m++) { // m = 372 for future data
-        finalResultMap.get(m).set(10, PolicyMaker.getStage(m));
         sumDeficit += finalResultMap.get(m).get(11);
         if (finalResultMap.get(m).get(11) == 0) { // deficit is equal to zero
           zeroDeficit++;
@@ -473,7 +528,7 @@ public class FallsLake extends Reservoir implements Steppable {
             + ","
             + newShiftFac
             + ","
-            + inflow
+            + droughtStage
             + ","
             + deficit
             + ","

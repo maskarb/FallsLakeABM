@@ -291,7 +291,10 @@ public class WRRSim extends SimState {
             readStageStorageData("elevationAreaStorage.txt"),
             outputStreamReservoir,
             flow,
-            shiftFac);
+            shiftFac,
+            isDroughtRestriction,
+            droughtStages,
+            recisionStages);
 
     PolicyMaker policyMaker =
         new PolicyMaker(
@@ -299,9 +302,7 @@ public class WRRSim extends SimState {
             initialElevation,
             initialStorage,
             isDroughtRestriction,
-            reductionPercentages,
-            droughtStages,
-            recisionStages);
+            reductionPercentages);
 
     Climate climate = new Climate();
     climate.setPrecipitation(precipitation);
