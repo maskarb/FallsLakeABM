@@ -133,7 +133,7 @@ public class GenerateTimeseries {
               + "\n");
     }
     try {
-      File file = new File("ts-mgmt" + manage + "-s-" + shifacStr + "-" + RunNum + ".csv");
+      File file = new File("ts-mgmt-" + manage + "-s-" + shifacStr + "-" + RunNum + ".csv");
 
       // if file doesnt exists, then create it
       if (!file.exists()) {
