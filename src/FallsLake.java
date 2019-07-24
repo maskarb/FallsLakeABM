@@ -394,12 +394,7 @@ public class FallsLake extends Reservoir implements Steppable {
       deficit = totalWaterSupply - waterSupply;
     }
     this.droughtStage = isDroughtRestriction ? calcDroughtStage(time) : 0;
-    System.out.println(
-        time
-            + " "
-            + droughtStage
-            + " "
-            + storage); // ###################################################################
+    System.out.println(time + " " + droughtStage + " " + storage); // ###################################################################
     ArrayList<Double> finalResultArray = new ArrayList<Double>();
     finalResultArray.add(storage);
     finalResultArray.add(outflow);
