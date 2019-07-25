@@ -119,14 +119,8 @@ public class WRRSim extends SimState {
         days = 28;
         break;
       case 3:
-        days = 30;
-        break;
       case 5:
-        days = 30;
-        break;
       case 8:
-        days = 30;
-        break;
       case 10:
         days = 30;
         break;
@@ -153,14 +147,8 @@ public class WRRSim extends SimState {
         days = 28;
         break;
       case 3:
-        days = 30;
-        break;
       case 5:
-        days = 30;
-        break;
       case 8:
-        days = 30;
-        break;
       case 10:
         days = 30;
         break;
@@ -615,8 +603,8 @@ public class WRRSim extends SimState {
     long t1 = System.currentTimeMillis();
 
     numOfShifts = 8; // 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-    numOfRun = 1;
-    numOfManagementScenarios = 4;
+    numOfRun = 10;
+    numOfManagementScenarios = 1;
     endTime = 600;
 
     SimState state = null;
@@ -665,8 +653,8 @@ public class WRRSim extends SimState {
     recisionStages.put(11, new double[] {.55, .50, .45});
     recisionStages.put(12, new double[] {.55, .50, .45});
 
-    for (int n = 3; n < numOfManagementScenarios; n++) {
-      for (int m = 7; m < numOfShifts; m++) {
+    for (int n = 0; n < numOfManagementScenarios; n++) {
+      for (int m = 2; m < numOfShifts; m++) {
         endShift = 0.1 * (m + 1);
         finalResult = new ArrayList<HashMap<Integer, ArrayList<Double>>>();
         for (int i = 0; i < numOfRun; i++) {

@@ -157,7 +157,7 @@ public class FallsLake extends Reservoir implements Steppable {
     } else if (wssp >= 0) {
       stage = 3;
     } else {
-      stage = 4;
+      stage = 4; // stage should be impossible to reach
     }
     this.prevStage = stage;
     return stage;
@@ -394,12 +394,13 @@ public class FallsLake extends Reservoir implements Steppable {
       deficit = totalWaterSupply - waterSupply;
     }
     this.droughtStage = isDroughtRestriction ? calcDroughtStage(time) : 0;
-    System.out.println(
+    /*System.out.println(
         time
             + " "
             + droughtStage
             + " "
             + storage); // ###################################################################
+    */
     ArrayList<Double> finalResultArray = new ArrayList<Double>();
     finalResultArray.add(storage);
     finalResultArray.add(outflow);
