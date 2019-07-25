@@ -14,15 +14,30 @@ public class GenerateTimeseries {
 
   public static Timeseries execute(
       double[] shiftFactor, int numberYears, int manage, int RunNum, long seed) {
+    String Rloc = null;
+    String floc = null;
     int len_shift = shiftFactor.length;
     String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
+
+    String pattern = "Rscript";
+    if (System.getProperty("os.name") == "Windows") {pattern = "Rscript.exe";}
+    File fullyQualifiedExecutable = findExecutableOnPath(pattern);
+    if (fullyQualifiedExecutable != null)
+      {
+        Rloc = fullyQualifiedExecutable.getAbsolutePath();
+      } else {
+        System.out.println("Rscript Not Found. Terminating");
+        System.exit(1);
+      }
+      ClassLoader loader = GenerateTimeseries.class.getClassLoader();
+      floc = loader.getResource("pertubing/").getPath();
 
     double[] copProbs = new double[600];
     try {
       Process child =
           Runtime.getRuntime()
               .exec(
-                  "/usr/bin/Rscript analysis_flows.R "
+                  Rloc + " " + floc + "analysis_flows.R "
                       + Long.toString(seed)
                       + " "
                       + manage
@@ -45,9 +60,10 @@ public class GenerateTimeseries {
       e.printStackTrace();
       System.out.println(
           "Check Rscript analysis_flows.R. VineCopula might be missing. Terminating program.");
-      System.exit(-1);
+      System.exit(1);
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
+      System.exit(1);
     }
 
     Timeseries result = new Timeseries();
@@ -205,13 +221,31 @@ public class GenerateTimeseries {
     return new double[] {f, prob};
   }
 
+  private static File findExecutableOnPath(String executableName)
+  {
+      String systemPath = System.getenv("PATH");
+      String[] pathDirs = systemPath.split(File.pathSeparator);
+
+      File fullyQualifiedExecutable = null;
+      for (String pathDir : pathDirs)
+      {
+          File file = new File(pathDir, executableName);
+          if (file.isFile())
+          {
+              fullyQualifiedExecutable = file;
+              break;
+          }
+      }
+      return fullyQualifiedExecutable;
+  }
+
   public static void main(String[] args) {
 
     Timeseries t = null;
     for (int i = 0; i < 1; i++) {
       // System.out.println("Run " + i);
-      double[] shift = {1, 0.9, 0.8, 0.7};
-      t = GenerateTimeseries.execute(shift, 80, 0, 0, 100);
+      double[] shift = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+      t = GenerateTimeseries.execute(shift, 32, 0, 0, 100);
     }
 
     // System.out.println(t.getFlow().size());
