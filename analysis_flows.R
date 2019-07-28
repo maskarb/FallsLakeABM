@@ -1,28 +1,102 @@
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly=TRUE)
 
-source("historical_data.R")
-library(VineCopula)
+# library(VineCopula)
 
-vals <- list(fJan, fFeb, fMar, fApr, fMay, fJun, fJul, fAug, fSep, fOct, fNov, fDec)
+fJan <- c(
+  816, 1884, 1039,  340, 1919,  784,  340, 1310, 2084, 1174,
+  1868,  784,  843, 1682, 1151, 3006, 1598, 1127,  160,  568,
+  658,  240,  857,  368, 1082,  101,  736, 1546,  110,  155,
+  854
+)
+
+fFeb <- c(
+  2394, 2558, 2497,  453, 1908,  607, 2218, 2029,  347,  575,
+  792, 1213, 1406, 1341, 1533, 3393,  480, 1579,  473,  210,
+  2131,  961,  636,  343,  586,  221,  298, 2200,  237,  275,
+  980
+)
+
+fMar <- c(
+  3144, 3177,  386, 1120, 2274,  259, 3239, 1079, 1728,  978,
+  3718, 2704, 1187, 1300, 1089, 4393,  919,  941, 1986,  333,
+  2953,  403, 1463,  103, 1023,  887, 2357,  835,  621,  913,
+  494
+)
+
+fApr <- c(
+  2366, 1981,   87,  134, 1776,  400, 1743, 1409,  529,  497,
+  2403,  508,  102,  864, 1712,  959,  859, 1372,  799,  159,
+  2923,  479,  589,  324, 1060, 1114,  542,  185,  404,  125,
+  614
+)
+
+fMay <- c(
+  1499, 1079,  248,  149,  305,  229, 1457, 1565,  219,  148,
+  321,  115,  156,  837,  376,  373,  214,  441,  121,  -11,
+  1617,  289,  135,  131,  137,  223,  197, 1060,  342,  348,
+  995
+)
+
+fJun <- c(
+  357,  221,   -4,  -52,  103,   48,  723,  195,   62,  325,
+  20,   55, 1935,  230,  371,  114,  110,  281,  332,  -66,
+  973,   67,  141, 1259,   47,   81,  638,  130,  -19,   25,
+  1348
+)
+
+fJul <- c(
+  71, 1006,  103,   24,   31,   11,  981,   57,   59,  198,
+  0,  201,  496,  164,  273,   28,   34,  630,  326,   -3,
+  882,  179,   36,  516,  -25,  174,   30,   40,   -8,   50,
+  1262
+)
+
+fAug <- c(
+  59,  424,  566,  709,  -35,   -3, 1151,  163,   25,  119,
+  -16,  136,  153,  402,  -47,   31,  201,  455,  247,   56,
+  823,  995,   17,   16,  -46,  252,   26,   30,  -15,  141,
+  268
+)
+
+fSep <- c(
+  -35,   25,  101,  -21,  194,   85,  239,  -53,  146,   72,
+  5,  -19,   13, 4153,   37,   80, 5421,  279,   82,   99,
+  646,  535,  -56,  294,  -44, 1930,  117,  174,  107,  465,
+  12
+)
+
+fOct <- c(
+  98,   76,   31,  -38,   -6,  172,  904,  501,   18,  136,
+  28,  190, 1178,  819,   47,   37,  607,   -9,   -7, 1814,
+  189,  183,   37,  179,   86,   66,   17,   78,   41,   57,
+  5
+)
+
+fNov <- c(  
+  331,    53, 2565,   63,   79,  558,  622,  140,   36,  747,  
+  136,    83, 1295,  597,  285,   57,  296,   91,    4, 1026, 
+  268,   585,  132, 2360,    1,  230, 1787,   18,  195,    1,  
+  86
+)
+
+fDec <- c(
+  1757,  339,  742,  610,  241,  148, 1247,  613,  123,  724,
+  398,   58,  700, 1331,  312,  278,  419,  148,   74, 1965,
+  1092,  707,  688,  630,  186,  990, 2768,  107,  245,  250,
+  1000
+)
+
+vals <- list(fJan, fFeb, fMar, fApr, fMay, fJun, fJul, fAug, fSep, fOct, fNov, fDec, fJan)
+
 
 set.seed(args[1])
 
 cops <- c()
-for (i in 1:(length(vals) - 1)) {
-  u <- pobs(as.matrix(cbind(vals[[i]], vals[[i + 1]])))[, 1]
-  v <- pobs(as.matrix(cbind(vals[[i]], vals[[i + 1]])))[, 2]
-  selectedCopula <- BiCopSelect(u, v, familyset = NA, indeptest = TRUE)
+for (i in 1:12) {
+  u <- VineCopula::pobs(as.matrix(cbind(vals[[i]], vals[[i + 1]])))[, 1]
+  v <- VineCopula::pobs(as.matrix(cbind(vals[[i]], vals[[i + 1]])))[, 2]
+  selectedCopula <- VineCopula::BiCopSelect(u, v, familyset = NA, indeptest = TRUE)
   cops <- c(cops, list(selectedCopula))
-  if (i == 11) {
-    u <- pobs(as.matrix(cbind(vals[[12]], vals[[1]])))[, 1]
-    v <- pobs(as.matrix(cbind(vals[[12]], vals[[1]])))[, 2]
-    selectedCopula <- BiCopSelect(u, v, familyset = NA, indeptest = TRUE)
-    cop <-
-      BiCop(selectedCopula$family,
-                            selectedCopula$par,
-                            selectedCopula$par2)
-    cops <- c(list(selectedCopula), cops)
-  }
 }
 
 u1 <- runif(1)
@@ -30,14 +104,14 @@ probs <- c(u1)
 for (i in c(2:600)) {
   if (i == 2) {
     u_i_prev <- u1
-    cat(paste(toString(u1),"\n"))
+    cat(paste(toString(u1), "\n"))
   }
   v <- runif(1)
   j <- if (i %% 12 != 0) i %% 12 else 12
-  u_i <- BiCopHinv1(u_i_prev, v, obj = cops[[j]])
+  u_i <- VineCopula::BiCopHinv1(u_i_prev, v, obj = cops[[j]])
   cat(paste(toString(u_i),"\n"))
   probs <- c(probs, u_i)
   u_i_prev <- u_i
 }
-filename <- paste("probs-", toString(args[2]), "-", toString(args[3]), ".csv", sep="")
+filename <- paste("probs-mgmt-", toString(args[2]), "-s-", toString(args[3]), "-", toString(args[4]), ".csv", sep="")
 write.table(probs, file=filename, row.names=FALSE, col.names=FALSE, sep=",")
