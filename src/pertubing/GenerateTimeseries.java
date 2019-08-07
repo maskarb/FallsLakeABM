@@ -6,210 +6,219 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-// import java.util.Arrays;
-
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class GenerateTimeseries {
 
-	public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum, long seed) {
-		int len_shift = shiftFactor.length;
-		String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
+  public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum, long seed) {
+    int len_shift = shiftFactor.length;
+    String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 
-		double[] copProbs = new double[600];
-		try {
-			Process child = Runtime.getRuntime().exec("/usr/bin/Rscript analysis_flows.R "
-														+ Long.toString(seed) + " "
-														+ shifacStr + " "
-														+ Integer.toString(RunNum));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
-			String item;
-			for(int i = 0; i < 600; i++){
-				item = reader.readLine();
-				copProbs[i] = Double.parseDouble(item);
-			}
-			int exitCode = child.waitFor();
-			System.out.println("Probability CSV created. Rscript exited with error code : " + exitCode);
-		} catch (IOException|InterruptedException e) {
-			e.printStackTrace();
-		}
+    double[] copProbs = new double[600];
+    try {
+      Process child =
+          Runtime.getRuntime()
+              .exec(
+                  "/usr/bin/Rscript analysis_flows.R "
+                      + Long.toString(seed)
+                      + " "
+                      + shifacStr
+                      + " "
+                      + Integer.toString(RunNum));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(child.getInputStream()));
+      String item;
+      for (int i = 0; i < 600; i++) {
+        item = reader.readLine();
+        copProbs[i] = Double.parseDouble(item);
+      }
+      int exitCode = child.waitFor();
+      System.out.println(
+          "Probability CSV created. Rscript exited with error code : "
+              + exitCode
+              + " (zero is what ya want)");
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      System.out.println(
+          "Check Rscript analysis_flows.R. VineCopula might be missing. Terminating program.");
+      System.exit(-1);
+    } catch (IOException | InterruptedException e) {
+      e.printStackTrace();
+    }
 
+    Timeseries result = new Timeseries();
+    Timeseries hresult = new Timeseries(); // historical data is imported. not used.
 
+    // add historic data
+    double[] hFlow = WrrProject.historicData(true, false, false);
 
-		Timeseries result = new Timeseries();
-		Timeseries hresult = new Timeseries(); // historical data is imported. not used.
+    for (int i = 0; i < hFlow.length; i++) {
+      hresult.getFlow().addData(i, hFlow[i]);
+    }
 
-		// add historic data
-		double[] hFlow = WrrProject.historicData(true, false, false);
+    double[] hPre = WrrProject.historicData(false, true, false);
 
-		for (int i = 0; i < hFlow.length; i++) {
-			hresult.getFlow().addData(i, hFlow[i]);
-		}
+    for (int i = 0; i < hPre.length; i++) {
+      hresult.getPrecipitation().addData(i, hPre[i]);
+    }
 
-		double[] hPre = WrrProject.historicData(false, true, false);
+    double[] hEva = WrrProject.historicData(false, false, true);
 
-		for (int i = 0; i < hPre.length; i++) {
-			hresult.getPrecipitation().addData(i, hPre[i]);
-		}
+    for (int i = 0; i < hEva.length; i++) {
+      hresult.getEvapotranspiration().addData(i, hEva[i]);
+    }
 
-		double[] hEva = WrrProject.historicData(false, false, true);
+    int month = 1;
 
-		for (int i = 0; i < hEva.length; i++) {
-			hresult.getEvapotranspiration().addData(i, hEva[i]);
-		}
+    Timeseries tMonth2 = null;
 
-		int month = 1;
+    double prob = 0;
+    double probEva = 0;
+    double probPre = 0;
 
-		Timeseries tMonth2 = null;
+    for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
+      month = i % 12 + 1;
 
-		double prob = 0;
-		double probEva = 0;
-		double probPre = 0;
+      tMonth2 =
+          WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i]);
 
-		for (int i = 0; i < (numberYears - WrrProject.time.length) * 12; i++) {
-			month = i % 12 + 1;
+      DataList flow2 = tMonth2.getFlow();
+      DataList pre2 = tMonth2.getPrecipitation();
+      DataList eva2 = tMonth2.getEvapotranspiration();
 
-			tMonth2 = WrrProject.reconstructAllTimeseriesWithRespectToShiftInFlow(month, 0.05, shiftFactor[i]);
+      double[] fa = sampleUsingData(flow2, copProbs[i]);
 
-			DataList flow2 = tMonth2.getFlow();
-			DataList pre2 = tMonth2.getPrecipitation();
-			DataList eva2 = tMonth2.getEvapotranspiration();
+      double sampleFlow2 = fa[0];
+      prob = fa[1];
 
-			double[] fa = sampleUsingData(flow2, copProbs[i]);
-			// System.out.println(i + " " + copProbs[i]);
+      double[] pa = sampleUsingData1(pre2);
+      double samplePre2 = pa[0];
+      probPre = pa[1];
 
-			double sampleFlow2 = fa[0];
-			prob = fa[1];
+      double[] ea = sampleUsingData1(eva2);
+      double sampleEva2 = ea[0];
+      probEva = ea[1];
 
-			double[] pa = sampleUsingData1(pre2);
-			double samplePre2 = pa[0];
-			probPre = pa[1];
+      result.getFlow().addData(i, sampleFlow2);
+      result.getEvapotranspiration().addData(i, sampleEva2);
+      result.getPrecipitation().addData(i, samplePre2);
+      result.getShiftFactor().addData(i, shiftFactor[i]);
+      result.getFlowProb().addData(i, prob);
+      result.getPrecipProb().addData(i, probPre);
+      result.getEvapProb().addData(i, probEva);
+    }
 
-			double[] ea = sampleUsingData1(eva2);
-			double sampleEva2 = ea[0];
-			probEva = ea[1];
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append("Flow,Preci,Evatr,ShiftFac,FlowProb,PreciProb,EvatrProb\n");
 
-			result.getFlow().addData(i, sampleFlow2);
-			result.getEvapotranspiration().addData(i, sampleEva2);
-			result.getPrecipitation().addData(i, samplePre2);
-			result.getShiftFactor().addData(i, shiftFactor[i]);
-			result.getFlowProb().addData(i, prob);
-			result.getPrecipProb().addData(i, probPre);
-			result.getEvapProb().addData(i, probEva);
-		}
+    for (int i = 0; i < result.getFlow().size(); i++) {
+      stringBuffer.append(
+          result.getFlow().value(i)
+              + ","
+              + result.getPrecipitation().value(i)
+              + ","
+              + result.getEvapotranspiration().value(i)
+              + ","
+              + result.getShiftFactor().value(i)
+              + ","
+              + result.getFlowProb().value(i)
+              + ","
+              + result.getPrecipProb().value(i)
+              + ","
+              + result.getEvapProb().value(i)
+              + "\n");
+    }
+    try {
+      File file = new File("ts-s-" + shifacStr + "-" + RunNum + ".csv");
 
-		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("Flow,Preci,Evatr,ShiftFac,FlowProb,PreciProb,EvatrProb\n");
+      // if file doesnt exists, then create it
+      if (!file.exists()) {
+        file.createNewFile();
+      }
 
-		for (int i = 0; i < result.getFlow().size(); i++) {
-			stringBuffer.append(result.getFlow().value(i) + "," + result.getPrecipitation().value(i) + ","
-					+ result.getEvapotranspiration().value(i) + "," + result.getShiftFactor().value(i) + ","
-					+ result.getFlowProb().value(i) + "," + result.getPrecipProb().value(i) + ","
-					+ result.getEvapProb().value(i) + "\n");
-		}
-		try {
-			//File file = new File("timeseries_" + new Random().nextInt(10000) + ".txt");
-			File file = new File("ts-s-" + shifacStr + "-" + RunNum + ".csv");
+      FileWriter fw = new FileWriter(file.getAbsoluteFile());
+      BufferedWriter bw = new BufferedWriter(fw);
+      bw.write(stringBuffer.toString());
+      bw.close();
 
-			// if file doesnt exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-			}
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
+    return result;
+  }
 
-			bw.write(stringBuffer.toString());
-			bw.close();
+  public static double[] sampleUsingData(DataList datalist1, double prob) {
 
+    datalist1.sortList();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    // create distributions
+    double[] values = new double[datalist1.size()];
+    double[] pdf = new double[datalist1.size()];
 
+    for (int i = 0; i < values.length; i++) {
+      if (i == 0) {
+        pdf[0] = 0;
+        values[i] = datalist1.value(i);
+      } else {
+        pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
+        values[i] = datalist1.value(i);
+      }
+    }
 
-		return result;
-	}
+    // reset the last element of pdf to 1.0
+    pdf[pdf.length - 1] = 1.0;
+    PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+    double f = function.value(prob);
 
-	public static double[] sampleUsingData(DataList datalist1, double prob) {
+    return new double[] {f, prob};
+  }
 
-		datalist1.sortList();
+  public static double[] sampleUsingData1(DataList datalist1) {
 
-		// create distributions
-		double[] values = new double[datalist1.size()];
-		double[] pdf = new double[datalist1.size()];
+    datalist1.sortList();
 
-		for (int i = 0; i < values.length; i++) {
-			if (i == 0) {
-				pdf[0] = 0;
-				values[i] = datalist1.value(i);
-			} else {
-				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
-				values[i] = datalist1.value(i);
-			}
-		}
+    // create distributions
+    double[] values = new double[datalist1.size()];
+    double[] pdf = new double[datalist1.size()];
 
-		// reset the last element of pdf to 1.0
-		pdf[pdf.length - 1] = 1.0;
+    for (int i = 0; i < values.length; i++) {
+      if (i == 0) {
+        pdf[0] = 0;
+        values[i] = datalist1.value(i);
+      } else {
+        pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
+        values[i] = datalist1.value(i);
+      }
+    }
 
-		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
-		//System.out.println(Arrays.toString(values));
+    // reset the last element of pdf to 1.0
+    pdf[pdf.length - 1] = 1.0;
+    PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
+    double prob = new RandomDataGenerator().nextUniform(0, 1);
+    double f = function.value(prob);
 
-		//double prob = new RandomDataGenerator().nextUniform(0, 1);
+    return new double[] {f, prob};
+  }
 
-		double f = function.value(prob);
-		// f = Math.exp(f);
-		// System.out.println(f);
+  public static void main(String[] args) {
 
-		return new double[] { f, prob };
-	}
+    Timeseries t = null;
+    for (int i = 0; i < 1; i++) {
+      // System.out.println("Run " + i);
+      double[] shift = {1, 0.9, 0.8, 0.7};
+      t = GenerateTimeseries.execute(shift, 80, 0, 100);
+    }
 
-	public static double[] sampleUsingData1(DataList datalist1) {
-
-		datalist1.sortList();
-
-		// create distributions
-		double[] values = new double[datalist1.size()];
-		double[] pdf = new double[datalist1.size()];
-
-		for (int i = 0; i < values.length; i++) {
-			if (i == 0) {
-				pdf[0] = 0;
-				values[i] = datalist1.value(i);
-			} else {
-				pdf[i] = pdf[i - 1] + 1.0 / (datalist1.size() - 1);
-				values[i] = datalist1.value(i);
-			}
-		}
-
-		// reset the last element of pdf to 1.0
-		pdf[pdf.length - 1] = 1.0;
-
-		PolynomialSplineFunction function = new SplineInterpolator().interpolate(pdf, values);
-
-		double prob = new RandomDataGenerator().nextUniform(0, 1);
-
-		double f = function.value(prob);
-		// f = Math.exp(f);
-
-		return new double[] { f, prob };
-	}
-
-	public static void main(String[] args) {
-
-		Timeseries t = null;
-		for (int i = 0; i < 1; i++) {
-			// System.out.println("Run " + i);
-			double[] shift = {1,0.9,0.8,0.7};
-			t = GenerateTimeseries.execute(shift, 80, 0, 100);
-		}
-
-		// System.out.println(t.getFlow().size());
-		for (int i = 0; i < t.getFlow().size(); i++) {
-			System.out.println(t.getFlow().value(i) + " " + t.getPrecipitation().value(i) + " "
-					+ t.getEvapotranspiration().value(i));
-		}
-	}
+    // System.out.println(t.getFlow().size());
+    for (int i = 0; i < t.getFlow().size(); i++) {
+      System.out.println(
+          t.getFlow().value(i)
+              + " "
+              + t.getPrecipitation().value(i)
+              + " "
+              + t.getEvapotranspiration().value(i));
+    }
+  }
 }

@@ -5,42 +5,38 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class BivariateNormalDistributionCopula {
 
-	private final MultivariateNormalDistribution multivariateNormalDistribution;
+  private final MultivariateNormalDistribution multivariateNormalDistribution;
 
-	private final NormalDistribution normalDistribution = new NormalDistribution(0, 1);
+  private final NormalDistribution normalDistribution = new NormalDistribution(0, 1);
 
-	public BivariateNormalDistributionCopula(double v, double w) {
+  public BivariateNormalDistributionCopula(double v, double w) {
 
-		double m = normalDistribution.inverseCumulativeProbability(v);
+    double m = normalDistribution.inverseCumulativeProbability(v);
 
-		double s = normalDistribution.inverseCumulativeProbability(w);
+    double s = normalDistribution.inverseCumulativeProbability(w);
 
-		if (m < 0)
-			m = -1 * m;
+    if (m < 0) m = -1 * m;
 
-		if (s < 0)
-			s = -1 * s;
+    if (s < 0) s = -1 * s;
 
-		System.out.println(m + " " + s);
+    System.out.println(m + " " + s);
 
-		double[] means = new double[] { m };
+    double[] means = new double[] {m};
 
-		double[][] covariances = new double[][] { { s } };
+    double[][] covariances = new double[][] {{s}};
 
-		multivariateNormalDistribution = new MultivariateNormalDistribution(means, covariances);
-	}
+    multivariateNormalDistribution = new MultivariateNormalDistribution(means, covariances);
+  }
 
-	public double sample() {
+  public double sample() {
 
-		return multivariateNormalDistribution.sample()[0];
-	}
+    return multivariateNormalDistribution.sample()[0];
+  }
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
 
-		BivariateNormalDistributionCopula b = new BivariateNormalDistributionCopula(0.05, 0.05);
+    BivariateNormalDistributionCopula b = new BivariateNormalDistributionCopula(0.05, 0.05);
 
-		System.out.println(b.multivariateNormalDistribution.sample()[0]);
-
-	}
-
+    System.out.println(b.multivariateNormalDistribution.sample()[0]);
+  }
 }

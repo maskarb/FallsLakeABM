@@ -1,34 +1,16 @@
-/* import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-*/
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
-/**
- * 
- */
-
-/**
- * @author amashha
- *
- */
+/** @author amashha */
 public class Watershed implements Steppable {
-	static final long serialVersionUID = 1L;
+  static final long serialVersionUID = 1L;
 
-	// private Climate climate;
-	private double streamflow;
+  // private Climate climate;
+  private double streamflow;
 
-	public void step(SimState state) {
+  public void step(SimState state) {}
 
-	}
-
-	public double getStreamflow() {
-		return streamflow;
-	}
-
+  public double getStreamflow() {
+    return streamflow;
+  }
 }
