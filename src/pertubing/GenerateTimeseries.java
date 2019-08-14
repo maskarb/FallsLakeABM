@@ -17,11 +17,15 @@ public class GenerateTimeseries {
     String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 
     double[] copProbs = new double[600];
+    String floc = System.getProperty("user.dir");
+    System.out.println(floc + "\\analysis_flows.R ");
     try {
       Process child =
           Runtime.getRuntime()
               .exec(
-                  "/c/R/R-3.6.1/bin/Rscript analysis_flows.R "
+                  "C:\\R\\R-3.6.1\\bin\\Rscript "
+                      + floc
+                      + "\\analysis_flows.R "
                       + Long.toString(seed)
                       + " "
                       + shifacStr
