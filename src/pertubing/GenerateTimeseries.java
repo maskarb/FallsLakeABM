@@ -12,21 +12,23 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 
 public class GenerateTimeseries {
 
-  public static Timeseries execute(double[] shiftFactor, int numberYears, int RunNum, long seed) {
+  public static Timeseries execute(double[] shiftFactor, int numberYears, int manage, int RunNum, long seed) {
     int len_shift = shiftFactor.length;
     String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 
     double[] copProbs = new double[600];
     String floc = System.getProperty("user.dir");
-    System.out.println(floc + "\\analysis_flows.R ");
+    System.out.println(floc + "/analysis_flows.R ");
     try {
       Process child =
           Runtime.getRuntime()
               .exec(
-                  "C:\\R\\R-3.6.1\\bin\\Rscript "
+                  "/usr/bin/Rscript "
                       + floc
-                      + "\\analysis_flows.R "
+                      + "/analysis_flows.R "
                       + Long.toString(seed)
+                      + " "
+                      + manage
                       + " "
                       + shifacStr
                       + " "
@@ -135,7 +137,7 @@ public class GenerateTimeseries {
               + "\n");
     }
     try {
-      File file = new File("ts-s-" + shifacStr + "-" + RunNum + ".csv");
+      File file = new File("ts-mgmt-" + manage + "-s-" + shifacStr + "-" + RunNum + ".csv");
 
       // if file doesnt exists, then create it
       if (!file.exists()) {
@@ -213,7 +215,7 @@ public class GenerateTimeseries {
     for (int i = 0; i < 1; i++) {
       // System.out.println("Run " + i);
       double[] shift = {1, 0.9, 0.8, 0.7};
-      t = GenerateTimeseries.execute(shift, 80, 0, 100);
+      t = GenerateTimeseries.execute(shift, 80, 0, 0, 100);
     }
 
     // System.out.println(t.getFlow().size());

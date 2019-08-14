@@ -72,6 +72,7 @@ public class WRRSim extends SimState {
     this.isRetrofitting = r;
     this.isDroughtRestriction = d;
     this.reductionPercentages = per;
+    this.manage = manage;
   }
 
   public double getPopulation() {
@@ -263,7 +264,7 @@ public class WRRSim extends SimState {
     city.clear();
 
     System.out.println("Generate timeseries.");
-    Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, runNum, ranSeed);
+    Timeseries timeSeries = GenerateTimeseries.execute(shift, 81, manage, runNum, ranSeed);
     System.out.println("Timeseries generated.");
 
     DataList flow = timeSeries.getFlow();
@@ -605,8 +606,8 @@ public class WRRSim extends SimState {
     long t1 = System.currentTimeMillis();
 
     numOfShifts = 8; // 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.0
-    numOfRun = 50;
-    numOfManagementScenarios = 2;
+    numOfRun = 1;
+    numOfManagementScenarios = 1;
     endTime = 600;
 
     SimState state = null;
@@ -733,11 +734,6 @@ public class WRRSim extends SimState {
                 + ","
                 + "deficit_rsd"
                 + ",");
-        // outputStream.print("storage_std" + "," + "outflow_std" + "," + "waterSupply_std" + ","
-        //		+ "waterDelivered_std" + "," + "elevation_std" + "," + "totalIndoor_std" + ","
-        //		+ "totalOutdoor_std" + "," + "numOfHouseholds_std" + "," + "population_std" + "," +
-        // "inflow_std"
-        //		+ "," + "deficit_std" + ",");
         outputStream.print(
             "storage_max"
                 + ","
