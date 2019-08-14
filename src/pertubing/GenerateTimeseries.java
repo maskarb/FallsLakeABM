@@ -21,7 +21,7 @@ public class GenerateTimeseries {
       Process child =
           Runtime.getRuntime()
               .exec(
-                  "/usr/bin/Rscript analysis_flows.R "
+                  "/c/R/R-3.6.1/bin/Rscript analysis_flows.R "
                       + Long.toString(seed)
                       + " "
                       + shifacStr
@@ -45,6 +45,7 @@ public class GenerateTimeseries {
       System.exit(-1);
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
+      System.exit(2);
     }
 
     Timeseries result = new Timeseries();
