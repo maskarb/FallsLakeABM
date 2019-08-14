@@ -20,7 +20,7 @@ public class GenerateTimeseries {
     String shifacStr = String.format("%.1f", shiftFactor[len_shift - 1]);
 
     String pattern = "Rscript";
-    if (System.getProperty("os.name") == "Windows") {pattern = "Rscript.exe";}
+    if (System.getProperty("os.name").charAt(0) == 'W') {pattern = "Rscript.exe";}
     File fullyQualifiedExecutable = findExecutableOnPath(pattern);
     if (fullyQualifiedExecutable != null)
       {
