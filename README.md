@@ -1,4 +1,4 @@
-# MASON
+# Falls Lake Agent Based Model
 
 ## Dependencies
 
